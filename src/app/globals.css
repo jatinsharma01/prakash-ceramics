@@ -1,26 +1,102 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #fbf9f7;
+  --foreground: #1c1815;
+  --primary: #F2ECE7;
+  --primary-foreground: #1c1815;
+  --primary-hover: #e5dcd5;
+  --accent: #9b7842;
+  --card-bg: #ffffff;
+  --card-border: #e6ddd6;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+@theme {
+  --font-sans: var(--font-sans), "Outfit", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-serif: var(--font-serif), "Playfair Display", Georgia, serif;
+
+  /* Alabaster Warm Stone Palette (#F2ECE7 Base) */
+  --color-alabaster-50: #fbf9f7;
+  --color-alabaster-100: #f7f2ee;
+  --color-alabaster-200: #F2ECE7;
+  --color-alabaster-300: #e6ddd6;
+  --color-alabaster-400: #d7cbc0;
+  --color-alabaster-500: #b8a594;
+  --color-alabaster-600: #8c7764;
+  --color-alabaster-700: #5f4f42;
+  --color-alabaster-800: #3d322a;
+  --color-alabaster-900: #1c1815;
+
+  --color-gold-50: #fdfbf7;
+  --color-gold-100: #f7f1e6;
+  --color-gold-200: #ece0ca;
+  --color-gold-300: #dec49a;
+  --color-gold-400: #c5a880;
+  --color-gold-500: #9b7842;
+  --color-gold-600: #836433;
+  --color-gold-700: #6a5028;
+  --color-gold-800: #543e20;
+  --color-gold-900: #423018;
+
+  --color-stone-50: #fbf9f7;
+  --color-stone-100: #f7f2ee;
+  --color-stone-200: #F2ECE7;
+  --color-stone-300: #e6ddd6;
+  --color-stone-400: #d7cbc0;
+  --color-stone-500: #8c7764;
+  --color-stone-600: #5f4f42;
+  --color-stone-700: #3d322a;
+  --color-stone-800: #26201b;
+  --color-stone-900: #1c1815;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  scroll-behavior: smooth;
+  color-scheme: light;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: #fbf9f7;
+  color: #1c1815;
+  font-family: var(--font-sans), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  overflow-x: hidden;
+}
+
+/* Crisp Minimalist Panels */
+.clean-panel {
+  background: #ffffff;
+  border: 1px solid #e6ddd6;
+}
+
+/* Luxury Alabaster Stone Gradient Buttons */
+.btn-alabaster-gradient {
+  background: linear-gradient(135deg, #fcfbf9 0%, #F2ECE7 52%, #e3d8ce 100%);
+  border: 1px solid #ded5cb;
+  box-shadow: 0 2px 8px rgba(28, 24, 21, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  color: #1c1815;
+}
+
+.btn-alabaster-gradient:hover {
+  background: linear-gradient(135deg, #ffffff 0%, #f7f2ed 52%, #ebe2d9 100%);
+  box-shadow: 0 4px 14px rgba(28, 24, 21, 0.09), inset 0 1px 0 rgba(255, 255, 255, 0.95);
+  border-color: #d7cbc0;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f7f2ee;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #d7cbc0;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #b8a594;
 }
