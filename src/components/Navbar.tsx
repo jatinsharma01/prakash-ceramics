@@ -58,6 +58,10 @@ export function Navbar() {
 
   const isTransparent = !isScrolled && isDarkHeroPage;
 
+  if (pathname?.startsWith("/admin")) {
+    return null;
+  }
+
   return (
     <motion.header
       initial={{ y: -40, opacity: 0 }}

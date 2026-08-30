@@ -1,5 +1,8 @@
+"use client";
+
 import React from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { CATEGORIES } from "@/lib/categories";
 import { BrandLogo } from "./BrandLogo";
 import { 
@@ -12,10 +15,17 @@ import {
   ArrowUpRight,
   Droplets,
   Award,
-  Layers
+  Layers,
+  LayoutDashboard
 } from "lucide-react";
 
 export function Footer() {
+  const pathname = usePathname();
+
+  if (pathname?.startsWith("/admin")) {
+    return null;
+  }
+
   return (
     <footer className="bg-[#faf8f5] border-t border-[#ede8df] text-[#4b5563] relative overflow-hidden">
       
@@ -192,6 +202,13 @@ export function Footer() {
             <span className="hover:text-[#151a22] cursor-pointer">Terms of Service</span>
             <span className="hover:text-[#151a22] cursor-pointer">Warranty Terms</span>
             <span className="text-[#8a6833] font-semibold">ISO 9001 Certified Quality</span>
+            <Link 
+              href="/admin" 
+              className="inline-flex items-center gap-1 text-[#9b7842] hover:text-[#151a22] font-semibold transition-colors bg-white/70 px-2.5 py-1 rounded-md border border-[#e2dcd0]"
+            >
+              <LayoutDashboard className="w-3 h-3" />
+              <span>Admin Console</span>
+            </Link>
           </div>
         </div>
       </div>
