@@ -1099,7 +1099,7 @@ export default function HomePage() {
                           Tour Request Confirmed
                         </h4>
                         <p className="text-xs text-emerald-700 max-w-md mx-auto leading-relaxed">
-                          Thank you! A dedicated Parkash Ceramics bath concierge will reach out via WhatsApp (+91 86288 05096) to confirm your schedule and prepare custom displays.
+                          Thank you! A dedicated Parkash Ceramics bath concierge will reach out via WhatsApp (+91 70188 61957) to confirm your schedule and prepare custom displays.
                         </p>
                       </motion.div>
                     ) : (

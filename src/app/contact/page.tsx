@@ -93,8 +93,8 @@ export default function ContactPage() {
                 <div className="flex items-center gap-3">
                   <Phone className="w-4 h-4 text-[#9b7842] shrink-0" />
                   <div>
-                    <p className="text-[#151a22] font-semibold">+91 86288 05096 (Showroom & WhatsApp)</p>
-                    <p className="text-[#6b7280]">+91 86288 05096 (Direct Desk)</p>
+                    <p className="text-[#151a22] font-semibold">+91 70188 61957 (Showroom & WhatsApp)</p>
+                    <p className="text-[#6b7280]">+91 70188 61957 (Direct Desk)</p>
                   </div>
                 </div>
 
@@ -117,7 +117,7 @@ export default function ContactPage() {
 
               {/* Call Showroom Desk */}
               <a
-                href="tel:+918628805096"
+                href="tel:+917018861957"
                 className="w-full mt-6 bg-[#1c1815] hover:bg-[#9b7842] text-white font-semibold py-3 rounded-xl text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition-colors shadow-sm"
               >
                 <Phone className="w-4 h-4" />

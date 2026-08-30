@@ -53,7 +53,7 @@ export default function OrderSuccessPage() {
     message += `Please confirm dispatch slot and provide official tax invoice.`;
 
     const encoded = encodeURIComponent(message);
-    window.open(`https://wa.me/918628805096?text=${encoded}`, "_blank");
+    window.open(`https://wa.me/917018861957?text=${encoded}`, "_blank");
   };
 
   return (
@@ -73,12 +73,12 @@ export default function OrderSuccessPage() {
             Thank You for Your Order
           </h1>
           <p className="text-xs sm:text-sm text-[#6b7280] max-w-lg mx-auto leading-relaxed">
-            Your architectural project order has been logged and forwarded directly to the Parkash Ceramics Concierge desk on WhatsApp (+91 86288 05096).
+            Your architectural project order has been logged and forwarded directly to the Parkash Ceramics Concierge desk on WhatsApp (+91 70188 61957).
           </p>
 
           <div className="mt-6 inline-flex items-center gap-2 bg-[#faf8f5] border border-[#ded5cb] px-5 py-2.5 rounded-full text-xs font-mono font-bold text-[#151a22]">
             <span>Order Reference:</span>
-            <span className="text-[#9b7842]">{order?.orderId || "PC-862880"}</span>
+            <span className="text-[#9b7842]">{order?.orderId || "PC-701886"}</span>
           </div>
 
           <div className="mt-8 pt-8 border-t border-[#ede8df] flex flex-wrap justify-center gap-3">
@@ -88,7 +88,7 @@ export default function OrderSuccessPage() {
               className="bg-[#25D366] hover:bg-[#20ba59] text-white px-6 py-3.5 rounded-xl text-xs font-bold uppercase tracking-wider flex items-center gap-2 transition-all shadow-md shadow-[#25D366]/20 cursor-pointer"
             >
               <MessageCircle className="w-4 h-4 fill-current" />
-              <span>Open in WhatsApp (8628805096)</span>
+              <span>Open in WhatsApp (7018861957)</span>
             </button>
 
             <Link
@@ -161,7 +161,7 @@ export default function OrderSuccessPage() {
                 <Building className="w-4 h-4 text-[#9b7842]" />
                 <span>Parkash Ceramics Concierge Dispatch Hub</span>
               </div>
-              <span className="font-bold text-[#151a22]">+91 86288 05096</span>
+              <span className="font-bold text-[#151a22]">+91 70188 61957</span>
             </div>
           </div>
         )}

@@ -87,7 +87,7 @@ export function Footer() {
               </div>
               <div className="flex items-center gap-2.5 text-[#374151]">
                 <Phone className="w-4 h-4 text-[#9b7842] shrink-0" />
-                <span>+91 86288 05096 (Direct Desk)</span>
+                <span>+91 70188 61957 (Direct Desk)</span>
               </div>
               <div className="flex items-center gap-2.5 text-[#374151]">
                 <Mail className="w-4 h-4 text-[#9b7842] shrink-0" />
