@@ -38,24 +38,34 @@ export default function AdminProductsPage() {
       if (res.ok) {
         const data = await res.json();
         if (data.products && Array.isArray(data.products)) {
-          const mapped = data.products.map((p: any) => ({
-            id: p.id,
-            name: p.name,
-            sku: p.sku,
-            category: p.category,
-            categorySlug: p.categorySlug,
-            price: p.price,
-            originalPrice: p.originalPrice,
-            stockCount: p.stockCount || 20,
-            stockStatus: (p.stockCount || 20) <= 5 ? "Low Stock" : "In Stock",
-            salesCount: p.salesCount || Math.floor(10 + Math.random() * 50),
-            totalRevenue: (p.price || 0) * (p.salesCount || 15),
-            finishes: p.finishes || ["Chrome"],
-            tagline: p.tagline,
-            description: p.description,
-            images: p.images || ["https://res.cloudinary.com/dtk1pspib/image/upload/v1788760648/parkash-ceramics/faucets.jpg"],
-            slug: p.slug,
-          }));
+          const mapped = data.products.map((p: any) => {
+            const stockCount = typeof p.stockCount === "number" ? p.stockCount : 0;
+            const stockStatus =
+              stockCount <= 0 ? "Out of Stock" : stockCount <= 5 ? "Low Stock" : "In Stock";
+            const salesCount = typeof p.salesCount === "number" ? p.salesCount : 0;
+            const totalRevenue = typeof p.totalRevenue === "number" ? p.totalRevenue : (p.price || 0) * salesCount;
+
+            return {
+              id: p.id,
+              name: p.name,
+              sku: p.sku,
+              category: p.category,
+              categorySlug: p.categorySlug,
+              price: p.price,
+              originalPrice: p.originalPrice,
+              stockCount,
+              stockStatus,
+              salesCount,
+              totalRevenue,
+              finishes: p.finishes || ["Chrome"],
+              tagline: p.tagline,
+              description: p.description,
+              images: p.images || ["https://res.cloudinary.com/dtk1pspib/image/upload/v1788760648/parkash-ceramics/faucets.jpg"],
+              slug: p.slug,
+              specs: p.specs,
+              warranty: p.warranty,
+            };
+          });
           setItems(mapped);
         }
       }
@@ -374,7 +384,7 @@ export default function AdminProductsPage() {
                         <div className="flex items-center gap-1.5">
                           <span
                             className={`w-2 h-2 rounded-full ${
-                              p.stockCount > 10
+                              p.stockCount > 5
                                 ? "bg-emerald-400"
                                 : p.stockCount > 0
                                 ? "bg-amber-400"
@@ -401,9 +411,15 @@ export default function AdminProductsPage() {
 
                     {/* Units Sold */}
                     <td className="p-4">
-                      <p className="font-semibold text-white">{p.salesCount} units</p>
-                      <p className="text-[10px] text-stone-400">
-                        ₹{(p.totalRevenue / 100000).toFixed(2)} L
+                      <p className="font-semibold text-white">
+                        {p.salesCount} {p.salesCount === 1 ? "unit" : "units"}
+                      </p>
+                      <p className="text-[10px] text-stone-400 font-medium">
+                        {p.totalRevenue === 0
+                          ? "₹0"
+                          : p.totalRevenue >= 100000
+                          ? `₹${(p.totalRevenue / 100000).toFixed(2)} L`
+                          : `₹${p.totalRevenue.toLocaleString("en-IN")}`}
                       </p>
                     </td>
 

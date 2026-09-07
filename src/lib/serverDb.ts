@@ -171,47 +171,104 @@ export async function getProducts(options?: {
         ];
       }
 
-      const products = await prisma.product.findMany({
-        where,
-        take: options?.limit,
-        orderBy: { createdAt: "desc" },
+      const [products, orderItems] = await Promise.all([
+        prisma.product.findMany({
+          where,
+          take: options?.limit,
+          orderBy: { createdAt: "desc" },
+        }),
+        (prisma as any).orderItem.findMany({
+          select: { sku: true, productName: true, quantity: true, price: true },
+        }).catch(() => []),
+      ]);
+
+      const salesMap: Record<string, { count: number; revenue: number }> = {};
+      (orderItems || []).forEach((item: any) => {
+        const key = item.sku || item.productName;
+        if (key) {
+          if (!salesMap[key]) salesMap[key] = { count: 0, revenue: 0 };
+          salesMap[key].count += item.quantity || 1;
+          salesMap[key].revenue += (item.price || 0) * (item.quantity || 1);
+        }
       });
 
-      return products.map((p): Product => ({
-        id: p.id,
-        name: p.name,
-        slug: p.slug,
-        category: p.category,
-        categorySlug: p.categorySlug,
-        subcategory: p.subcategory || undefined,
-        range: p.range || undefined,
-        tagline: p.tagline,
-        description: p.description,
-        price: p.price,
-        originalPrice: p.originalPrice || undefined,
-        sku: p.sku,
-        isFeatured: p.isFeatured,
-        isNew: p.isNew,
-        isBestseller: p.isBestseller,
-        finishes: p.finishes as any,
-        finishImages: (p.finishImages as Record<string, string>) || undefined,
-        finishPrices: (p.specs as any)?.finishPrices || undefined,
-        finishSkus: (p.specs as any)?.finishSkus || undefined,
-        finishStocks: (p.specs as any)?.finishStocks || undefined,
-        stockCount: p.stockCount,
-        images: p.images,
-        dimensions: p.dimensions || undefined,
-        flowRate: p.flowRate || undefined,
-        material: p.material || "Solid Forged Brass",
-        warranty: p.warranty || "15 Years Warranty",
-        rating: p.rating,
-        reviewsCount: p.reviewsCount,
-        features: p.features,
-        specs: (p.specs as Record<string, string>) || {},
-      }));
+      return products.map((p): Product => {
+        const finishStocks = (p.specs as any)?.finishStocks || undefined;
+        let calculatedStock = typeof p.stockCount === "number" ? p.stockCount : 0;
+        if (finishStocks && typeof finishStocks === "object") {
+          const vals = Object.values(finishStocks) as number[];
+          if (vals.length > 0) {
+            calculatedStock = vals.reduce((sum, v) => sum + (Number(v) || 0), 0);
+          }
+        }
+        const sales = salesMap[p.sku] || salesMap[p.name] || { count: 0, revenue: 0 };
+
+        return {
+          id: p.id,
+          name: p.name,
+          slug: p.slug,
+          category: p.category,
+          categorySlug: p.categorySlug,
+          subcategory: p.subcategory || undefined,
+          range: p.range || undefined,
+          tagline: p.tagline,
+          description: p.description,
+          price: p.price,
+          originalPrice: p.originalPrice || undefined,
+          sku: p.sku,
+          isFeatured: p.isFeatured,
+          isNew: p.isNew,
+          isBestseller: p.isBestseller,
+          finishes: p.finishes as any,
+          finishImages: (p.finishImages as Record<string, string>) || undefined,
+          finishPrices: (p.specs as any)?.finishPrices || undefined,
+          finishSkus: (p.specs as any)?.finishSkus || undefined,
+          finishStocks,
+          stockCount: calculatedStock,
+          salesCount: sales.count,
+          totalRevenue: sales.revenue,
+          images: p.images,
+          dimensions: p.dimensions || undefined,
+          flowRate: p.flowRate || undefined,
+          material: p.material || "Solid Forged Brass",
+          warranty: p.warranty || "15 Years Warranty",
+          rating: p.rating,
+          reviewsCount: p.reviewsCount,
+          features: p.features,
+          specs: (p.specs as Record<string, string>) || {},
+        };
+      });
     },
     () => {
-      let list = [...memoryProducts];
+      const salesMap: Record<string, { count: number; revenue: number }> = {};
+      memoryOrders.forEach((o) => {
+        o.items.forEach((item) => {
+          const key = item.sku || item.name;
+          if (key) {
+            if (!salesMap[key]) salesMap[key] = { count: 0, revenue: 0 };
+            salesMap[key].count += item.quantity || 1;
+            salesMap[key].revenue += (item.price || 0) * (item.quantity || 1);
+          }
+        });
+      });
+
+      let list = memoryProducts.map((p) => {
+        const finishStocks = p.finishStocks;
+        let calculatedStock = typeof p.stockCount === "number" ? p.stockCount : 0;
+        if (finishStocks && typeof finishStocks === "object") {
+          const vals = Object.values(finishStocks) as number[];
+          if (vals.length > 0) {
+            calculatedStock = vals.reduce((sum, v) => sum + (Number(v) || 0), 0);
+          }
+        }
+        const sales = salesMap[p.sku] || salesMap[p.name] || { count: 0, revenue: 0 };
+        return {
+          ...p,
+          stockCount: calculatedStock,
+          salesCount: sales.count,
+          totalRevenue: sales.revenue,
+        };
+      });
       if (options?.categorySlug && options.categorySlug !== "all") {
         list = list.filter((p) => p.categorySlug.toLowerCase() === options.categorySlug?.toLowerCase());
       }

@@ -14,7 +14,10 @@ import {
   Tag, 
   Sliders,
   Image as ImageIcon,
-  CheckCircle2
+  CheckCircle2,
+  Flame,
+  Award,
+  Star
 } from "lucide-react";
 import { CATEGORIES } from "@/lib/categories";
 import { FinishType } from "@/lib/types";
@@ -636,6 +639,127 @@ export default function AdminNewProductPage() {
             >
               Add Point
             </button>
+          </div>
+        </div>
+
+        {/* Step 5: Badges & Showcase Settings */}
+        <div className="p-6 rounded-2xl bg-[#141822] border border-stone-800 space-y-4">
+          <div className="flex items-center justify-between">
+            <h3 className="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
+              <Award className="w-4 h-4 text-[#dec49a]" />
+              5. Product Badges & Visibility
+            </h3>
+            <span className="text-xs text-stone-400">Manage tags & storefront promotional visibility</span>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-1">
+            {/* Bestseller Toggle */}
+            <div
+              onClick={() => setIsBestseller(!isBestseller)}
+              className={`p-4 rounded-xl border transition-all cursor-pointer select-none flex flex-col justify-between gap-3 ${
+                isBestseller
+                  ? "bg-[#9b7842]/20 border-[#9b7842] shadow-sm shadow-[#9b7842]/10"
+                  : "bg-[#1c222c]/60 border-stone-800 hover:border-stone-700"
+              }`}
+            >
+              <div className="flex items-start justify-between">
+                <div className="flex items-center gap-2.5">
+                  <div className={`p-2 rounded-lg ${isBestseller ? "bg-[#9b7842] text-white" : "bg-stone-800 text-stone-400"}`}>
+                    <Flame className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <div className="text-xs font-bold text-white">Bestseller Product</div>
+                    <div className="text-[11px] text-stone-400 mt-0.5">Top-selling signature item</div>
+                  </div>
+                </div>
+                <div
+                  className={`w-9 h-5 rounded-full transition-colors relative flex items-center p-0.5 ${
+                    isBestseller ? "bg-[#9b7842]" : "bg-stone-800 border border-stone-700"
+                  }`}
+                >
+                  <div
+                    className={`w-4 h-4 rounded-full bg-white transition-transform ${
+                      isBestseller ? "translate-x-4" : "translate-x-0"
+                    }`}
+                  />
+                </div>
+              </div>
+              <p className="text-[11px] text-stone-400">
+                Displays <span className="text-[#dec49a] font-semibold">Bestseller</span> badge and boosts ranking in recommendations.
+              </p>
+            </div>
+
+            {/* Featured Toggle */}
+            <div
+              onClick={() => setIsFeatured(!isFeatured)}
+              className={`p-4 rounded-xl border transition-all cursor-pointer select-none flex flex-col justify-between gap-3 ${
+                isFeatured
+                  ? "bg-[#9b7842]/20 border-[#9b7842] shadow-sm shadow-[#9b7842]/10"
+                  : "bg-[#1c222c]/60 border-stone-800 hover:border-stone-700"
+              }`}
+            >
+              <div className="flex items-start justify-between">
+                <div className="flex items-center gap-2.5">
+                  <div className={`p-2 rounded-lg ${isFeatured ? "bg-[#9b7842] text-white" : "bg-stone-800 text-stone-400"}`}>
+                    <Star className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <div className="text-xs font-bold text-white">Featured Product</div>
+                    <div className="text-[11px] text-stone-400 mt-0.5">Showcase on homepage</div>
+                  </div>
+                </div>
+                <div
+                  className={`w-9 h-5 rounded-full transition-colors relative flex items-center p-0.5 ${
+                    isFeatured ? "bg-[#9b7842]" : "bg-stone-800 border border-stone-700"
+                  }`}
+                >
+                  <div
+                    className={`w-4 h-4 rounded-full bg-white transition-transform ${
+                      isFeatured ? "translate-x-4" : "translate-x-0"
+                    }`}
+                  />
+                </div>
+              </div>
+              <p className="text-[11px] text-stone-400">
+                Highlights product in curated architectural collections & catalog hero.
+              </p>
+            </div>
+
+            {/* New Arrival Toggle */}
+            <div
+              onClick={() => setIsNew(!isNew)}
+              className={`p-4 rounded-xl border transition-all cursor-pointer select-none flex flex-col justify-between gap-3 ${
+                isNew
+                  ? "bg-[#9b7842]/20 border-[#9b7842] shadow-sm shadow-[#9b7842]/10"
+                  : "bg-[#1c222c]/60 border-stone-800 hover:border-stone-700"
+              }`}
+            >
+              <div className="flex items-start justify-between">
+                <div className="flex items-center gap-2.5">
+                  <div className={`p-2 rounded-lg ${isNew ? "bg-[#9b7842] text-white" : "bg-stone-800 text-stone-400"}`}>
+                    <Sparkles className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <div className="text-xs font-bold text-white">New Arrival</div>
+                    <div className="text-[11px] text-stone-400 mt-0.5">New launch collection</div>
+                  </div>
+                </div>
+                <div
+                  className={`w-9 h-5 rounded-full transition-colors relative flex items-center p-0.5 ${
+                    isNew ? "bg-[#9b7842]" : "bg-stone-800 border border-stone-700"
+                  }`}
+                >
+                  <div
+                    className={`w-4 h-4 rounded-full bg-white transition-transform ${
+                      isNew ? "translate-x-4" : "translate-x-0"
+                    }`}
+                  />
+                </div>
+              </div>
+              <p className="text-[11px] text-stone-400">
+                Displays <span className="text-[#dec49a] font-semibold">NEW</span> badge tag on product cards across the website.
+              </p>
+            </div>
           </div>
         </div>
 

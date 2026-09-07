@@ -56,6 +56,8 @@ export interface Product {
   reviewsCount: number;
   features: string[];
   specs: Record<string, string>;
+  salesCount?: number;
+  totalRevenue?: number;
 }
 
 export interface EnquiryItem {
