@@ -31,10 +31,10 @@ export async function generateMetadata(): Promise<Metadata> {
   const homeSeo = await getPageSeoByPath("/");
   const title =
     homeSeo?.title ||
-    "PARKASH CERAMICS | Luxury Bathrooms, Sanitaryware & Wellness Solutions";
+    "PRAKASH CERAMICS | Luxury Bathrooms, Sanitaryware & Wellness Solutions";
   const description =
     homeSeo?.description ||
-    "Explore Parkash Ceramics' signature collection of premium architectural faucets, hydrotherapy showers, freestanding bathtubs, saunas, and luxury sanitaryware.";
+    "Explore Prakash Ceramics' signature collection of premium architectural faucets, hydrotherapy showers, freestanding bathtubs, saunas, and luxury sanitaryware.";
 
   return {
     title,
@@ -42,7 +42,7 @@ export async function generateMetadata(): Promise<Metadata> {
     keywords: homeSeo?.keywords
       ? homeSeo.keywords.split(",").map((k) => k.trim())
       : [
-          "Parkash Ceramics",
+          "Prakash Ceramics",
           "luxury bathroom",
           "sanitaryware",
           "faucets",
@@ -52,12 +52,12 @@ export async function generateMetadata(): Promise<Metadata> {
           "steam bath",
           "architectural fittings",
         ],
-    authors: [{ name: "Parkash Ceramics" }],
+    authors: [{ name: "Prakash Ceramics" }],
     openGraph: {
       title,
       description,
-      url: "https://parkashceramics.com",
-      siteName: "Parkash Ceramics",
+      url: "https://prakashceramic.com",
+      siteName: "Prakash Ceramics",
       images: [
         {
           url:
@@ -65,7 +65,7 @@ export async function generateMetadata(): Promise<Metadata> {
             "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&q=80&w=1200",
           width: 1200,
           height: 630,
-          alt: "Parkash Ceramics Luxury Bathroom Suite",
+          alt: "Prakash Ceramics Luxury Bathroom Suite",
         },
       ],
       locale: "en_IN",

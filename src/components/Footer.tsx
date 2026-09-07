@@ -87,7 +87,7 @@ export function Footer() {
             </Link>
 
             <p className="text-xs text-[#6b7280] leading-relaxed max-w-sm">
-              Parkash Ceramics is a benchmark purveyor of luxury sanitaryware, high-performance shower systems, freestanding soaking bathtubs, and wellness hydro-spas for discerning residences, hospitality resorts, and architectural landmarks.
+              Prakash Ceramics is a benchmark purveyor of luxury sanitaryware, high-performance shower systems, freestanding soaking bathtubs, and wellness hydro-spas for discerning residences, hospitality resorts, and architectural landmarks.
             </p>
 
             <div className="pt-2 space-y-2 text-xs">
@@ -97,11 +97,11 @@ export function Footer() {
               </div>
               <div className="flex items-center gap-2.5 text-[#374151]">
                 <Phone className="w-4 h-4 text-[#9b7842] shrink-0" />
-                <span>+91 70188 61957 (Direct Desk)</span>
+                <span>+91 91480 03924 (Direct Desk)</span>
               </div>
               <div className="flex items-center gap-2.5 text-[#374151]">
                 <Mail className="w-4 h-4 text-[#9b7842] shrink-0" />
-                <span>concierge@parkashceramics.com</span>
+                <span>sales@prakashceramic.com</span>
               </div>
               <div className="flex items-center gap-2.5 text-[#374151]">
                 <Clock className="w-4 h-4 text-[#9b7842] shrink-0" />
@@ -196,7 +196,7 @@ export function Footer() {
       {/* Copyright & Disclaimer */}
       <div className="border-t border-[#ede8df] py-6 bg-[#f0ede6]">
         <div className="max-w-[1600px] mx-auto px-4 sm:px-8 lg:px-12 flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px] text-[#6b7280]">
-          <p>© {new Date().getFullYear()} PARKASH CERAMICS. All Rights Reserved. Precision sanitaryware & luxury wellness.</p>
+          <p>© {new Date().getFullYear()} PRAKASH CERAMICS. All Rights Reserved. Precision sanitaryware & luxury wellness.</p>
           <div className="flex items-center gap-6">
             <span className="hover:text-[#151a22] cursor-pointer">Privacy Policy</span>
             <span className="hover:text-[#151a22] cursor-pointer">Terms of Service</span>

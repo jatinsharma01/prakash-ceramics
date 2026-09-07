@@ -115,7 +115,7 @@ export default function ContactPage() {
                 <div className="flex items-start gap-3">
                   <MapPin className="w-4 h-4 text-[#9b7842] shrink-0 mt-0.5" />
                   <div>
-                    <strong className="text-[#151a22] block">Parkash Ceramics Experience Center</strong>
+                    <strong className="text-[#151a22] block">Prakash Ceramics Experience Center</strong>
                     <p className="text-[#6b7280] mt-0.5">Plot No. 42, Marble Market Avenue, Main Bath Boulevard, New Delhi / NCR, India</p>
                   </div>
                 </div>
@@ -123,16 +123,15 @@ export default function ContactPage() {
                 <div className="flex items-center gap-3">
                   <Phone className="w-4 h-4 text-[#9b7842] shrink-0" />
                   <div>
-                    <p className="text-[#151a22] font-semibold">+91 70188 61957 (Showroom & WhatsApp)</p>
-                    <p className="text-[#6b7280]">+91 70188 61957 (Direct Desk)</p>
+                    <p className="text-[#151a22] font-semibold">+91 91480 03924 (Showroom & WhatsApp)</p>
+                    <p className="text-[#6b7280]">+91 91480 03924 (Direct Desk)</p>
                   </div>
                 </div>
 
                 <div className="flex items-center gap-3">
                   <Mail className="w-4 h-4 text-[#9b7842] shrink-0" />
                   <div>
-                    <p className="text-[#151a22] font-semibold">concierge@parkashceramics.com</p>
-                    <p className="text-[#6b7280]">projects@parkashceramics.com</p>
+                    <p className="text-[#151a22] font-semibold">sales@prakashceramic.com</p>
                   </div>
                 </div>
 
@@ -147,7 +146,7 @@ export default function ContactPage() {
 
               {/* Call Showroom Desk */}
               <a
-                href="tel:+917018861957"
+                href="tel:+919148003924"
                 className="w-full mt-6 bg-[#1c1815] hover:bg-[#9b7842] text-white font-semibold py-3 rounded-xl text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition-colors shadow-sm"
               >
                 <Phone className="w-4 h-4" />
@@ -200,7 +199,7 @@ export default function ContactPage() {
                       Appointment Request Received
                     </h3>
                     <p className="text-xs text-emerald-700 max-w-sm mx-auto leading-relaxed">
-                      Thank you! A dedicated Parkash Ceramics luxury bath consultant will contact you via WhatsApp and phone to confirm your schedule.
+                      Thank you! A dedicated Prakash Ceramics luxury bath consultant will contact you via WhatsApp and phone to confirm your schedule.
                     </p>
                   </motion.div>
                 ) : (

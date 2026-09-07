@@ -42,7 +42,7 @@ import { clsx } from "clsx";
 const HERO_CONTENT = {
   badge: "The Architecture of Water",
   headline: "Sculptural Luxury For Discerning Bathrooms",
-  subtitle: "Parkash Ceramics crafts architectural faucets, hydro-sensory rainfall showers, seamless bathtubs, and wellness sanctuaries engineered to perfection.",
+  subtitle: "Prakash Ceramics crafts architectural faucets, hydro-sensory rainfall showers, seamless bathtubs, and wellness sanctuaries engineered to perfection.",
   primaryCta: "Explore 2026 Collection",
   primaryHref: "/products",
   secondaryCta: "Consult Architect & Tour",
@@ -392,7 +392,7 @@ export default function HomePage() {
                   <div className="absolute inset-0 z-0">
                     <ProductImage
                       src={cat.image}
-                      alt={`${cat.name} by Parkash Ceramics`}
+                      alt={`${cat.name} by Prakash Ceramics`}
                       fill
                       className={clsx(
                         "object-cover transition-transform duration-700",
@@ -541,7 +541,7 @@ export default function HomePage() {
         <div className="absolute inset-0 z-0">
           <ProductImage
             src="https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&q=80&w=2400"
-            alt="Parkash Ceramics Luxury Hydrotherapy Master Bathroom"
+            alt="Prakash Ceramics Luxury Hydrotherapy Master Bathroom"
             fill
             className="object-cover object-center"
             containerClassName="w-full h-full"
@@ -592,7 +592,7 @@ export default function HomePage() {
               The Penthouse Villa Lookbook
             </h2>
             <p className="text-sm sm:text-base text-[#6b7280]">
-              Click on the glowing hotspots to reveal individual Parkash Ceramics fittings integrated into this marble master bathroom.
+              Click on the glowing hotspots to reveal individual Prakash Ceramics fittings integrated into this marble master bathroom.
             </p>
           </MotionReveal>
 
@@ -600,7 +600,7 @@ export default function HomePage() {
           <MotionReveal direction="scale" className="relative aspect-[16/9] w-full rounded-3xl overflow-hidden border border-[#d8d2c6] shadow-lg bg-black">
             <ProductImage
               src="https://images.unsplash.com/photo-1620626011761-996317b8d101?auto=format&fit=crop&q=80&w=2400"
-              alt="Parkash Ceramics Luxury Master Bathroom Suite Lookbook"
+              alt="Prakash Ceramics Luxury Master Bathroom Suite Lookbook"
               fill
               className="object-cover"
               sizes="100vw"
@@ -896,7 +896,7 @@ export default function HomePage() {
         <div className="absolute inset-0 z-0">
           <ProductImage
             src="https://images.unsplash.com/photo-1600566753376-12c8ab7fb75b?auto=format&fit=crop&q=80&w=2400"
-            alt="Parkash Ceramics Architectural Benchmark"
+            alt="Prakash Ceramics Architectural Benchmark"
             fill
             className="object-cover object-center"
             containerClassName="w-full h-full"
@@ -920,7 +920,7 @@ export default function HomePage() {
               </h2>
 
               <p className="text-xs sm:text-sm text-neutral-200 leading-relaxed max-w-2xl">
-                Every Parkash Ceramics fixture undergoes 50-bar hydrodynamic pressure validation, Swiss ceramic cartridge cycle testing, and PVD molecular vacuum coating to exceed international hospitality and luxury residential standards.
+                Every Prakash Ceramics fixture undergoes 50-bar hydrodynamic pressure validation, Swiss ceramic cartridge cycle testing, and PVD molecular vacuum coating to exceed international hospitality and luxury residential standards.
               </p>
 
               <div className="flex flex-wrap items-center gap-4 pt-3">
@@ -1003,7 +1003,7 @@ export default function HomePage() {
               <div className="relative aspect-[3/4] rounded-2xl overflow-hidden border border-[#e5e0d8] shadow-md bg-white">
                 <ProductImage
                   src="https://images.unsplash.com/photo-1595846519845-68e298c2edd8?auto=format&fit=crop&q=80&w=1000"
-                  alt="Parkash Ceramics Precision Faucet Engineering"
+                  alt="Prakash Ceramics Precision Faucet Engineering"
                   fill
                   className="object-cover"
                 />
@@ -1040,7 +1040,7 @@ export default function HomePage() {
             <MotionReveal direction="left" className="lg:pl-6">
               <div className="flex items-center gap-2 text-xs uppercase tracking-[0.25em] text-[#9b7842] font-semibold mb-3">
                 <Award className="w-3.5 h-3.5" />
-                <span>The Parkash Ceramics Benchmark</span>
+                <span>The Prakash Ceramics Benchmark</span>
               </div>
 
               <h2 className="text-3xl sm:text-4xl lg:text-5xl font-serif font-semibold text-[#151a22] tracking-tight leading-tight mb-6">
@@ -1048,7 +1048,7 @@ export default function HomePage() {
               </h2>
 
               <p className="text-sm sm:text-base text-[#374151] leading-relaxed mb-6">
-                For over two decades, Parkash Ceramics has supplied visionary architects, interior designers, and luxury homeowners with bathroom fixtures that transcend utility. We combine German ceramic cartridge precision, French thermostatic regulation, and Physical Vapor Deposition (PVD) to deliver surfaces that remain immaculate for a lifetime.
+                For over two decades, Prakash Ceramics has supplied visionary architects, interior designers, and luxury homeowners with bathroom fixtures that transcend utility. We combine German ceramic cartridge precision, French thermostatic regulation, and Physical Vapor Deposition (PVD) to deliver surfaces that remain immaculate for a lifetime.
               </p>
 
               <div className="space-y-4 mb-8">
@@ -1146,7 +1146,7 @@ export default function HomePage() {
                           Tour Request Confirmed
                         </h4>
                         <p className="text-xs text-emerald-700 max-w-md mx-auto leading-relaxed">
-                          Thank you! A dedicated Parkash Ceramics bath concierge will reach out via WhatsApp (+91 70188 61957) to confirm your schedule and prepare custom displays.
+                          Thank you! A dedicated Prakash Ceramics bath concierge will reach out via WhatsApp (+91 91480 03924) to confirm your schedule and prepare custom displays.
                         </p>
                       </motion.div>
                     ) : (
@@ -1297,7 +1297,7 @@ export default function HomePage() {
 
                 {/* Full Bleed Google Map Iframe */}
                 <iframe
-                  title="Parkash Ceramics Flagship Location"
+                  title="Prakash Ceramics Flagship Location"
                   src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d248849.886539092!2d77.49085449760773!3d12.95395998811883!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bae1670c9b44e6d%3A0xf8dfc3e8517e4fe0!2sBengaluru%2C%20Karnataka!5e0!3m2!1sen!2sin!4v1700000000000!5m2!1sen!2sin"
                   width="100%"
                   height="100%"

@@ -6,7 +6,7 @@ let memoryAdmin = {
   id: "admin-default",
   email: "admin-parkash@gmail.com",
   password: "123456",
-  name: "Parkash Executive Admin",
+  name: "Prakash Executive Admin",
   role: "Super Admin",
 };
 

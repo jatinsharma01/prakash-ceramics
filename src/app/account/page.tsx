@@ -532,7 +532,7 @@ function AccountContent() {
                 </div>
                 <div className="mt-5">
                   <a
-                    href="https://wa.me/917018861957?text=Hello%20Parkash%20Ceramics,%20I%20need%20assistance%20with%20my%20order."
+                    href="https://wa.me/919148003924?text=Hello%20Prakash%20Ceramics,%20I%20need%20assistance%20with%20my%20order."
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-2 bg-[#1c1815] hover:bg-[#9b7842] text-white text-xs font-bold px-5 py-3 rounded-xl transition-all shadow-sm"
@@ -706,7 +706,7 @@ function AccountContent() {
                             )}
                           </div>
                           <a
-                            href={`https://wa.me/917018861957?text=Hello%20Parkash%20Ceramics,%20inquiry%20regarding%20Order%20${encodeURIComponent(order.orderNumber)}`}
+                            href={`https://wa.me/919148003924?text=Hello%20Prakash%20Ceramics,%20inquiry%20regarding%20Order%20${encodeURIComponent(order.orderNumber)}`}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="text-[#9b7842] hover:underline font-bold inline-flex items-center gap-1"

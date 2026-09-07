@@ -62,7 +62,7 @@ export function ProductImage({
         <div className="absolute inset-0 z-10 flex items-center justify-center bg-gradient-to-r from-[#ede8df] via-[#f7f5f0] to-[#ede8df] animate-pulse">
           <div className="flex items-center gap-2 text-[#84786d] text-xs font-mono uppercase tracking-widest">
             <Sparkles className="w-3.5 h-3.5 animate-spin text-[#9b7842]" />
-            <span>Parkash Ceramics</span>
+            <span>Prakash Ceramics</span>
           </div>
         </div>
       )}
@@ -71,14 +71,14 @@ export function ProductImage({
       {hasError && imgSrc === fallbackSrc && (
         <div className="absolute inset-0 z-0 flex flex-col items-center justify-center bg-[#fbf9f5] text-[#84786d] p-4 text-center">
           <ImageOff className="w-8 h-8 text-[#b5aba0] mb-2" />
-          <p className="text-xs uppercase tracking-wider font-semibold text-[#151a22]">Parkash Ceramics</p>
+          <p className="text-xs uppercase tracking-wider font-semibold text-[#151a22]">Prakash Ceramics</p>
           <p className="text-[10px] text-[#84786d] mt-1">Premium Sanitaryware</p>
         </div>
       )}
 
       <Image
         src={imgSrc}
-        alt={alt || "Parkash Ceramics Luxury Bathroom Product"}
+        alt={alt || "Prakash Ceramics Luxury Bathroom Product"}
         fill={fill}
         width={!fill ? width || 800 : undefined}
         height={!fill ? height || 800 : undefined}

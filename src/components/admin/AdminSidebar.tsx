@@ -121,7 +121,7 @@ export function AdminSidebar() {
             <div className="w-full h-full bg-[#12161f] rounded-[10px] p-1 flex items-center justify-center relative overflow-hidden">
               <Image
                 src="/pc-mark.png"
-                alt="Parkash Ceramics Logo"
+                alt="Prakash Ceramics Logo"
                 fill
                 priority
                 sizes="50px"
@@ -132,7 +132,7 @@ export function AdminSidebar() {
           <div>
             <div className="flex items-center gap-2">
               <span className="font-serif tracking-widest text-sm font-bold text-white uppercase">
-                Parkash
+                Prakash
               </span>
               <span className="text-[10px] font-semibold tracking-wider uppercase px-2 py-0.5 rounded-full bg-[#9b7842]/20 text-[#dec49a] border border-[#9b7842]/30">
                 Admin
@@ -251,7 +251,7 @@ export function AdminSidebar() {
           </div>
           <div className="flex-1 min-w-0">
             <p className="text-xs font-semibold text-white truncate">
-              Parkash Admin
+              Prakash Admin
             </p>
             <p className="text-[10px] text-stone-400 truncate font-mono">
               admin-parkash@gmail.com

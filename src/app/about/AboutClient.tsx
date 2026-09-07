@@ -28,7 +28,7 @@ export default function AboutClient() {
         <div className="absolute inset-0 z-0">
           <ProductImage
             src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&q=80&w=2000"
-            alt="Parkash Ceramics Design Studio & Heritage"
+            alt="Prakash Ceramics Design Studio & Heritage"
             fill
             priority
             className="object-cover"
@@ -63,7 +63,7 @@ export default function AboutClient() {
             transition={{ duration: 0.7, delay: 0.3 }}
             className="text-base sm:text-lg text-neutral-200 max-w-2xl font-normal leading-relaxed"
           >
-            Parkash Ceramics was founded with a singular purpose: to elevate bathing from a daily routine into an architectural and sensory ritual of well-being.
+            Prakash Ceramics was founded with a singular purpose: to elevate bathing from a daily routine into an architectural and sensory ritual of well-being.
           </motion.p>
         </div>
       </div>
@@ -81,7 +81,7 @@ export default function AboutClient() {
               Precision Engineering Meets Timeless Materiality
             </h2>
             <p className="text-sm text-[#374151] leading-relaxed mb-4">
-              At Parkash Ceramics, every curve, valve, and ceramic contour is sculpted with obsessive attention to fluid mechanics and tactile ergonomics. We believe luxury is not merely decorative — it is the effortless glide of a ceramic cartridge, the silent cascade of aerated rainfall, and the warmth of perfectly calibrated thermostatic water.
+              At Prakash Ceramics, every curve, valve, and ceramic contour is sculpted with obsessive attention to fluid mechanics and tactile ergonomics. We believe luxury is not merely decorative — it is the effortless glide of a ceramic cartridge, the silent cascade of aerated rainfall, and the warmth of perfectly calibrated thermostatic water.
             </p>
             <p className="text-sm text-[#374151] leading-relaxed">
               Our products are specified across India’s most prestigious private villas, luxury penthouses, boutique wellness resorts, and commercial architectural landmarks.
@@ -91,7 +91,7 @@ export default function AboutClient() {
           <MotionReveal direction="left" className="relative aspect-[4/3] rounded-3xl overflow-hidden border border-[#d8d2c6] shadow-xl bg-white">
             <ProductImage
               src="https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&q=80&w=1200"
-              alt="Parkash Ceramics Architectural Bath Suite"
+              alt="Prakash Ceramics Architectural Bath Suite"
               fill
               className="object-cover"
               sizes="50vw"
@@ -157,7 +157,7 @@ export default function AboutClient() {
                 Flagship Destination
               </span>
               <h2 className="text-3xl sm:text-4xl font-serif font-semibold text-[#151a22] tracking-tight mb-4">
-                The Parkash Ceramics Experience Center
+                The Prakash Ceramics Experience Center
               </h2>
               <p className="text-xs sm:text-sm text-[#4b5563] leading-relaxed mb-6">
                 Explore fully plumbed live hydrotherapy showers, test pneumatic whirlpool bathtubs, and step inside real Canadian red cedar sauna cabins. Our senior project architects are on hand to review floor plans and recommend ideal rough-in placements.
@@ -188,7 +188,7 @@ export default function AboutClient() {
             <div className="relative aspect-[4/3] rounded-2xl overflow-hidden border border-[#d8d2c6] shadow-xl bg-white">
               <ProductImage
                 src="https://images.unsplash.com/photo-1540518614846-7ede433c4550?auto=format&fit=crop&q=80&w=1000"
-                alt="Parkash Ceramics Flagship Showroom Interior"
+                alt="Prakash Ceramics Flagship Showroom Interior"
                 fill
                 className="object-cover"
                 sizes="50vw"

@@ -216,7 +216,7 @@ export default function CheckoutPage() {
     }
 
     // Format WhatsApp message
-    let message = `*PARKASH CERAMICS — CONFIRMED ORDER & PROJECT DISPATCH*\n`;
+    let message = `*PRAKASH CERAMICS — CONFIRMED ORDER & PROJECT DISPATCH*\n`;
     message += `*Order ID:* ${orderData.orderId}\n\n`;
     message += `*CLIENT & DELIVERY ADDRESS:*\n`;
     message += `• Name: ${formData.fullName}\n`;
@@ -241,7 +241,7 @@ export default function CheckoutPage() {
     message += `Please confirm dispatch slot and provide official tax invoice.`;
 
     const encoded = encodeURIComponent(message);
-    const waUrl = `https://wa.me/917018861957?text=${encoded}`;
+    const waUrl = `https://wa.me/919148003924?text=${encoded}`;
 
     // Open WhatsApp in new tab and redirect to success page
     window.open(waUrl, "_blank");
@@ -699,7 +699,7 @@ export default function CheckoutPage() {
               className="w-full bg-[#25D366] hover:bg-[#20ba59] text-white py-4 rounded-xl text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 transition-all shadow-lg shadow-[#25D366]/25 hover:scale-[1.02] cursor-pointer"
             >
               <MessageCircle className="w-4 h-4 fill-current" />
-              <span>Place Order & Send to WhatsApp (7018861957)</span>
+              <span>Place Order & Send to WhatsApp (+91 91480 03924)</span>
             </button>
 
             <div className="flex items-center justify-center gap-2 text-[11px] text-[#84786d] text-center">

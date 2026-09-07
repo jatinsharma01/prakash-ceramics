@@ -7,7 +7,7 @@ export const revalidate = 0;
 
 export async function generateMetadata(): Promise<Metadata> {
   const seo = await getPageSeoByPath("/about");
-  const title = seo?.title || "Our Heritage & Craftsmanship | PARKASH CERAMICS";
+  const title = seo?.title || "Our Heritage & Craftsmanship | PRAKASH CERAMICS";
   const description =
     seo?.description ||
     "Over 35 years of engineering excellence, partnering with Swiss and German cartridge makers to craft bespoke luxury bath fittings and wellness sanctuaries.";

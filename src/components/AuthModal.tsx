@@ -57,13 +57,13 @@ export function AuthModal() {
       if (!res.success) {
         setError(res.message || "Registration failed. Please check the details.");
       } else {
-        setSuccess("Welcome to Parkash Ceramics! Your account is created.");
+        setSuccess("Welcome to Prakash Ceramics! Your account is created.");
       }
     }
   };
 
   const fillDemo = () => {
-    setEmail("client@parkash.com");
+    setEmail("client@prakashceramic.com");
     setPassword("password123");
     setError(null);
   };
@@ -105,7 +105,7 @@ export function AuthModal() {
               <span>Client & Architect Portal</span>
             </div>
             <h2 className="text-2xl font-serif font-bold text-[#151a22]">
-              {authModalMode === "login" ? "Welcome Back" : "Join Parkash Ceramics"}
+              {authModalMode === "login" ? "Welcome Back" : "Join Prakash Ceramics"}
             </h2>
             <p className="text-xs text-stone-500 mt-1">
               {authModalMode === "login"
@@ -223,7 +223,7 @@ export function AuthModal() {
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="client@parkash.com"
+                  placeholder="client@prakashceramic.com"
                   className="w-full bg-[#fbf9f7] border border-[#ded5cb] rounded-xl pl-10 pr-3.5 py-2.5 text-xs text-[#151a22] placeholder-stone-400 focus:outline-none focus:border-[#9b7842]"
                 />
               </div>
@@ -265,7 +265,7 @@ export function AuthModal() {
                   <KeyRound className="w-3 h-3" />
                   <span>Auto-fill Demo Account</span>
                 </button>
-                <span className="text-[11px] text-stone-400">client@parkash.com</span>
+                <span className="text-[11px] text-stone-400">client@prakashceramic.com</span>
               </div>
             )}
 

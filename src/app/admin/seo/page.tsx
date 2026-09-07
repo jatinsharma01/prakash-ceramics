@@ -347,11 +347,11 @@ export default function AdminSeoPage() {
                     P
                   </div>
                   <span className="text-xs text-stone-700">
-                    parkashceramics.com › products › {selectedProduct.slug}
+                    prakashceramic.com › products › {selectedProduct.slug}
                   </span>
                 </div>
                 <h3 className="text-base text-[#1a0dab] font-medium hover:underline line-clamp-1">
-                  {selectedProduct.name} | PARKASH CERAMICS
+                  {selectedProduct.name} | PRAKASH CERAMICS
                 </h3>
                 <p className="text-xs text-stone-600 mt-1 line-clamp-2 leading-relaxed">
                   {selectedProduct.description || selectedProduct.tagline}
@@ -522,7 +522,7 @@ export default function AdminSeoPage() {
                             P
                           </div>
                           <span className="text-xs text-stone-700 truncate">
-                            parkashceramics.com {item.path === "/" ? "" : `› ${item.path.replace("/", "")}`}
+                            prakashceramic.com {item.path === "/" ? "" : `› ${item.path.replace("/", "")}`}
                           </span>
                         </div>
                         <h4 className="text-base text-[#1a0dab] font-medium hover:underline line-clamp-1 leading-snug">
@@ -625,7 +625,7 @@ export default function AdminSeoPage() {
                   <input
                     type="text"
                     required
-                    placeholder="e.g. Luxury Architectural Faucets & Bathware | PARKASH CERAMICS"
+                    placeholder="e.g. Luxury Architectural Faucets & Bathware | PRAKASH CERAMICS"
                     value={formData.title}
                     onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                     className="w-full bg-[#1c222c] border border-stone-700 text-xs text-white px-3.5 py-2.5 rounded-xl focus:border-[#9b7842] focus:outline-hidden"
@@ -679,11 +679,11 @@ export default function AdminSeoPage() {
                         P
                       </div>
                       <span className="text-xs text-stone-700 truncate">
-                        parkashceramics.com {formData.path === "/" ? "" : `› ${formData.path.replace("/", "")}`}
+                        prakashceramic.com {formData.path === "/" ? "" : `› ${formData.path.replace("/", "")}`}
                       </span>
                     </div>
                     <h4 className="text-base text-[#1a0dab] font-medium hover:underline line-clamp-1 leading-snug">
-                      {formData.title || "Your Page Title Goes Here | PARKASH CERAMICS"}
+                      {formData.title || "Your Page Title Goes Here | PRAKASH CERAMICS"}
                     </h4>
                     <p className="text-xs text-stone-600 mt-1 line-clamp-2 leading-relaxed">
                       {formData.description || "Your compelling meta description will appear here on Google search result pages..."}

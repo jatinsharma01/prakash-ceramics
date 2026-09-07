@@ -61,7 +61,7 @@ let memoryCustomerUsers: CustomerUserRecord[] = [
   {
     id: "cust-demo-1",
     name: "Rajesh Malhotra",
-    email: "client@parkash.com",
+    email: "client@prakashceramic.com",
     phone: "+91 98101 23456",
     password: "password123",
     avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=200",
@@ -512,7 +512,7 @@ export async function getUserOrders(userEmail: string, userPhone?: string): Prom
     const phoneMatch = cleanPhone && oPhone ? oPhone === cleanPhone : false;
 
     // For demo customer account, link active orders for immediate live tracking preview
-    if (emailLower === "client@parkash.com" || emailLower === "ananya.d@gmail.com") {
+    if (emailLower === "client@prakashceramic.com" || emailLower === "client@parkash.com" || emailLower === "ananya.d@gmail.com") {
       if (
         o.orderNumber === "PC-ORD-8942" ||
         o.orderNumber === "PC-ORD-8941" ||
@@ -607,7 +607,7 @@ export async function getAllCustomersForAdmin(): Promise<RegisteredCustomerAdmin
           const oPhone = o.customer.phone ? o.customer.phone.replace(/[^0-9]/g, "").slice(-10) : "";
           const oName = o.customer.name ? o.customer.name.toLowerCase().trim() : "";
 
-          if (emailLower === "client@parkash.com" || emailLower === "ananya.d@gmail.com") {
+          if (emailLower === "client@prakashceramic.com" || emailLower === "client@parkash.com" || emailLower === "ananya.d@gmail.com") {
             if (["PC-ORD-8942", "PC-ORD-8941", "PC-ORD-822453", "PC-ORD-368675"].includes(o.orderNumber)) return true;
           }
           const emailMatch = emailLower && oEmail === emailLower;
@@ -654,7 +654,7 @@ export async function getAllCustomersForAdmin(): Promise<RegisteredCustomerAdmin
           const oPhone = o.customer.phone ? o.customer.phone.replace(/[^0-9]/g, "").slice(-10) : "";
           const oName = o.customer.name ? o.customer.name.toLowerCase().trim() : "";
 
-          if (emailLower === "client@parkash.com" || emailLower === "ananya.d@gmail.com") {
+          if (emailLower === "client@prakashceramic.com" || emailLower === "client@parkash.com" || emailLower === "ananya.d@gmail.com") {
             if (["PC-ORD-8942", "PC-ORD-8941", "PC-ORD-822453", "PC-ORD-368675"].includes(o.orderNumber)) return true;
           }
           const emailMatch = emailLower && oEmail === emailLower;
