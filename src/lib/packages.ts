@@ -49,7 +49,7 @@ export const BATHROOM_PACKAGES: BathroomPackage[] = [
         finish: "Gold Bright PVD",
         sku: "FUP-GBP-29005BPM",
         price: 10300,
-        image: "/images/faucets/single-lever-tall-boy/0057108_single-lever-tall-boy-gold-bright-pvd_960.jpeg",
+        image: "https://res.cloudinary.com/dtk1pspib/image/upload/v1788760554/parkash-ceramics/0057108_single-lever-tall-boy-gold-bright-pvd_960.jpg",
         productId: "prod-faucet-01"
       },
       {
@@ -58,7 +58,7 @@ export const BATHROOM_PACKAGES: BathroomPackage[] = [
         finish: "Gold Bright PVD",
         sku: "FUP-GBP-29011BPM",
         price: 9400,
-        image: "/images/faucets/single-lever-basin/0057135_single-lever-basin-mixer-with-popup-waste-gold-bright-pvd_960.jpeg",
+        image: "https://res.cloudinary.com/dtk1pspib/image/upload/v1788760559/parkash-ceramics/0057135_single-lever-basin-mixer-with-popup-waste-gold-bright-pvd_960.jpg",
         productId: "prod-faucet-02"
       },
       {
@@ -100,7 +100,7 @@ export const BATHROOM_PACKAGES: BathroomPackage[] = [
         finish: "Black Matt",
         sku: "FUP-BMT-29005BPM",
         price: 10300,
-        image: "/images/faucets/single-lever-tall-boy/0057106_single-lever-tall-boy-black-matt_960.jpeg",
+        image: "https://res.cloudinary.com/dtk1pspib/image/upload/v1788760551/parkash-ceramics/0057106_single-lever-tall-boy-black-matt_960.jpg",
         productId: "prod-faucet-01"
       },
       {
@@ -109,7 +109,7 @@ export const BATHROOM_PACKAGES: BathroomPackage[] = [
         finish: "Black Matt",
         sku: "FUP-BMT-29011BPM",
         price: 9400,
-        image: "/images/faucets/single-lever-basin/0057133_single-lever-basin-mixer-with-popup-waste-black-matt_960.jpeg",
+        image: "https://res.cloudinary.com/dtk1pspib/image/upload/v1788760557/parkash-ceramics/0057133_single-lever-basin-mixer-with-popup-waste-black-matt_960.jpg",
         productId: "prod-faucet-02"
       },
       {
@@ -151,7 +151,7 @@ export const BATHROOM_PACKAGES: BathroomPackage[] = [
         finish: "Chrome",
         sku: "FUP-CHM-29005BPM",
         price: 10300,
-        image: "/images/faucets/single-lever-tall-boy/0059263_single-lever-tall-boy-chrome_960.jpeg",
+        image: "https://res.cloudinary.com/dtk1pspib/image/upload/v1788760562/parkash-ceramics/0059263_single-lever-tall-boy-chrome_960.jpg",
         productId: "prod-faucet-01"
       },
       {
@@ -160,7 +160,7 @@ export const BATHROOM_PACKAGES: BathroomPackage[] = [
         finish: "Chrome",
         sku: "FUP-CHM-29011BPM",
         price: 9400,
-        image: "/images/faucets/single-lever-basin/0059261_single-lever-basin-mixer-with-popup-waste-chrome_960.jpeg",
+        image: "https://res.cloudinary.com/dtk1pspib/image/upload/v1788760560/parkash-ceramics/0059261_single-lever-basin-mixer-with-popup-waste-chrome_960.jpg",
         productId: "prod-faucet-02"
       },
       {
@@ -202,7 +202,7 @@ export const BATHROOM_PACKAGES: BathroomPackage[] = [
         finish: "Blush Gold PVD",
         sku: "FUP-BGP-29005BPM",
         price: 10300,
-        image: "/images/faucets/single-lever-tall-boy/0057107_single-lever-tall-boy-blush-gold-pvd_960.jpeg",
+        image: "https://res.cloudinary.com/dtk1pspib/image/upload/v1788760553/parkash-ceramics/0057107_single-lever-tall-boy-blush-gold-pvd_960.jpg",
         productId: "prod-faucet-01"
       },
       {
@@ -211,7 +211,7 @@ export const BATHROOM_PACKAGES: BathroomPackage[] = [
         finish: "Blush Gold PVD",
         sku: "FUP-BGP-29011BPM",
         price: 9400,
-        image: "/images/faucets/single-lever-basin/0057134_single-lever-basin-mixer-with-popup-waste-blush-gold-pvd_960.jpeg",
+        image: "https://res.cloudinary.com/dtk1pspib/image/upload/v1788760558/parkash-ceramics/0057134_single-lever-basin-mixer-with-popup-waste-blush-gold-pvd_960.jpg",
         productId: "prod-faucet-02"
       },
       {

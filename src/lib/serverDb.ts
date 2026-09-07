@@ -1387,7 +1387,7 @@ export async function getAdminStats() {
           price: p.price,
           stockCount: p.stockCount,
           salesCount: soldCount > 0 ? soldCount : 15,
-          images: p.images.length > 0 ? p.images : ["/images/faucets.png"],
+          images: p.images.length > 0 ? p.images : ["https://res.cloudinary.com/dtk1pspib/image/upload/v1788760648/parkash-ceramics/faucets.jpg"],
         };
       });
 

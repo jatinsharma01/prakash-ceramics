@@ -614,7 +614,7 @@ export default function AdminDashboardPage() {
                   <div key={p.id} className="py-3 flex items-center justify-between gap-3 group">
                     <div className="flex items-center gap-3 min-w-0">
                       <img
-                        src={p.images?.[0] || "/images/faucets.png"}
+                        src={p.images?.[0] || "https://res.cloudinary.com/dtk1pspib/image/upload/v1788760648/parkash-ceramics/faucets.jpg"}
                         alt={p.name}
                         className="w-10 h-10 rounded-lg object-cover bg-stone-900 border border-stone-700/80 shrink-0"
                       />

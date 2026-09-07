@@ -53,7 +53,7 @@ export default function AdminProductsPage() {
             finishes: p.finishes || ["Chrome"],
             tagline: p.tagline,
             description: p.description,
-            images: p.images || ["/images/faucets.png"],
+            images: p.images || ["https://res.cloudinary.com/dtk1pspib/image/upload/v1788760648/parkash-ceramics/faucets.jpg"],
             slug: p.slug,
           }));
           setItems(mapped);

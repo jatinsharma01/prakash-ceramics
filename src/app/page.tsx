@@ -186,7 +186,7 @@ export default function HomePage() {
       category: "Faucets • Black Chrome",
       price: "₹10,300",
       slug: "single-lever-tall-boy",
-      image: "/images/faucets/single-lever-tall-boy/0057105_single-lever-tall-boy-black-chrome_960.jpeg"
+      image: "https://res.cloudinary.com/dtk1pspib/image/upload/v1788760550/parkash-ceramics/0057105_single-lever-tall-boy-black-chrome_960.jpg"
     },
     {
       id: 2,
