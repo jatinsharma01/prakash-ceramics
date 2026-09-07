@@ -13,15 +13,14 @@ import {
   ArrowRight, 
   Sparkles, 
   CheckCircle2, 
-  AlertCircle,
-  KeyRound
+  AlertCircle
 } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 
 export default function AdminLoginPage() {
   const router = useRouter();
-  const [email, setEmail] = useState("admin-parkash@gmail.com");
-  const [password, setPassword] = useState("123456");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -57,12 +56,6 @@ export default function AdminLoginPage() {
       setErrorMessage("Network error. Please try again.");
       setIsLoading(false);
     }
-  };
-
-  const fillDemoCredentials = () => {
-    setEmail("admin-parkash@gmail.com");
-    setPassword("123456");
-    setErrorMessage(null);
   };
 
   return (
@@ -146,7 +139,7 @@ export default function AdminLoginPage() {
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="admin-parkash@gmail.com"
+                  placeholder="admin@prakashceramics.com"
                   className="w-full bg-stone-900/90 border border-stone-700/80 rounded-xl pl-10 pr-4 py-3 text-xs text-white placeholder-stone-400 focus:outline-none focus:border-[#9b7842] focus:ring-1 focus:ring-[#9b7842] transition-all"
                 />
               </div>
@@ -168,7 +161,7 @@ export default function AdminLoginPage() {
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder="••••••••"
+                  placeholder="Enter your password"
                   className="w-full bg-stone-900/90 border border-stone-700/80 rounded-xl pl-10 pr-10 py-3 text-xs text-white placeholder-stone-400 focus:outline-none focus:border-[#9b7842] focus:ring-1 focus:ring-[#9b7842] transition-all font-mono"
                 />
                 <button
@@ -179,19 +172,6 @@ export default function AdminLoginPage() {
                   {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
               </div>
-            </div>
-
-            {/* Quick Demo Fill Helper */}
-            <div className="pt-1 flex items-center justify-between text-xs">
-              <span className="text-[11px] text-stone-300">Default Credentials:</span>
-              <button
-                type="button"
-                onClick={fillDemoCredentials}
-                className="text-[11px] font-semibold text-[#dec49a] hover:underline flex items-center gap-1"
-              >
-                <KeyRound className="w-3 h-3" />
-                <span>Fill admin-parkash@gmail.com</span>
-              </button>
             </div>
 
             {/* Submit Button */}

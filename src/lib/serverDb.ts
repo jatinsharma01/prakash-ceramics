@@ -182,13 +182,17 @@ export async function getProducts(options?: {
         }).catch(() => []),
       ]);
 
-      const salesMap: Record<string, { count: number; revenue: number }> = {};
+      const salesMap: Record<string, { count: number; revenue: number; finishSales: Record<string, number> }> = {};
       (orderItems || []).forEach((item: any) => {
         const key = item.sku || item.productName;
         if (key) {
-          if (!salesMap[key]) salesMap[key] = { count: 0, revenue: 0 };
-          salesMap[key].count += item.quantity || 1;
-          salesMap[key].revenue += (item.price || 0) * (item.quantity || 1);
+          if (!salesMap[key]) salesMap[key] = { count: 0, revenue: 0, finishSales: {} };
+          const qty = item.quantity || 1;
+          salesMap[key].count += qty;
+          salesMap[key].revenue += (item.price || 0) * qty;
+          if (item.finish) {
+            salesMap[key].finishSales[item.finish] = (salesMap[key].finishSales[item.finish] || 0) + qty;
+          }
         }
       });
 
@@ -201,7 +205,18 @@ export async function getProducts(options?: {
             calculatedStock = vals.reduce((sum, v) => sum + (Number(v) || 0), 0);
           }
         }
-        const sales = salesMap[p.sku] || salesMap[p.name] || { count: 0, revenue: 0 };
+        const sales = salesMap[p.sku] || salesMap[p.name] || { count: 0, revenue: 0, finishSales: {} };
+
+        // Subtract sold units from available stock (e.g. 75 total - 7 sold = 68 in stock)
+        const remainingStock = Math.max(0, calculatedStock - sales.count);
+
+        let adjustedFinishStocks = finishStocks ? { ...finishStocks } : undefined;
+        if (adjustedFinishStocks && typeof adjustedFinishStocks === "object") {
+          for (const finish of Object.keys(adjustedFinishStocks)) {
+            const soldForFinish = sales.finishSales?.[finish] || 0;
+            adjustedFinishStocks[finish] = Math.max(0, Number(adjustedFinishStocks[finish] || 0) - soldForFinish);
+          }
+        }
 
         return {
           id: p.id,
@@ -223,8 +238,8 @@ export async function getProducts(options?: {
           finishImages: (p.finishImages as Record<string, string>) || undefined,
           finishPrices: (p.specs as any)?.finishPrices || undefined,
           finishSkus: (p.specs as any)?.finishSkus || undefined,
-          finishStocks,
-          stockCount: calculatedStock,
+          finishStocks: adjustedFinishStocks,
+          stockCount: remainingStock,
           salesCount: sales.count,
           totalRevenue: sales.revenue,
           images: p.images,
@@ -240,14 +255,18 @@ export async function getProducts(options?: {
       });
     },
     () => {
-      const salesMap: Record<string, { count: number; revenue: number }> = {};
+      const salesMap: Record<string, { count: number; revenue: number; finishSales: Record<string, number> }> = {};
       memoryOrders.forEach((o) => {
         o.items.forEach((item) => {
           const key = item.sku || item.name;
           if (key) {
-            if (!salesMap[key]) salesMap[key] = { count: 0, revenue: 0 };
-            salesMap[key].count += item.quantity || 1;
-            salesMap[key].revenue += (item.price || 0) * (item.quantity || 1);
+            if (!salesMap[key]) salesMap[key] = { count: 0, revenue: 0, finishSales: {} };
+            const qty = item.quantity || 1;
+            salesMap[key].count += qty;
+            salesMap[key].revenue += (item.price || 0) * qty;
+            if (item.finish) {
+              salesMap[key].finishSales[item.finish] = (salesMap[key].finishSales[item.finish] || 0) + qty;
+            }
           }
         });
       });
@@ -261,10 +280,21 @@ export async function getProducts(options?: {
             calculatedStock = vals.reduce((sum, v) => sum + (Number(v) || 0), 0);
           }
         }
-        const sales = salesMap[p.sku] || salesMap[p.name] || { count: 0, revenue: 0 };
+        const sales = salesMap[p.sku] || salesMap[p.name] || { count: 0, revenue: 0, finishSales: {} };
+        const remainingStock = Math.max(0, calculatedStock - sales.count);
+
+        let adjustedFinishStocks = finishStocks ? { ...finishStocks } : undefined;
+        if (adjustedFinishStocks && typeof adjustedFinishStocks === "object") {
+          for (const finish of Object.keys(adjustedFinishStocks)) {
+            const soldForFinish = sales.finishSales?.[finish] || 0;
+            adjustedFinishStocks[finish] = Math.max(0, Number(adjustedFinishStocks[finish] || 0) - soldForFinish);
+          }
+        }
+
         return {
           ...p,
-          stockCount: calculatedStock,
+          finishStocks: adjustedFinishStocks,
+          stockCount: remainingStock,
           salesCount: sales.count,
           totalRevenue: sales.revenue,
         };
@@ -305,6 +335,45 @@ export async function getProductByIdOrSlug(idOrSlug: string): Promise<Product | 
         },
       });
       if (!p) return null;
+
+      const orderItems = await (prisma as any).orderItem.findMany({
+        where: {
+          OR: [{ sku: p.sku }, { productName: p.name }],
+        },
+        select: { finish: true, quantity: true, price: true },
+      }).catch(() => []);
+
+      let totalSold = 0;
+      let totalRevenue = 0;
+      const finishSales: Record<string, number> = {};
+      (orderItems || []).forEach((item: any) => {
+        const qty = item.quantity || 1;
+        totalSold += qty;
+        totalRevenue += (item.price || 0) * qty;
+        if (item.finish) {
+          finishSales[item.finish] = (finishSales[item.finish] || 0) + qty;
+        }
+      });
+
+      const finishStocks = (p.specs as any)?.finishStocks || undefined;
+      let calculatedStock = typeof p.stockCount === "number" ? p.stockCount : 0;
+      if (finishStocks && typeof finishStocks === "object") {
+        const vals = Object.values(finishStocks) as number[];
+        if (vals.length > 0) {
+          calculatedStock = vals.reduce((sum, v) => sum + (Number(v) || 0), 0);
+        }
+      }
+
+      let adjustedFinishStocks = finishStocks ? { ...finishStocks } : undefined;
+      if (adjustedFinishStocks && typeof adjustedFinishStocks === "object") {
+        for (const finish of Object.keys(adjustedFinishStocks)) {
+          const soldForFinish = finishSales[finish] || 0;
+          adjustedFinishStocks[finish] = Math.max(0, Number(adjustedFinishStocks[finish] || 0) - soldForFinish);
+        }
+      }
+
+      const remainingStock = Math.max(0, calculatedStock - totalSold);
+
       return {
         id: p.id,
         name: p.name,
@@ -325,8 +394,10 @@ export async function getProductByIdOrSlug(idOrSlug: string): Promise<Product | 
         finishImages: (p.finishImages as Record<string, string>) || undefined,
         finishPrices: (p.specs as any)?.finishPrices || undefined,
         finishSkus: (p.specs as any)?.finishSkus || undefined,
-        finishStocks: (p.specs as any)?.finishStocks || undefined,
-        stockCount: p.stockCount,
+        finishStocks: adjustedFinishStocks,
+        stockCount: remainingStock,
+        salesCount: totalSold,
+        totalRevenue: totalRevenue,
         images: p.images,
         dimensions: p.dimensions || undefined,
         flowRate: p.flowRate || undefined,
@@ -339,11 +410,53 @@ export async function getProductByIdOrSlug(idOrSlug: string): Promise<Product | 
       };
     },
     () => {
-      return (
-        memoryProducts.find(
-          (p) => p.id === idOrSlug || p.slug === idOrSlug || p.sku.toLowerCase() === idOrSlug.toLowerCase()
-        ) || null
+      const p = memoryProducts.find(
+        (p) => p.id === idOrSlug || p.slug === idOrSlug || p.sku.toLowerCase() === idOrSlug.toLowerCase()
       );
+      if (!p) return null;
+
+      let totalSold = 0;
+      let totalRevenue = 0;
+      const finishSales: Record<string, number> = {};
+      memoryOrders.forEach((o) => {
+        o.items.forEach((item) => {
+          if (item.sku === p.sku || item.name === p.name) {
+            const qty = item.quantity || 1;
+            totalSold += qty;
+            totalRevenue += (item.price || 0) * qty;
+            if (item.finish) {
+              finishSales[item.finish] = (finishSales[item.finish] || 0) + qty;
+            }
+          }
+        });
+      });
+
+      const finishStocks = p.finishStocks;
+      let calculatedStock = typeof p.stockCount === "number" ? p.stockCount : 0;
+      if (finishStocks && typeof finishStocks === "object") {
+        const vals = Object.values(finishStocks) as number[];
+        if (vals.length > 0) {
+          calculatedStock = vals.reduce((sum, v) => sum + (Number(v) || 0), 0);
+        }
+      }
+
+      let adjustedFinishStocks = finishStocks ? { ...finishStocks } : undefined;
+      if (adjustedFinishStocks && typeof adjustedFinishStocks === "object") {
+        for (const finish of Object.keys(adjustedFinishStocks)) {
+          const soldForFinish = finishSales[finish] || 0;
+          adjustedFinishStocks[finish] = Math.max(0, Number(adjustedFinishStocks[finish] || 0) - soldForFinish);
+        }
+      }
+
+      const remainingStock = Math.max(0, calculatedStock - totalSold);
+
+      return {
+        ...p,
+        finishStocks: adjustedFinishStocks,
+        stockCount: remainingStock,
+        salesCount: totalSold,
+        totalRevenue: totalRevenue,
+      };
     }
   );
 }
@@ -1370,7 +1483,29 @@ export async function getAdminStats() {
       const totalOrders = orders.length;
       const totalRevenue = orders.reduce((acc, o) => acc + o.total, 0);
       const avgOrderValue = totalOrders > 0 ? Math.round(totalRevenue / totalOrders) : 0;
-      const lowStockItemsCount = products.filter((p) => p.stockCount <= 5).length;
+
+      // Track sales per product
+      const productSalesMap: Record<string, number> = {};
+      for (const order of orders) {
+        for (const item of order.items) {
+          const key = item.sku || item.productName;
+          if (key) {
+            productSalesMap[key] = (productSalesMap[key] || 0) + (item.quantity || 1);
+          }
+        }
+      }
+
+      const lowStockItemsCount = products.filter((p) => {
+        const finishStocks = (p.specs as any)?.finishStocks;
+        let calculatedStock = typeof p.stockCount === "number" ? p.stockCount : 0;
+        if (finishStocks && typeof finishStocks === "object") {
+          const vals = Object.values(finishStocks) as number[];
+          if (vals.length > 0) calculatedStock = vals.reduce((sum, v) => sum + (Number(v) || 0), 0);
+        }
+        const sold = productSalesMap[p.sku] || productSalesMap[p.name] || 0;
+        const remaining = Math.max(0, calculatedStock - sold);
+        return remaining <= 5;
+      }).length;
       
       // Calculate real category sales breakdown
       const categorySalesMap: Record<string, { revenue: number; itemsSold: number }> = {};
