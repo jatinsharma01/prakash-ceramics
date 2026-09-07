@@ -5,6 +5,14 @@ import { CATEGORIES } from "@/lib/categories";
 import { ADMIN_COUPONS, ADMIN_ORDERS, ADMIN_USERS } from "@/lib/adminData";
 
 export async function POST() {
+  return seedDatabase();
+}
+
+export async function GET() {
+  return seedDatabase();
+}
+
+async function seedDatabase() {
   try {
     console.log("Starting DB sync / seed...");
 
