@@ -1285,7 +1285,7 @@ export default function HomePage() {
                   <motion.a
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
-                    href="https://maps.google.com/?q=Bengaluru%2C+Karnataka"
+                    href="https://www.google.com/maps/place/Jaquar+Authorized+Dealer+-+Prakash+Ceramics/@12.9572083,77.7373045,17z/data=!3m1!4b1!4m6!3m5!1s0x3bae120eacd0dc5f:0x9f79c25c97fb8192!8m2!3d12.9572083!4d77.7373045!16s%2Fg%2F11b8v4v5f8"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-1 text-[11px] font-bold uppercase tracking-wider text-white bg-[#1c1815] hover:bg-[#9b7842] px-3.5 py-2 rounded-xl shadow-md transition-colors pointer-events-auto"
@@ -1297,14 +1297,14 @@ export default function HomePage() {
 
                 {/* Full Bleed Google Map Iframe */}
                 <iframe
-                  title="Prakash Ceramics Flagship Location"
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d248849.886539092!2d77.49085449760773!3d12.95395998811883!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bae1670c9b44e6d%3A0xf8dfc3e8517e4fe0!2sBengaluru%2C%20Karnataka!5e0!3m2!1sen!2sin!4v1700000000000!5m2!1sen!2sin"
+                  title="Jaquar Authorized Dealer - Prakash Ceramics Flagship Location"
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d4870.411551528282!2d77.7373045!3d12.957208299999998!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bae120eacd0dc5f%3A0x9f79c25c97fb8192!2sJaquar%20Authorized%20Dealer%20-%20Prakash%20Ceramics!5e1!3m2!1sen!2sin!4v1788774745269!5m2!1sen!2sin"
                   width="100%"
                   height="100%"
                   style={{ border: 0 }}
-                  allowFullScreen={false}
+                  allowFullScreen
                   loading="lazy"
-                  referrerPolicy="no-referrer-when-downgrade"
+                  referrerPolicy="strict-origin-when-cross-origin"
                   className="w-full h-full min-h-[480px] sm:min-h-[540px]"
                 />
               </div>

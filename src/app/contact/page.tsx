@@ -14,7 +14,8 @@ import {
   Building, 
   Calendar,
   Loader2,
-  AlertCircle
+  AlertCircle,
+  ArrowUpRight
 } from "lucide-react";
 
 export default function ContactPage() {
@@ -326,6 +327,52 @@ export default function ContactPage() {
           </MotionReveal>
 
         </div>
+
+        {/* Full Bleed Interactive Google Map */}
+        <MotionReveal direction="up" className="mt-16">
+          <div className="bg-white border border-[#dec49a]/60 rounded-3xl p-6 sm:p-8 shadow-sm space-y-6">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div>
+                <span className="text-xs uppercase tracking-[0.25em] text-[#9b7842] font-semibold block mb-1">
+                  Visit Our Experience Center
+                </span>
+                <h3 className="text-xl sm:text-2xl font-serif font-bold text-[#151a22]">
+                  Jaquar Authorized Dealer - Prakash Ceramics
+                </h3>
+                <p className="text-xs sm:text-sm text-[#6b7280] mt-1">
+                  Experience live water display zones, sanitaryware collections, and architectural bath fittings.
+                </p>
+              </div>
+
+              <motion.a
+                whileHover={{ scale: 1.03 }}
+                whileTap={{ scale: 0.97 }}
+                href="https://www.google.com/maps/place/Jaquar+Authorized+Dealer+-+Prakash+Ceramics/@12.9572083,77.7373045,17z/data=!3m1!4b1!4m6!3m5!1s0x3bae120eacd0dc5f:0x9f79c25c97fb8192!8m2!3d12.9572083!4d77.7373045!16s%2Fg%2F11b8v4v5f8"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-white bg-[#1c1815] hover:bg-[#9b7842] px-6 py-3.5 rounded-xl shadow-md transition-colors shrink-0"
+              >
+                <span>Get Driving Directions</span>
+                <ArrowUpRight className="w-4 h-4" />
+              </motion.a>
+            </div>
+
+            <div className="relative w-full h-[450px] rounded-2xl overflow-hidden border border-[#e5e0d8] shadow-inner bg-[#faf8f5]">
+              <iframe
+                title="Jaquar Authorized Dealer - Prakash Ceramics Google Map"
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d4870.411551528282!2d77.7373045!3d12.957208299999998!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bae120eacd0dc5f%3A0x9f79c25c97fb8192!2sJaquar%20Authorized%20Dealer%20-%20Prakash%20Ceramics!5e1!3m2!1sen!2sin!4v1788774745269!5m2!1sen!2sin"
+                width="100%"
+                height="100%"
+                style={{ border: 0 }}
+                allowFullScreen
+                loading="lazy"
+                referrerPolicy="strict-origin-when-cross-origin"
+                className="w-full h-full"
+              />
+            </div>
+          </div>
+        </MotionReveal>
+
       </div>
 
     </div>
