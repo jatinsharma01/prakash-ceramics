@@ -1,7 +1,8 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { 
   LayoutDashboard, 
@@ -19,7 +20,9 @@ import {
   Sparkles,
   Sliders,
   Settings,
-  Bell
+  Bell,
+  MessageSquareText,
+  Globe
 } from "lucide-react";
 import { clsx } from "clsx";
 import { motion, AnimatePresence } from "motion/react";
@@ -35,14 +38,7 @@ const NAV_ITEMS = [
     label: "Products",
     href: "/admin/products",
     icon: Package,
-    badge: "12",
-  },
-  {
-    label: "Add Product",
-    href: "/admin/products/new",
-    icon: PlusCircle,
-    badge: "New",
-    badgeColor: "bg-[#9b7842] text-white",
+    badge: null,
   },
   {
     label: "Orders",
@@ -50,6 +46,13 @@ const NAV_ITEMS = [
     icon: ShoppingCart,
     badge: "6 New",
     badgeColor: "bg-emerald-500/20 text-emerald-400 border border-emerald-500/30",
+  },
+  {
+    label: "Enquiries",
+    href: "/admin/enquiries",
+    icon: MessageSquareText,
+    badge: "New Leads",
+    badgeColor: "bg-amber-500/20 text-amber-300 border border-amber-500/30",
   },
   {
     label: "Customers",
@@ -64,6 +67,13 @@ const NAV_ITEMS = [
     badge: "4 Active",
   },
   {
+    label: "SEO & Metadata",
+    href: "/admin/seo",
+    icon: Globe,
+    badge: "Meta",
+    badgeColor: "bg-blue-500/20 text-blue-300 border border-blue-500/30",
+  },
+  {
     label: "Sales & Analytics",
     href: "/admin/sales",
     icon: TrendingUp,
@@ -74,6 +84,26 @@ const NAV_ITEMS = [
 export function AdminSidebar() {
   const pathname = usePathname();
   const [isMobileOpen, setIsMobileOpen] = useState(false);
+  const [newEnquiryCount, setNewEnquiryCount] = useState<number | null>(null);
+
+  useEffect(() => {
+    let isMounted = true;
+    async function loadCount() {
+      try {
+        const res = await fetch("/api/enquiries?status=new");
+        if (res.ok) {
+          const data = await res.json();
+          if (isMounted && typeof data.count === "number") {
+            setNewEnquiryCount(data.count);
+          }
+        }
+      } catch {}
+    }
+    loadCount();
+    return () => {
+      isMounted = false;
+    };
+  }, [pathname]);
 
   const isActive = (href: string) => {
     if (href === "/admin") {
@@ -87,9 +117,16 @@ export function AdminSidebar() {
       {/* Brand Header */}
       <div className="p-6 border-b border-stone-800/80 flex items-center justify-between">
         <Link href="/admin" className="flex items-center gap-3 group">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#dec49a] via-[#9b7842] to-[#6a5028] p-0.5 shadow-lg shadow-[#9b7842]/20 flex items-center justify-center">
-            <div className="w-full h-full bg-[#12161f] rounded-[10px] flex items-center justify-center">
-              <Sparkles className="w-5 h-5 text-[#dec49a]" />
+          <div className="relative w-11 h-11 rounded-xl bg-gradient-to-br from-[#dec49a] via-[#9b7842] to-[#6a5028] p-0.5 shadow-lg shadow-[#9b7842]/20 shrink-0">
+            <div className="w-full h-full bg-[#12161f] rounded-[10px] p-1 flex items-center justify-center relative overflow-hidden">
+              <Image
+                src="/pc-mark.png"
+                alt="Parkash Ceramics Logo"
+                fill
+                priority
+                sizes="50px"
+                className="object-contain p-1 transition-transform group-hover:scale-105"
+              />
             </div>
           </div>
           <div>
@@ -163,18 +200,27 @@ export function AdminSidebar() {
                 <span>{item.label}</span>
               </div>
 
-              {item.badge && (
-                <span
-                  className={clsx(
-                    "text-[10px] px-2 py-0.5 rounded-full font-semibold",
-                    active
-                      ? "bg-black/30 text-white"
-                      : item.badgeColor || "bg-stone-800 text-stone-300 border border-stone-700"
-                  )}
-                >
-                  {item.badge}
-                </span>
-              )}
+              {(() => {
+                const badgeText =
+                  item.href === "/admin/enquiries" && newEnquiryCount !== null
+                    ? `${newEnquiryCount} New`
+                    : item.badge;
+
+                if (!badgeText) return null;
+
+                return (
+                  <span
+                    className={clsx(
+                      "text-[10px] px-2 py-0.5 rounded-full font-semibold",
+                      active
+                        ? "bg-black/30 text-white"
+                        : item.badgeColor || "bg-stone-800 text-stone-300 border border-stone-700"
+                    )}
+                  >
+                    {badgeText}
+                  </span>
+                );
+              })()}
             </Link>
           );
         })}
@@ -198,24 +244,33 @@ export function AdminSidebar() {
       <div className="p-4 border-t border-stone-800 bg-[#0d1017]">
         <div className="flex items-center gap-3">
           <div className="relative">
-            <img
-              src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=120"
-              alt="Admin Avatar"
-              className="w-9 h-9 rounded-xl object-cover border border-[#9b7842]/50"
-            />
+            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#9b7842] to-[#836433] text-white flex items-center justify-center font-bold text-xs border border-[#dec49a]/40 shadow-sm">
+              PA
+            </div>
             <span className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-emerald-500 rounded-full border-2 border-[#0d1017]" />
           </div>
           <div className="flex-1 min-w-0">
             <p className="text-xs font-semibold text-white truncate">
-              Gaurav Parkash
+              Parkash Admin
             </p>
-            <p className="text-[10px] text-[#dec49a] truncate font-medium">
-              Principal Administrator
+            <p className="text-[10px] text-stone-400 truncate font-mono">
+              admin-parkash@gmail.com
             </p>
           </div>
-          <div className="p-1.5 rounded-lg text-stone-300 hover:text-white hover:bg-stone-800 transition-colors">
+          <button
+            onClick={async () => {
+              try {
+                await fetch("/api/admin/logout", { method: "POST" });
+                window.location.href = "/admin/login";
+              } catch {
+                window.location.href = "/admin/login";
+              }
+            }}
+            className="p-1.5 rounded-lg text-stone-400 hover:text-red-400 hover:bg-stone-800 transition-colors"
+            title="Sign Out"
+          >
             <ShieldCheck className="w-4 h-4 text-[#dec49a]" />
-          </div>
+          </button>
         </div>
       </div>
     </div>

@@ -13,11 +13,11 @@ import {
   PulseRadar 
 } from "@/components/MotionWrappers";
 import { CATEGORIES } from "@/lib/categories";
-import { PRODUCTS, getFeaturedProducts } from "@/lib/products";
+import { PRODUCTS, getBestsellerProducts } from "@/lib/products";
 import { BATHROOM_PACKAGES, BathroomPackage } from "@/lib/packages";
 import { useEnquiry } from "@/context/EnquiryContext";
 import { CartIcon } from "@/components/CartIcon";
-import { FinishType } from "@/lib/types";
+import { FinishType, Product } from "@/lib/types";
 import {
   Sparkles,
   ArrowRight,
@@ -33,7 +33,9 @@ import {
   Droplets,
   ArrowUpRight,
   Send,
-  Star
+  Star,
+  Loader2,
+  AlertCircle
 } from "lucide-react";
 import { clsx } from "clsx";
 
@@ -51,11 +53,28 @@ const HERO_CONTENT = {
 
 export default function HomePage() {
   const { addToEnquiry, setIsDrawerOpen } = useEnquiry();
-  const featuredProducts = getFeaturedProducts();
+  const [bestsellerProducts, setBestsellerProducts] = useState<Product[]>(getBestsellerProducts());
   const [hoveredCategorySlug, setHoveredCategorySlug] = useState<string>("faucets");
   const [selectedPackageId, setSelectedPackageId] = useState<string>("pkg-gold-penthouse");
   const [packageAddedId, setPackageAddedId] = useState<string | null>(null);
   const [activeLookbookHotspot, setActiveLookbookHotspot] = useState<number | null>(null);
+
+  React.useEffect(() => {
+    async function loadBestsellerProducts() {
+      try {
+        const res = await fetch("/api/products?bestseller=true");
+        if (res.ok) {
+          const data = await res.json();
+          if (data.products && Array.isArray(data.products) && data.products.length > 0) {
+            setBestsellerProducts(data.products);
+          }
+        }
+      } catch (err) {
+        console.warn("Could not load dynamic bestseller products:", err);
+      }
+    }
+    loadBestsellerProducts();
+  }, []);
 
   const selectedPackage = BATHROOM_PACKAGES.find((p) => p.id === selectedPackageId) || BATHROOM_PACKAGES[0];
 
@@ -98,13 +117,32 @@ export default function HomePage() {
     preferredDate: "",
     message: ""
   });
+  const [isBookingSubmitting, setIsBookingSubmitting] = useState(false);
   const [bookingSubmitted, setBookingSubmitted] = useState(false);
+  const [bookingError, setBookingError] = useState<string | null>(null);
 
-  const handleBookingSubmit = (e: React.FormEvent) => {
+  const handleBookingSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setBookingSubmitted(true);
-    setTimeout(() => {
-      setBookingSubmitted(false);
+    setIsBookingSubmitting(true);
+    setBookingError(null);
+
+    try {
+      const res = await fetch("/api/enquiries", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ...bookingData,
+          source: "Home Page Consultation",
+        }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.message || "Failed to schedule showroom tour");
+      }
+
+      setBookingSubmitted(true);
       setBookingData({
         name: "",
         phone: "",
@@ -113,7 +151,16 @@ export default function HomePage() {
         preferredDate: "",
         message: ""
       });
-    }, 4500);
+
+      setTimeout(() => {
+        setBookingSubmitted(false);
+      }, 5000);
+    } catch (err: any) {
+      console.error("Home booking submission error:", err);
+      setBookingError(err.message || "Something went wrong. Please try again or reach out directly.");
+    } finally {
+      setIsBookingSubmitting(false);
+    }
   };
 
   // Horizontal category scroll container ref
@@ -461,10 +508,10 @@ export default function HomePage() {
                 <span>Best Sellers</span>
               </div>
               <h2 className="text-3xl sm:text-4xl lg:text-5xl font-serif font-semibold text-[#1c1815] tracking-tight">
-                Best Selling Collections
+                Best Selling Products
               </h2>
               <p className="text-xs sm:text-sm text-[#6b7280] mt-2 max-w-xl">
-                Our most requested architectural faucets, hydro-sensory rainfall showers, and freestanding bathtubs specified by top architects and luxury homeowners.
+                Our most requested architectural faucets, precision basin mixers, and luxury bath fittings specified by top architects and luxury homeowners.
               </p>
             </div>
 
@@ -479,7 +526,7 @@ export default function HomePage() {
 
           {/* Product Grid (4 Columns) with Staggered Entrance */}
           <StaggerContainer className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
-            {featuredProducts.slice(0, 8).map((product) => (
+            {bestsellerProducts.slice(0, 8).map((product) => (
               <StaggerItem key={product.id}>
                 <ProductCard product={product} />
               </StaggerItem>
@@ -1192,14 +1239,31 @@ export default function HomePage() {
                           />
                         </div>
 
+                        {bookingError && (
+                          <div className="bg-red-50 border border-red-200 text-red-700 text-xs px-4 py-3 rounded-xl flex items-center gap-2">
+                            <AlertCircle className="w-4 h-4 shrink-0 text-red-500" />
+                            <span>{bookingError}</span>
+                          </div>
+                        )}
+
                         <motion.button
-                          whileHover={{ scale: 1.01 }}
-                          whileTap={{ scale: 0.98 }}
+                          whileHover={isBookingSubmitting ? {} : { scale: 1.01 }}
+                          whileTap={isBookingSubmitting ? {} : { scale: 0.98 }}
                           type="submit"
-                          className="w-full bg-[#1c1815] hover:bg-[#9b7842] text-white font-bold text-xs uppercase tracking-widest py-4 rounded-xl shadow-md transition-colors flex items-center justify-center gap-2 cursor-pointer mt-3"
+                          disabled={isBookingSubmitting}
+                          className="w-full bg-[#1c1815] hover:bg-[#9b7842] disabled:opacity-60 text-white font-bold text-xs uppercase tracking-widest py-4 rounded-xl shadow-md transition-colors flex items-center justify-center gap-2 cursor-pointer mt-3 disabled:cursor-not-allowed"
                         >
-                          <Send className="w-4 h-4" />
-                          <span>Schedule Private Showroom Tour</span>
+                          {isBookingSubmitting ? (
+                            <>
+                              <Loader2 className="w-4 h-4 animate-spin text-[#dec49a]" />
+                              <span>Scheduling Tour...</span>
+                            </>
+                          ) : (
+                            <>
+                              <Send className="w-4 h-4" />
+                              <span>Schedule Private Showroom Tour</span>
+                            </>
+                          )}
                         </motion.button>
                       </form>
                     )}

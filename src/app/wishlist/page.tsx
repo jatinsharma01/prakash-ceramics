@@ -11,7 +11,7 @@ import {
   Trash2, 
   Plus, 
   ArrowRight, 
-  ChevronRight 
+  ChevronRight
 } from "lucide-react";
 
 export default function WishlistPage() {

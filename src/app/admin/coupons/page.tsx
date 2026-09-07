@@ -17,13 +17,15 @@ import {
   X, 
   Trash2, 
   Sliders,
-  Scissors
+  Scissors,
+  Loader2
 } from "lucide-react";
-import { ADMIN_COUPONS, AdminCoupon } from "@/lib/adminData";
+import { AdminCoupon } from "@/lib/adminData";
 import { motion, AnimatePresence } from "motion/react";
 
 export default function AdminCouponsPage() {
-  const [coupons, setCoupons] = useState<AdminCoupon[]>(ADMIN_COUPONS);
+  const [coupons, setCoupons] = useState<AdminCoupon[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [filter, setFilter] = useState<"all" | "active" | "expired" | "scheduled">("all");
   const [copiedCode, setCopiedCode] = useState<string | null>(null);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
@@ -43,6 +45,26 @@ export default function AdminCouponsPage() {
     setTimeout(() => setToastMessage(null), 3000);
   };
 
+  const fetchCoupons = React.useCallback(async () => {
+    try {
+      const res = await fetch("/api/coupons");
+      if (res.ok) {
+        const data = await res.json();
+        if (data.coupons && Array.isArray(data.coupons)) {
+          setCoupons(data.coupons);
+        }
+      }
+    } catch (err) {
+      console.error("Failed to fetch coupons", err);
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
+  React.useEffect(() => {
+    fetchCoupons();
+  }, [fetchCoupons]);
+
   const copyToClipboard = (code: string) => {
     navigator.clipboard.writeText(code);
     setCopiedCode(code);
@@ -50,44 +72,73 @@ export default function AdminCouponsPage() {
     showToast(`Coupon code ${code} copied to clipboard!`);
   };
 
-  const toggleCouponStatus = (id: string) => {
-    setCoupons((prev) =>
-      prev.map((c) => {
-        if (c.id === id) {
-          const nextStatus = c.status === "Active" ? "Expired" : "Active";
-          return { ...c, status: nextStatus };
-        }
-        return c;
-      })
-    );
-    showToast("Coupon status updated!");
+  const toggleCouponStatus = async (id: string) => {
+    try {
+      const res = await fetch(`/api/coupons/${id}`, { method: "PATCH" });
+      if (res.ok) {
+        setCoupons((prev) =>
+          prev.map((c) => {
+            if (c.id === id) {
+              const nextStatus = c.status === "Active" ? "Expired" : "Active";
+              return { ...c, status: nextStatus };
+            }
+            return c;
+          })
+        );
+        showToast("Coupon status updated in database!");
+      }
+    } catch (err) {
+      showToast("Failed to update coupon status");
+    }
   };
 
-  const handleCreateCoupon = (e: React.FormEvent) => {
+  const handleDeleteCoupon = async (id: string, code: string) => {
+    if (!confirm(`Are you sure you want to delete coupon ${code}?`)) return;
+    try {
+      const res = await fetch(`/api/coupons/${id}`, { method: "DELETE" });
+      if (res.ok) {
+        setCoupons((prev) => prev.filter((c) => c.id !== id));
+        showToast(`Deleted coupon ${code}`);
+      }
+    } catch (err) {
+      showToast("Failed to delete coupon");
+    }
+  };
+
+  const handleCreateCoupon = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!newCode) return;
 
-    const newCoupon: AdminCoupon = {
-      id: `c-${Date.now()}`,
-      code: newCode.toUpperCase().replace(/\s+/g, ""),
-      discountType,
-      discountValue: Number(discountValue) || 10,
-      minOrderValue: Number(minOrderValue) || 0,
-      usageLimit: Number(usageLimit) || 100,
-      usedCount: 0,
-      startDate: new Date().toISOString().split("T")[0],
-      expiryDate: expiryDate || "2026-12-31",
-      status: "Active",
-      description: description || "Promotional concession code for luxury bathware.",
-    };
+    try {
+      const payload = {
+        code: newCode.toUpperCase().replace(/\s+/g, ""),
+        discountType,
+        discountValue: Number(discountValue) || 10,
+        minOrderValue: Number(minOrderValue) || 0,
+        usageLimit: Number(usageLimit) || 100,
+        expiryDate: expiryDate || "2026-12-31",
+        description: description || `${discountType === "percentage" ? `${discountValue}%` : `₹${discountValue}`} Off Coupon`,
+      };
 
-    setCoupons([newCoupon, ...coupons]);
-    setIsCreateModalOpen(false);
-    showToast(`Created new promo code: ${newCoupon.code}`);
+      const res = await fetch("/api/coupons", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
 
-    // Reset Form
-    setNewCode("");
-    setDescription("");
+      if (res.ok) {
+        showToast(`Created new promo code: ${payload.code}`);
+        setIsCreateModalOpen(false);
+        setNewCode("");
+        setDescription("");
+        fetchCoupons();
+      } else {
+        const err = await res.json().catch(() => ({}));
+        showToast(err.message || "Failed to create coupon");
+      }
+    } catch (err: any) {
+      showToast("Error creating coupon");
+    }
   };
 
   const generateRandomCode = () => {
@@ -222,16 +273,26 @@ export default function AdminCouponsPage() {
       </div>
 
       {/* Coupons Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {filteredCoupons.map((coupon) => {
-          const usagePercent = Math.min(
-            100,
-            Math.round((coupon.usedCount / coupon.usageLimit) * 100)
-          );
+      {isLoading ? (
+        <div className="py-20 flex flex-col items-center justify-center gap-2">
+          <Loader2 className="w-8 h-8 animate-spin text-[#dec49a]" />
+          <p className="text-xs text-stone-400">Loading coupons from database...</p>
+        </div>
+      ) : filteredCoupons.length === 0 ? (
+        <div className="py-16 text-center text-stone-400 text-xs bg-[#141822] rounded-2xl border border-stone-800">
+          No coupon codes found. Click &quot;Create New Promo&quot; to add a discount code.
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {filteredCoupons.map((coupon) => {
+            const usagePercent = Math.min(
+              100,
+              Math.round((coupon.usedCount / coupon.usageLimit) * 100)
+            );
 
-          return (
-            <div
-              key={coupon.id}
+            return (
+              <div
+                key={coupon.id}
               className="relative rounded-2xl bg-[#141822] border border-stone-800 p-6 flex flex-col justify-between shadow-md hover:border-stone-700 transition-all group overflow-hidden"
             >
               {/* Ticket Cutout Deco */}
@@ -345,10 +406,7 @@ export default function AdminCouponsPage() {
                   {coupon.status === "Active" ? "Pause Voucher" : "Re-activate"}
                 </button>
                 <button
-                  onClick={() => {
-                    setCoupons(coupons.filter((c) => c.id !== coupon.id));
-                    showToast(`Deleted coupon ${coupon.code}`);
-                  }}
+                  onClick={() => handleDeleteCoupon(coupon.id, coupon.code)}
                   className="text-red-400 hover:text-red-300 text-[11px]"
                 >
                   Delete
@@ -357,7 +415,8 @@ export default function AdminCouponsPage() {
             </div>
           );
         })}
-      </div>
+        </div>
+      )}
 
       {/* Create Coupon Modal */}
       <AnimatePresence>

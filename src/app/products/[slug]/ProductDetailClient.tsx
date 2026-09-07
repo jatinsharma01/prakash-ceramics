@@ -55,8 +55,16 @@ export default function ProductDetailClient({ product }: { product: Product }) {
     }
   };
 
+  const activePrice = (product.finishPrices && product.finishPrices[selectedFinish]) || product.price;
+  const activeSku = (product.finishSkus && product.finishSkus[selectedFinish]) || product.sku;
+
   const handleAdd = () => {
-    addToEnquiry(product, selectedFinish, quantity);
+    const variantProduct: Product = {
+      ...product,
+      price: activePrice,
+      sku: activeSku,
+    };
+    addToEnquiry(variantProduct, selectedFinish, quantity);
     setIsAdded(true);
     setTimeout(() => setIsAdded(false), 2000);
   };
@@ -170,7 +178,7 @@ export default function ProductDetailClient({ product }: { product: Product }) {
               <span className="text-[#9b7842] uppercase tracking-[0.2em] font-semibold">
                 {product.range ? `${product.range} • ` : ""}{product.category} {product.subcategory && `• ${product.subcategory}`}
               </span>
-              <span className="text-[#84786d] font-mono font-semibold">Code: {product.sku}</span>
+              <span className="text-[#84786d] font-mono font-semibold">Code: {activeSku}</span>
             </div>
 
             {/* Title */}
@@ -197,11 +205,11 @@ export default function ProductDetailClient({ product }: { product: Product }) {
             <div className="py-6 border-b border-[#ede8df] flex items-baseline justify-between">
               <div>
                 <span className="text-[10px] text-[#84786d] uppercase tracking-widest block mb-1 font-semibold">
-                  Catalogue MRP
+                  Catalogue MRP ({selectedFinish})
                 </span>
                 <div className="flex items-baseline gap-3">
                   <span className="text-3xl sm:text-4xl font-serif font-semibold text-[#151a22]">
-                    ₹{product.price.toLocaleString("en-IN")}
+                    ₹{activePrice.toLocaleString("en-IN")}
                   </span>
                   {product.originalPrice && (
                     <span className="text-sm text-neutral-400 line-through">
@@ -372,12 +380,14 @@ export default function ProductDetailClient({ product }: { product: Product }) {
                     <span className="text-[#151a22] font-semibold">{product.flowRate}</span>
                   </div>
                 )}
-                {Object.entries(product.specs).map(([key, val]) => (
-                  <div key={key} className="flex flex-col py-1.5 border-b border-[#ede8df]">
-                    <span className="text-[#84786d] font-medium">{key}</span>
-                    <span className="text-[#151a22] font-semibold">{val}</span>
-                  </div>
-                ))}
+                {Object.entries(product.specs || {})
+                  .filter(([key, val]) => typeof val === "string" || typeof val === "number")
+                  .map(([key, val]) => (
+                    <div key={key} className="flex flex-col py-1.5 border-b border-[#ede8df]">
+                      <span className="text-[#84786d] font-medium">{key}</span>
+                      <span className="text-[#151a22] font-semibold">{String(val)}</span>
+                    </div>
+                  ))}
               </div>
             </div>
 

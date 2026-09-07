@@ -3,7 +3,7 @@
 import React from "react";
 import Link from "next/link";
 import { motion } from "motion/react";
-import { Category } from "@/lib/types";
+import { Category, Product } from "@/lib/types";
 import { CATEGORIES } from "@/lib/categories";
 import { getProductsByCategory } from "@/lib/products";
 import { ProductCard } from "@/components/ProductCard";
@@ -15,8 +15,33 @@ import {
   Sparkles
 } from "lucide-react";
 
-export default function CategoryDetailClient({ category }: { category: Category }) {
-  const categoryProducts = getProductsByCategory(category.slug);
+export default function CategoryDetailClient({ 
+  category, 
+  initialProducts 
+}: { 
+  category: Category; 
+  initialProducts?: Product[];
+}) {
+  const [categoryProducts, setCategoryProducts] = React.useState<Product[]>(
+    initialProducts && initialProducts.length > 0 ? initialProducts : getProductsByCategory(category.slug)
+  );
+
+  React.useEffect(() => {
+    async function loadCategoryProducts() {
+      try {
+        const res = await fetch(`/api/products?category=${category.slug}`);
+        if (res.ok) {
+          const data = await res.json();
+          if (data.products && Array.isArray(data.products)) {
+            setCategoryProducts(data.products);
+          }
+        }
+      } catch (err) {
+        console.warn("Could not load dynamic category products:", err);
+      }
+    }
+    loadCategoryProducts();
+  }, [category.slug]);
 
   return (
     <div className="min-h-screen bg-[#fbf9f5] text-[#151a22] pb-24">

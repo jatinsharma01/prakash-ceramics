@@ -11,7 +11,7 @@ import {
   ArrowRight, 
   Plus, 
   Minus, 
-  Truck 
+  Truck
 } from "lucide-react";
 import Link from "next/link";
 
@@ -24,7 +24,7 @@ export function EnquiryDrawer() {
     updateQuantity, 
     clearEnquiry, 
     totalEstimatedValue,
-    totalItems 
+    totalItems
   } = useEnquiry();
 
   return (

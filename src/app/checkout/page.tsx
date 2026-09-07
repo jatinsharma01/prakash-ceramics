@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEnquiry } from "@/context/EnquiryContext";
@@ -18,13 +18,16 @@ import {
   Phone,
   Mail,
   FileText,
-  Lock
+  Lock,
+  Sparkles
 } from "lucide-react";
 import { clsx } from "clsx";
+import { useUserAuth } from "@/context/UserAuthContext";
 
 export default function CheckoutPage() {
   const router = useRouter();
   const { enquiryList, totalEstimatedValue, totalItems, clearEnquiry } = useEnquiry();
+  const { user, addresses, addAddress } = useUserAuth();
 
   const [formData, setFormData] = useState({
     fullName: "",
@@ -39,6 +42,51 @@ export default function CheckoutPage() {
     notes: "",
   });
 
+  const [selectedSavedAddressId, setSelectedSavedAddressId] = useState<string | null>(null);
+  const [saveAddressToProfile, setSaveAddressToProfile] = useState(false);
+
+  // Autofill user details and default address
+  useEffect(() => {
+    if (user) {
+      setFormData((prev) => ({
+        ...prev,
+        fullName: prev.fullName || user.name || "",
+        email: prev.email || user.email || "",
+        phone: prev.phone || user.phone || "",
+        city: prev.city || user.city || "",
+      }));
+
+      if (addresses.length > 0 && !formData.address) {
+        const defaultAddr = addresses.find((a) => a.isDefault) || addresses[0];
+        setSelectedSavedAddressId(defaultAddr.id);
+        setFormData((prev) => ({
+          ...prev,
+          fullName: defaultAddr.fullName,
+          phone: defaultAddr.phone,
+          address: defaultAddr.address,
+          city: defaultAddr.city,
+          state: defaultAddr.state,
+          pincode: defaultAddr.pincode,
+          landmark: defaultAddr.landmark || "",
+        }));
+      }
+    }
+  }, [user, addresses]);
+
+  const handleSelectSavedAddress = (addr: any) => {
+    setSelectedSavedAddressId(addr.id);
+    setFormData((prev) => ({
+      ...prev,
+      fullName: addr.fullName,
+      phone: addr.phone,
+      address: addr.address,
+      city: addr.city,
+      state: addr.state,
+      pincode: addr.pincode,
+      landmark: addr.landmark || "",
+    }));
+  };
+
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -46,13 +94,108 @@ export default function CheckoutPage() {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handlePlaceOrder = (e: React.FormEvent) => {
+  const [couponInput, setCouponInput] = useState("");
+  const [appliedCoupon, setAppliedCoupon] = useState<{
+    code: string;
+    discountAmount: number;
+    description?: string;
+  } | null>(null);
+  const [couponError, setCouponError] = useState<string | null>(null);
+  const [couponSuccess, setCouponSuccess] = useState<string | null>(null);
+  const [isValidatingCoupon, setIsValidatingCoupon] = useState(false);
+
+  const discountAmount = appliedCoupon ? appliedCoupon.discountAmount : 0;
+  const finalTotal = Math.max(0, totalEstimatedValue - discountAmount);
+
+
+  const handleApplyCoupon = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!couponInput.trim()) return;
+
+    setIsValidatingCoupon(true);
+    setCouponError(null);
+    setCouponSuccess(null);
+
+    try {
+      const res = await fetch("/api/coupons/validate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          code: couponInput.trim(),
+          cartTotal: totalEstimatedValue,
+        }),
+      });
+
+      const data = await res.json();
+
+      if (data.valid && data.coupon) {
+        setAppliedCoupon({
+          code: data.coupon.code,
+          discountAmount: data.coupon.discountAmount,
+          description: data.coupon.description,
+        });
+        setCouponSuccess(data.message || "Privilege coupon applied successfully!");
+      } else {
+        setCouponError(data.message || "Invalid coupon code");
+        setAppliedCoupon(null);
+      }
+    } catch (err) {
+      setCouponError("Could not validate coupon code");
+    } finally {
+      setIsValidatingCoupon(false);
+    }
+  };
+
+  const handleRemoveCoupon = () => {
+    setAppliedCoupon(null);
+    setCouponInput("");
+    setCouponSuccess(null);
+    setCouponError(null);
+  };
+
+  const handlePlaceOrder = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
 
+    const orderNumber = `PC-${Date.now().toString().slice(-6)}`;
+
+    // 1. Persist to Backend PostgreSQL Database
+    try {
+      await fetch("/api/orders", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          userId: user?.id,
+          customer: formData,
+          items: enquiryList,
+          subtotal: totalEstimatedValue,
+          discount: discountAmount,
+          total: finalTotal,
+          couponCode: appliedCoupon ? appliedCoupon.code : undefined,
+          paymentMethod: "UPI / QR",
+        }),
+      });
+
+      if (saveAddressToProfile && user && formData.address) {
+        addAddress({
+          fullName: formData.fullName,
+          phone: formData.phone,
+          address: formData.address,
+          city: formData.city,
+          state: formData.state,
+          pincode: formData.pincode,
+          landmark: formData.landmark || undefined,
+          label: "Site / Villa",
+          isDefault: addresses.length === 0,
+        });
+      }
+    } catch (err) {
+      console.warn("Backend order sync note:", err);
+    }
+
     // Save order data to sessionStorage for success page
     const orderData = {
-      orderId: `PC-${Date.now().toString().slice(-6)}`,
+      orderId: orderNumber,
       date: new Date().toLocaleDateString("en-IN", {
         day: "numeric",
         month: "short",
@@ -60,7 +203,10 @@ export default function CheckoutPage() {
       }),
       customer: formData,
       items: enquiryList,
-      total: totalEstimatedValue,
+      total: finalTotal,
+      subtotal: totalEstimatedValue,
+      discount: discountAmount,
+      couponCode: appliedCoupon?.code,
     };
 
     try {
@@ -87,7 +233,11 @@ export default function CheckoutPage() {
       message += `${idx + 1}. *${item.product.name}*\n   • Code: ${item.product.sku}\n   • Finish: ${item.selectedFinish}\n   • Qty: ${item.quantity} x ₹${item.product.price.toLocaleString("en-IN")} = ₹${(item.quantity * item.product.price).toLocaleString("en-IN")}\n\n`;
     });
 
-    message += `*TOTAL ORDER AMOUNT:* ₹${totalEstimatedValue.toLocaleString("en-IN")}\n\n`;
+    if (appliedCoupon) {
+      message += `*Catalogue Subtotal:* ₹${totalEstimatedValue.toLocaleString("en-IN")}\n`;
+      message += `*Privilege Voucher (${appliedCoupon.code}):* -₹${discountAmount.toLocaleString("en-IN")}\n`;
+    }
+    message += `*TOTAL PAYABLE AMOUNT:* ₹${finalTotal.toLocaleString("en-IN")}\n\n`;
     message += `Please confirm dispatch slot and provide official tax invoice.`;
 
     const encoded = encodeURIComponent(message);
@@ -233,6 +383,48 @@ export default function CheckoutPage() {
                 </div>
               </div>
 
+              {/* Saved Addresses Quick Selector */}
+              {user && addresses.length > 0 && (
+                <div className="p-4 rounded-2xl bg-[#f7f5f0] border border-[#ede8df] space-y-2">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-bold text-[#151a22] flex items-center gap-1.5">
+                      <Sparkles className="w-3.5 h-3.5 text-[#9b7842]" />
+                      <span>Choose From Your Saved Addresses:</span>
+                    </span>
+                    <Link href="/account?tab=addresses" className="text-[11px] text-[#9b7842] font-semibold hover:underline">
+                      Manage
+                    </Link>
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
+                    {addresses.map((addr) => {
+                      const isSelected = selectedSavedAddressId === addr.id;
+                      return (
+                        <button
+                          key={addr.id}
+                          type="button"
+                          onClick={() => handleSelectSavedAddress(addr)}
+                          className={`text-left p-3 rounded-xl border transition-all cursor-pointer ${
+                            isSelected
+                              ? "bg-white border-[#9b7842] shadow-xs ring-1 ring-[#9b7842]"
+                              : "bg-white/70 border-[#ded5cb] hover:bg-white"
+                          }`}
+                        >
+                          <div className="flex items-center justify-between">
+                            <span className="text-xs font-bold text-[#151a22] truncate">{addr.fullName}</span>
+                            <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-stone-100 text-stone-600 uppercase">
+                              {addr.label}
+                            </span>
+                          </div>
+                          <p className="text-[11px] text-stone-500 line-clamp-1 mt-0.5">
+                            {addr.address}, {addr.city}
+                          </p>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+
               <div className="space-y-4">
                 <div>
                   <label className="text-xs font-bold text-[#374151] block mb-1.5">
@@ -329,6 +521,20 @@ export default function CheckoutPage() {
                   </div>
                 </div>
 
+                {user && (
+                  <div className="pt-2 border-t border-[#ede8df]">
+                    <label className="flex items-center gap-2 cursor-pointer text-xs text-stone-700 font-medium">
+                      <input
+                        type="checkbox"
+                        checked={saveAddressToProfile}
+                        onChange={(e) => setSaveAddressToProfile(e.target.checked)}
+                        className="rounded border-[#ded5cb] text-[#9b7842] focus:ring-[#9b7842]"
+                      />
+                      <span>Save this address to my account for future orders</span>
+                    </label>
+                  </div>
+                )}
+
                 <div>
                   <label className="text-xs font-bold text-[#374151] block mb-1.5">
                     Special Delivery Instructions / Finish Preferences (Optional)
@@ -408,12 +614,68 @@ export default function CheckoutPage() {
               ))}
             </div>
 
+            {/* Coupon Promo Code Box */}
+            <div className="pt-4 border-t border-[#ede8df] space-y-2">
+              <label className="text-[11px] font-bold text-[#151a22] uppercase tracking-wider block">
+                Privilege Promo Code
+              </label>
+              {appliedCoupon ? (
+                <div className="flex items-center justify-between p-2.5 rounded-xl bg-emerald-50 border border-emerald-200 text-xs">
+                  <div className="min-w-0">
+                    <span className="font-mono font-bold text-emerald-800 tracking-wider">
+                      {appliedCoupon.code}
+                    </span>
+                    <span className="text-[10px] text-emerald-600 block">
+                      Saved ₹{appliedCoupon.discountAmount.toLocaleString("en-IN")}
+                    </span>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={handleRemoveCoupon}
+                    className="text-[11px] font-bold text-red-600 hover:text-red-700 underline ml-2"
+                  >
+                    Remove
+                  </button>
+                </div>
+              ) : (
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    placeholder="Enter code (e.g. LUXURY10)"
+                    value={couponInput}
+                    onChange={(e) => setCouponInput(e.target.value.toUpperCase())}
+                    className="flex-1 bg-[#fbf9f7] border border-[#ded5cb] rounded-xl px-3 py-2 text-xs font-mono tracking-wider text-[#151a22] placeholder-neutral-400 focus:outline-none focus:border-[#9b7842]"
+                  />
+                  <button
+                    type="button"
+                    disabled={isValidatingCoupon || !couponInput.trim()}
+                    onClick={handleApplyCoupon}
+                    className="bg-[#1c1815] hover:bg-[#9b7842] disabled:opacity-50 text-white text-xs font-bold px-4 py-2 rounded-xl transition-all"
+                  >
+                    {isValidatingCoupon ? "..." : "Apply"}
+                  </button>
+                </div>
+              )}
+              {couponError && (
+                <p className="text-[10px] text-red-600 font-semibold">{couponError}</p>
+              )}
+              {couponSuccess && (
+                <p className="text-[10px] text-emerald-600 font-semibold">{couponSuccess}</p>
+              )}
+            </div>
+
             {/* Calculations */}
-            <div className="space-y-3 text-xs pt-4 border-t border-[#ede8df]">
+            <div className="space-y-2.5 text-xs pt-4 border-t border-[#ede8df]">
               <div className="flex justify-between text-[#4b5563]">
                 <span>Catalogue Total</span>
                 <span className="font-bold text-[#151a22]">₹{totalEstimatedValue.toLocaleString("en-IN")}</span>
               </div>
+              {discountAmount > 0 && (
+                <div className="flex justify-between text-emerald-700 font-semibold">
+                  <span>Privilege Concession ({appliedCoupon?.code})</span>
+                  <span>-₹{discountAmount.toLocaleString("en-IN")}</span>
+                </div>
+              )}
               <div className="flex justify-between text-[#4b5563]">
                 <span>Insured Packaging & Freight</span>
                 <span className="text-emerald-700 font-bold">FREE</span>
@@ -425,7 +687,7 @@ export default function CheckoutPage() {
               <div className="pt-3 border-t border-[#ede8df] flex justify-between items-baseline">
                 <span className="text-sm font-bold text-[#151a22]">Total Payable</span>
                 <span className="text-2xl font-serif font-extrabold text-[#151a22]">
-                  ₹{totalEstimatedValue.toLocaleString("en-IN")}
+                  ₹{finalTotal.toLocaleString("en-IN")}
                 </span>
               </div>
             </div>

@@ -43,6 +43,10 @@ export interface Product {
   isBestseller?: boolean;
   finishes: FinishType[];
   finishImages?: Record<string, string>;
+  finishPrices?: Record<string, number>;
+  finishSkus?: Record<string, string>;
+  finishStocks?: Record<string, number>;
+  stockCount?: number;
   images: string[];
   dimensions?: string;
   flowRate?: string;

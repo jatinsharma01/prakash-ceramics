@@ -12,7 +12,9 @@ import {
   Send, 
   CheckCircle2, 
   Building, 
-  Calendar
+  Calendar,
+  Loader2,
+  AlertCircle
 } from "lucide-react";
 
 export default function ContactPage() {
@@ -24,13 +26,32 @@ export default function ContactPage() {
     preferredDate: "",
     message: "",
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSubmitted(true);
-    setTimeout(() => {
-      setSubmitted(false);
+    setIsSubmitting(true);
+    setErrorMessage(null);
+
+    try {
+      const res = await fetch("/api/enquiries", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ...formData,
+          source: "Contact Page",
+        }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.message || "Failed to submit consultation request");
+      }
+
+      setSubmitted(true);
       setFormData({
         name: "",
         email: "",
@@ -39,7 +60,16 @@ export default function ContactPage() {
         preferredDate: "",
         message: "",
       });
-    }, 4000);
+
+      setTimeout(() => {
+        setSubmitted(false);
+      }, 5000);
+    } catch (err: any) {
+      console.error("Enquiry submission error:", err);
+      setErrorMessage(err.message || "Something went wrong. Please try again or call our showroom.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -263,14 +293,31 @@ export default function ContactPage() {
                       />
                     </div>
 
+                    {errorMessage && (
+                      <div className="bg-red-50 border border-red-200 text-red-700 text-xs px-4 py-3 rounded-xl flex items-center gap-2">
+                        <AlertCircle className="w-4 h-4 shrink-0 text-red-500" />
+                        <span>{errorMessage}</span>
+                      </div>
+                    )}
+
                     <motion.button
-                      whileHover={{ scale: 1.01 }}
-                      whileTap={{ scale: 0.98 }}
+                      whileHover={isSubmitting ? {} : { scale: 1.01 }}
+                      whileTap={isSubmitting ? {} : { scale: 0.98 }}
                       type="submit"
-                      className="w-full bg-gradient-to-r from-[#fcfbf9] via-[#F2ECE7] to-[#e6ddd6] hover:from-white hover:to-[#ded5cb] text-[#1c1815] border border-[#ded5cb] font-semibold text-xs uppercase tracking-widest py-4 rounded-xl shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer"
+                      disabled={isSubmitting}
+                      className="w-full bg-gradient-to-r from-[#fcfbf9] via-[#F2ECE7] to-[#e6ddd6] hover:from-white hover:to-[#ded5cb] disabled:opacity-60 text-[#1c1815] border border-[#ded5cb] font-semibold text-xs uppercase tracking-widest py-4 rounded-xl shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer disabled:cursor-not-allowed"
                     >
-                      <Send className="w-4 h-4 text-[#8c7764]" />
-                      <span>Submit Consultation Request</span>
+                      {isSubmitting ? (
+                        <>
+                          <Loader2 className="w-4 h-4 animate-spin text-[#8c7764]" />
+                          <span>Submitting Request...</span>
+                        </>
+                      ) : (
+                        <>
+                          <Send className="w-4 h-4 text-[#8c7764]" />
+                          <span>Submit Consultation Request</span>
+                        </>
+                      )}
                     </motion.button>
                   </form>
                 )}

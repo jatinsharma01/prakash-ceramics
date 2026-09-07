@@ -2,43 +2,124 @@
 
 import React, { useState, useMemo } from "react";
 import Link from "next/link";
-import { 
-  ShoppingCart, 
-  Search, 
-  Filter, 
-  Eye, 
-  Download, 
-  Clock, 
-  Truck, 
-  CheckCircle2, 
-  AlertCircle, 
-  CreditCard, 
-  Phone, 
-  Mail, 
-  MapPin, 
-  X, 
-  ChevronRight, 
-  Printer, 
+import {
+  ShoppingCart,
+  Search,
+  Filter,
+  Eye,
+  Download,
+  Clock,
+  Truck,
+  CheckCircle2,
+  AlertCircle,
+  CreditCard,
+  Phone,
+  Mail,
+  MapPin,
+  X,
+  ChevronRight,
+  Printer,
   Sparkles,
-  PackageCheck
+  PackageCheck,
+  Loader2
 } from "lucide-react";
-import { ADMIN_ORDERS, AdminOrder } from "@/lib/adminData";
+import { AdminOrder } from "@/lib/adminData";
 import { motion, AnimatePresence } from "motion/react";
 
 export default function AdminOrdersPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [selectedOrder, setSelectedOrder] = useState<AdminOrder | null>(null);
-  const [orders, setOrders] = useState<AdminOrder[]>(ADMIN_ORDERS);
+  const [orders, setOrders] = useState<AdminOrder[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
+  const fetchOrders = React.useCallback(async () => {
+    try {
+      const res = await fetch("/api/orders");
+      if (res.ok) {
+        const data = await res.json();
+        if (data.orders && Array.isArray(data.orders)) {
+          setOrders(data.orders);
+        }
+      }
+    } catch (err) {
+      console.error("Failed to load orders from API", err);
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
+  React.useEffect(() => {
+    fetchOrders();
+  }, [fetchOrders]);
+
+  React.useEffect(() => {
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      const q = params.get("search") || params.get("q") || params.get("orderNumber");
+      if (q) {
+        setSearchQuery(q);
+      }
+    }
+  }, []);
+
+  const showToast = (msg: string) => {
+    setToastMessage(msg);
+    setTimeout(() => setToastMessage(null), 3000);
+  };
+
+  const [modalTrackingInput, setModalTrackingInput] = useState("");
+
+  React.useEffect(() => {
+    if (selectedOrder) {
+      setModalTrackingInput(selectedOrder.trackingNumber || "");
+    }
+  }, [selectedOrder]);
+
+  const updateOrder = async (
+    orderId: string,
+    updates: {
+      fulfillmentStatus?: string;
+      paymentStatus?: string;
+      trackingNumber?: string;
+    }
+  ) => {
+    try {
+      const res = await fetch(`/api/orders/${orderId}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(updates),
+      });
+
+      if (res.ok) {
+        setOrders((prev) =>
+          prev.map((o) => (o.id === orderId ? { ...o, ...updates } as AdminOrder : o))
+        );
+        if (selectedOrder && selectedOrder.id === orderId) {
+          setSelectedOrder((prev) => (prev ? { ...prev, ...updates } as AdminOrder : null));
+        }
+        const updatedLabel = updates.paymentStatus
+          ? `Payment status updated to ${updates.paymentStatus}`
+          : updates.fulfillmentStatus
+            ? `Fulfillment status updated to ${updates.fulfillmentStatus}`
+            : "Tracking details saved";
+        showToast(updatedLabel);
+      } else {
+        showToast("Failed to update order");
+      }
+    } catch (err) {
+      showToast("Error updating order");
+    }
+  };
+
   const filteredOrders = useMemo(() => {
-    return orders.filter((order) => {
+    return orders.filter((order: AdminOrder) => {
       const matchesSearch =
         order.orderNumber.toLowerCase().includes(searchQuery.toLowerCase()) ||
         order.customer.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         order.customer.city.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        order.items.some((i) => i.name.toLowerCase().includes(searchQuery.toLowerCase()));
+        order.items.some((i: any) => i.name.toLowerCase().includes(searchQuery.toLowerCase()));
 
       const matchesStatus =
         statusFilter === "all" ||
@@ -47,21 +128,6 @@ export default function AdminOrdersPage() {
       return matchesSearch && matchesStatus;
     });
   }, [orders, searchQuery, statusFilter]);
-
-  const showToast = (msg: string) => {
-    setToastMessage(msg);
-    setTimeout(() => setToastMessage(null), 3000);
-  };
-
-  const updateOrderStatus = (orderId: string, newStatus: AdminOrder["fulfillmentStatus"]) => {
-    setOrders((prev) =>
-      prev.map((o) => (o.id === orderId ? { ...o, fulfillmentStatus: newStatus } : o))
-    );
-    if (selectedOrder && selectedOrder.id === orderId) {
-      setSelectedOrder((prev) => (prev ? { ...prev, fulfillmentStatus: newStatus } : null));
-    }
-    showToast(`Order status updated to ${newStatus}`);
-  };
 
   const totalOrdersCount = orders.length;
   const processingCount = orders.filter((o) => o.fulfillmentStatus === "Processing").length;
@@ -148,41 +214,37 @@ export default function AdminOrdersPage() {
           <div className="flex items-center gap-1 bg-stone-900/90 p-1 rounded-xl border border-stone-800 text-xs overflow-x-auto">
             <button
               onClick={() => setStatusFilter("all")}
-              className={`px-3 py-1.5 rounded-lg whitespace-nowrap transition-all ${
-                statusFilter === "all"
+              className={`px-3 py-1.5 rounded-lg whitespace-nowrap transition-all ${statusFilter === "all"
                   ? "bg-[#9b7842] text-white font-semibold"
                   : "text-stone-400 hover:text-white"
-              }`}
+                }`}
             >
               All ({totalOrdersCount})
             </button>
             <button
               onClick={() => setStatusFilter("processing")}
-              className={`px-3 py-1.5 rounded-lg whitespace-nowrap transition-all ${
-                statusFilter === "processing"
+              className={`px-3 py-1.5 rounded-lg whitespace-nowrap transition-all ${statusFilter === "processing"
                   ? "bg-amber-600 text-white font-semibold"
                   : "text-stone-400 hover:text-white"
-              }`}
+                }`}
             >
               Processing ({processingCount})
             </button>
             <button
               onClick={() => setStatusFilter("shipped")}
-              className={`px-3 py-1.5 rounded-lg whitespace-nowrap transition-all ${
-                statusFilter === "shipped"
+              className={`px-3 py-1.5 rounded-lg whitespace-nowrap transition-all ${statusFilter === "shipped"
                   ? "bg-blue-600 text-white font-semibold"
                   : "text-stone-400 hover:text-white"
-              }`}
+                }`}
             >
               Shipped ({shippedCount})
             </button>
             <button
               onClick={() => setStatusFilter("delivered")}
-              className={`px-3 py-1.5 rounded-lg whitespace-nowrap transition-all ${
-                statusFilter === "delivered"
+              className={`px-3 py-1.5 rounded-lg whitespace-nowrap transition-all ${statusFilter === "delivered"
                   ? "bg-emerald-600 text-white font-semibold"
                   : "text-stone-400 hover:text-white"
-              }`}
+                }`}
             >
               Delivered ({deliveredCount})
             </button>
@@ -206,7 +268,16 @@ export default function AdminOrdersPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-stone-800/60">
-              {filteredOrders.length === 0 ? (
+              {isLoading ? (
+                <tr>
+                  <td colSpan={7} className="p-16 text-center">
+                    <div className="flex flex-col items-center justify-center gap-2">
+                      <Loader2 className="w-8 h-8 animate-spin text-[#dec49a]" />
+                      <p className="text-xs text-stone-400">Loading orders from database...</p>
+                    </div>
+                  </td>
+                </tr>
+              ) : filteredOrders.length === 0 ? (
                 <tr>
                   <td colSpan={7} className="p-8 text-center text-stone-400">
                     No orders match your filter.
@@ -271,15 +342,23 @@ export default function AdminOrdersPage() {
 
                     {/* Payment */}
                     <td className="p-4">
-                      <span
-                        className={`inline-block text-[10px] px-2 py-0.5 rounded-full font-semibold ${
-                          order.paymentStatus === "Paid"
-                            ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"
-                            : "bg-amber-500/10 text-amber-400 border border-amber-500/20"
-                        }`}
+                      <select
+                        value={order.paymentStatus}
+                        onChange={(e) => updateOrder(order.id, { paymentStatus: e.target.value })}
+                        className={`text-[10px] font-bold rounded-lg px-2 py-1 border transition-all cursor-pointer focus:outline-none ${order.paymentStatus === "Paid"
+                            ? "bg-emerald-500/15 text-emerald-300 border-emerald-500/30"
+                            : order.paymentStatus === "Pending"
+                              ? "bg-amber-500/15 text-amber-300 border-amber-500/30"
+                              : order.paymentStatus === "Refunded"
+                                ? "bg-purple-500/15 text-purple-300 border-purple-500/30"
+                                : "bg-red-500/15 text-red-300 border-red-500/30"
+                          }`}
                       >
-                        {order.paymentStatus}
-                      </span>
+                        <option value="Paid" className="bg-stone-900 text-emerald-300">Paid</option>
+                        <option value="Pending" className="bg-stone-900 text-amber-300">Pending</option>
+                        <option value="Refunded" className="bg-stone-900 text-purple-300">Refunded</option>
+                        <option value="Failed" className="bg-stone-900 text-red-300">Failed</option>
+                      </select>
                       <p className="text-[10px] text-stone-400 mt-1">
                         {order.paymentMethod}
                       </p>
@@ -287,17 +366,23 @@ export default function AdminOrdersPage() {
 
                     {/* Fulfillment Status */}
                     <td className="p-4">
-                      <span
-                        className={`inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold ${
-                          order.fulfillmentStatus === "Delivered"
-                            ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/30"
-                            : order.fulfillmentStatus === "Processing"
-                            ? "bg-amber-500/10 text-amber-400 border border-amber-500/30"
-                            : "bg-blue-500/10 text-blue-400 border border-blue-500/30"
-                        }`}
+                      <select
+                        value={order.fulfillmentStatus}
+                        onChange={(e) => updateOrder(order.id, { fulfillmentStatus: e.target.value })}
+                        className={`text-[10px] font-bold rounded-lg px-2.5 py-1 border transition-all cursor-pointer focus:outline-none ${order.fulfillmentStatus === "Delivered"
+                            ? "bg-emerald-500/15 text-emerald-300 border-emerald-500/30"
+                            : order.fulfillmentStatus === "Shipped"
+                              ? "bg-blue-500/15 text-blue-300 border-blue-500/30"
+                              : order.fulfillmentStatus === "Processing"
+                                ? "bg-amber-500/15 text-amber-300 border-amber-500/30"
+                                : "bg-red-500/15 text-red-300 border-red-500/30"
+                          }`}
                       >
-                        {order.fulfillmentStatus}
-                      </span>
+                        <option value="Processing" className="bg-stone-900 text-amber-300">Processing</option>
+                        <option value="Shipped" className="bg-stone-900 text-blue-300">Shipped</option>
+                        <option value="Delivered" className="bg-stone-900 text-emerald-300">Delivered</option>
+                        <option value="Cancelled" className="bg-stone-900 text-red-300">Cancelled</option>
+                      </select>
                     </td>
 
                     {/* Actions */}
@@ -343,11 +428,10 @@ export default function AdminOrdersPage() {
                       {selectedOrder.orderNumber}
                     </span>
                     <span
-                      className={`text-[10px] px-2.5 py-0.5 rounded-full font-bold uppercase ${
-                        selectedOrder.fulfillmentStatus === "Delivered"
+                      className={`text-[10px] px-2.5 py-0.5 rounded-full font-bold uppercase ${selectedOrder.fulfillmentStatus === "Delivered"
                           ? "bg-emerald-500/20 text-emerald-400"
                           : "bg-amber-500/20 text-amber-400"
-                      }`}
+                        }`}
                     >
                       {selectedOrder.fulfillmentStatus}
                     </span>
@@ -472,42 +556,110 @@ export default function AdminOrdersPage() {
                 </div>
               </div>
 
-              {/* Update Fulfillment Actions */}
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-4 border-t border-stone-800">
-                <span className="text-xs font-medium text-stone-400">
-                  Update Fulfillment Workflow:
-                </span>
-                <div className="flex items-center gap-2">
-                  <button
-                    onClick={() => updateOrderStatus(selectedOrder.id, "Processing")}
-                    className={`px-3 py-1.5 rounded-xl text-xs font-semibold ${
-                      selectedOrder.fulfillmentStatus === "Processing"
-                        ? "bg-amber-600 text-white"
-                        : "bg-stone-800 text-stone-300 hover:text-white"
-                    }`}
-                  >
-                    Processing
-                  </button>
-                  <button
-                    onClick={() => updateOrderStatus(selectedOrder.id, "Shipped")}
-                    className={`px-3 py-1.5 rounded-xl text-xs font-semibold ${
-                      selectedOrder.fulfillmentStatus === "Shipped"
-                        ? "bg-blue-600 text-white"
-                        : "bg-stone-800 text-stone-300 hover:text-white"
-                    }`}
-                  >
-                    Shipped
-                  </button>
-                  <button
-                    onClick={() => updateOrderStatus(selectedOrder.id, "Delivered")}
-                    className={`px-3 py-1.5 rounded-xl text-xs font-semibold ${
-                      selectedOrder.fulfillmentStatus === "Delivered"
-                        ? "bg-emerald-600 text-white"
-                        : "bg-stone-800 text-stone-300 hover:text-white"
-                    }`}
-                  >
-                    Delivered
-                  </button>
+              {/* Management Controls: Payment, Fulfillment, Tracking */}
+              <div className="pt-4 border-t border-stone-800 space-y-4">
+                {/* Payment Status Control */}
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3.5 rounded-2xl bg-stone-900/70 border border-stone-800">
+                  <div>
+                    <span className="text-xs font-semibold text-white block">
+                      Payment Settlement Status:
+                    </span>
+                    <span className="text-[11px] text-stone-400">
+                      Method: {selectedOrder.paymentMethod || "Direct"} • Current:{" "}
+                      <span className="font-semibold text-[#dec49a]">{selectedOrder.paymentStatus}</span>
+                    </span>
+                  </div>
+                  <div className="flex flex-wrap items-center gap-1.5">
+                    {(["Paid", "Pending", "Refunded", "Failed"] as const).map((status) => {
+                      const isActive = selectedOrder.paymentStatus === status;
+                      const activeColors: Record<string, string> = {
+                        Paid: "bg-emerald-600 text-white shadow-lg shadow-emerald-950/40",
+                        Pending: "bg-amber-600 text-white shadow-lg shadow-amber-950/40",
+                        Refunded: "bg-purple-600 text-white shadow-lg shadow-purple-950/40",
+                        Failed: "bg-rose-600 text-white shadow-lg shadow-rose-950/40",
+                      };
+                      return (
+                        <button
+                          key={status}
+                          type="button"
+                          onClick={() => updateOrder(selectedOrder.id, { paymentStatus: status })}
+                          className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all ${isActive
+                              ? activeColors[status]
+                              : "bg-stone-800 text-stone-300 hover:bg-stone-700 hover:text-white"
+                            }`}
+                        >
+                          {status}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* Fulfillment Status Control */}
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3.5 rounded-2xl bg-stone-900/70 border border-stone-800">
+                  <div>
+                    <span className="text-xs font-semibold text-white block">
+                      Fulfillment Logistics Status:
+                    </span>
+                    <span className="text-[11px] text-stone-400">
+                      Dispatched warehouse lifecycle:{" "}
+                      <span className="font-semibold text-blue-300">{selectedOrder.fulfillmentStatus}</span>
+                    </span>
+                  </div>
+                  <div className="flex flex-wrap items-center gap-1.5">
+                    {(["Processing", "Shipped", "Delivered", "Cancelled"] as const).map((status) => {
+                      const isActive = selectedOrder.fulfillmentStatus === status;
+                      const activeColors: Record<string, string> = {
+                        Processing: "bg-amber-600 text-white shadow-lg shadow-amber-950/40",
+                        Shipped: "bg-blue-600 text-white shadow-lg shadow-blue-950/40",
+                        Delivered: "bg-emerald-600 text-white shadow-lg shadow-emerald-950/40",
+                        Cancelled: "bg-stone-700 text-stone-200 shadow-lg",
+                      };
+                      return (
+                        <button
+                          key={status}
+                          type="button"
+                          onClick={() => updateOrder(selectedOrder.id, { fulfillmentStatus: status })}
+                          className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all ${isActive
+                              ? activeColors[status]
+                              : "bg-stone-800 text-stone-300 hover:bg-stone-700 hover:text-white"
+                            }`}
+                        >
+                          {status}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* Courier / AWB Tracking Number Input */}
+                <div className="p-3.5 rounded-2xl bg-stone-900/70 border border-stone-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                  <div className="flex-1">
+                    <label className="text-xs font-semibold text-white block mb-1">
+                      AWB / Courier Tracking ID
+                    </label>
+                    <div className="flex items-center gap-2">
+                      <div className="relative flex-1">
+                        <Truck className="w-3.5 h-3.5 text-stone-500 absolute left-3 top-1/2 -translate-y-1/2" />
+                        <input
+                          type="text"
+                          value={modalTrackingInput}
+                          onChange={(e) => setModalTrackingInput(e.target.value)}
+                          placeholder="e.g. BLUEDART-984210984"
+                          className="w-full bg-stone-950 border border-stone-800 rounded-xl pl-9 pr-3 py-1.5 text-xs text-stone-200 placeholder:text-stone-600 focus:outline-none focus:border-[#9b7842]"
+                        />
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() =>
+                          updateOrder(selectedOrder.id, { trackingNumber: modalTrackingInput })
+                        }
+                        className="px-3 py-1.5 bg-[#9b7842] hover:bg-[#866635] text-white text-xs font-semibold rounded-xl transition-all shadow-sm"
+                      >
+                        Save Tracking
+                      </button>
+                    </div>
+                  </div>
                 </div>
               </div>
             </motion.div>

@@ -28,7 +28,7 @@ export default function CartPage() {
     updateQuantity, 
     clearEnquiry, 
     totalEstimatedValue, 
-    totalItems 
+    totalItems
   } = useEnquiry();
 
   const { addToWishlist, isInWishlist } = useWishlist();
@@ -78,7 +78,7 @@ export default function CartPage() {
             <button
               type="button"
               onClick={clearEnquiry}
-              className="text-xs font-semibold text-red-600 hover:text-red-700 transition-colors self-start sm:self-auto cursor-pointer"
+              className="text-xs font-semibold text-red-600 hover:text-red-700 transition-colors cursor-pointer"
             >
               Clear Entire Cart
             </button>
