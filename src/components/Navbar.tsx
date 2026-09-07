@@ -487,7 +487,7 @@ export function Navbar() {
               </AnimatePresence>
             </div>
 
-            {/* Consult Architect CTA -> Links to /contact */}
+            {/* Visit Our Showroom CTA -> Links to /contact */}
             <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }} className="hidden md:block">
               <Link
                 href="/contact"
@@ -498,7 +498,7 @@ export function Navbar() {
                     : "bg-gradient-to-r from-[#fcfbf9] via-[#F2ECE7] to-[#e6ddd6] hover:from-white hover:to-[#ded5cb] text-[#1c1815] border border-[#ded5cb] hover:shadow-md"
                 )}
               >
-                <span>Consult Architect</span>
+                <span>Visit Our Showroom</span>
               </Link>
             </motion.div>
 
@@ -623,7 +623,7 @@ export function Navbar() {
                     href="/contact"
                     className="w-full text-center bg-gradient-to-r from-[#fcfbf9] via-[#F2ECE7] to-[#e6ddd6] hover:from-white hover:to-[#ded5cb] text-[#1c1815] border border-[#ded5cb] font-semibold text-xs uppercase tracking-wider py-3 rounded-lg shadow-sm"
                   >
-                    Consult Architect / Showroom Tour
+                    Visit Our Showroom
                   </Link>
 
                   {user && (

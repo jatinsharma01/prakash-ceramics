@@ -101,7 +101,7 @@ export default function CartPage() {
               href="/products"
               className="inline-flex items-center gap-2 bg-[#1c1815] hover:bg-[#9b7842] text-white text-xs font-bold uppercase tracking-wider px-8 py-4 rounded-xl transition-all shadow-md"
             >
-              <span>Explore 2026 Collection</span>
+              <span>Explore Products</span>
               <ArrowRight className="w-4 h-4" />
             </Link>
           </div>

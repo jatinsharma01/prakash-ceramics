@@ -5,45 +5,45 @@ export const CATEGORIES: Category[] = [
     id: "cat-faucets",
     name: "Faucets",
     slug: "faucets",
-    shortDescription: "Architectural precision & water-saving elegance for basins and countertops.",
-    description: "Designed with Swiss-engineered ceramic cartridges, PVD surface coatings, and aerated laminar water flow for lasting luxury.",
+    shortDescription: "Beautiful mixers for basins, showers and bathtubs.",
+    description: "Beautiful mixers for basins, showers and bathtubs.",
     image: "https://res.cloudinary.com/dtk1pspib/image/upload/v1788760648/parkash-ceramics/faucets.jpg",
     featured: true,
     itemCount: 42,
-    tags: ["Basin Mixers", "Wall Mount", "Tall Basin", "Sensor Faucets"]
+    tags: ["Basin Mixers", "Wall Mount", "Tall Basin", "Bath Mixers"]
   },
   {
     id: "cat-showers",
     name: "Showers",
     slug: "showers",
-    shortDescription: "Immersive deluge, cascading rain, and multi-flow hydrotherapy systems.",
-    description: "Experience revitalizing hydro-sensations with self-cleaning silicone nozzles, overhead rainfall plates, and mist spray technology.",
+    shortDescription: "Rain showers, hand showers and complete shower systems.",
+    description: "Rain showers, hand showers and complete shower systems.",
     image: "https://res.cloudinary.com/dtk1pspib/image/upload/v1788760665/parkash-ceramics/showers.jpg",
     featured: true,
     itemCount: 38,
-    tags: ["Rain Showers", "Overhead Cascade", "Hand Showers", "Body Jets"]
+    tags: ["Rain Showers", "Hand Showers", "Shower Systems", "Overhead Cascade"]
   },
   {
     id: "cat-cloud",
     name: "Cloud",
     slug: "cloud",
-    shortDescription: "Next-generation smart showering & intelligent ambient wellness spaces.",
-    description: "Digital touchscreen controls, customizable thermal routines, chromotherapy lighting, and whisper-quiet cloud steam dispersion.",
+    shortDescription: "Smart shower systems made for a better shower every day.",
+    description: "Smart shower systems made for a better shower every day.",
     image: "https://res.cloudinary.com/dtk1pspib/image/upload/v1788760644/parkash-ceramics/cloud.jpg",
     featured: true,
     itemCount: 16,
-    tags: ["Smart Controls", "Chromotherapy", "Aroma Cloud", "Memory Presets"]
+    tags: ["Smart Controls", "Rain Shower", "Body Jets", "Steam"]
   },
   {
     id: "cat-sanitaryware",
     name: "Sanitaryware",
     slug: "sanitaryware",
-    shortDescription: "Sculptural ceramic washbasins, rimless WCs, and bidet suites.",
-    description: "Crafted from fine vitreous china with ultra-hygienic nano-glaze finish, silent pneumatic flushing, and slimline soft-close seats.",
+    shortDescription: "Toilets, basins and bathroom pieces made for modern homes.",
+    description: "Toilets, basins and bathroom pieces made for modern homes.",
     image: "https://res.cloudinary.com/dtk1pspib/image/upload/v1788760655/parkash-ceramics/sanitaryware.jpg",
     featured: true,
     itemCount: 54,
-    tags: ["Wall-Hung WCs", "Tabletop Basins", "Vanity Sinks", "Bidet Toilets"]
+    tags: ["Wall-Hung WCs", "Tabletop Basins", "Vanity Sinks", "Bidet Suites"]
   },
   {
     id: "cat-thermostatic",

@@ -38,8 +38,8 @@ export function Footer() {
                 <ShieldCheck className="w-6 h-6" />
               </div>
               <div>
-                <h4 className="text-sm font-semibold text-[#151a22] uppercase tracking-wider">10-15 Year Warranty</h4>
-                <p className="text-xs text-[#6b7280] mt-1">Swiss & German ceramic cartridges engineered for half a million cycles.</p>
+                <h4 className="text-sm font-semibold text-[#151a22] uppercase tracking-wider">10–15 Year Warranty</h4>
+                <p className="text-xs text-[#6b7280] mt-1">Extra peace of mind for years to come.</p>
               </div>
             </div>
 
@@ -48,8 +48,8 @@ export function Footer() {
                 <Droplets className="w-6 h-6" />
               </div>
               <div>
-                <h4 className="text-sm font-semibold text-[#151a22] uppercase tracking-wider">Eco-Save Aeration</h4>
-                <p className="text-xs text-[#6b7280] mt-1">Air-injected water saving flow without compromising hydro-pressure.</p>
+                <h4 className="text-sm font-semibold text-[#151a22] uppercase tracking-wider">Save Water</h4>
+                <p className="text-xs text-[#6b7280] mt-1">Use less water without losing a good flow.</p>
               </div>
             </div>
 
@@ -58,8 +58,8 @@ export function Footer() {
                 <Layers className="w-6 h-6" />
               </div>
               <div>
-                <h4 className="text-sm font-semibold text-[#151a22] uppercase tracking-wider">Diamond PVD Finishes</h4>
-                <p className="text-xs text-[#6b7280] mt-1">Vapor deposition finishes impervious to corrosion and salt spray.</p>
+                <h4 className="text-sm font-semibold text-[#151a22] uppercase tracking-wider">Made To Last</h4>
+                <p className="text-xs text-[#6b7280] mt-1">Strong finishes that stay beautiful for years.</p>
               </div>
             </div>
 
@@ -68,8 +68,8 @@ export function Footer() {
                 <Award className="w-6 h-6" />
               </div>
               <div>
-                <h4 className="text-sm font-semibold text-[#151a22] uppercase tracking-wider">Architect Support</h4>
-                <p className="text-xs text-[#6b7280] mt-1">Dedicated CAD spec sheets, 3D files, and on-site project consulting.</p>
+                <h4 className="text-sm font-semibold text-[#151a22] uppercase tracking-wider">Help When You Need It</h4>
+                <p className="text-xs text-[#6b7280] mt-1">Get product advice, measurements and design help from our team.</p>
               </div>
             </div>
           </div>
@@ -157,8 +157,13 @@ export function Footer() {
             </h3>
             <ul className="space-y-2.5 text-xs mb-6">
               <li>
+                <Link href="/bestsellers" className="text-[#555f6d] hover:text-[#9b7842] transition-colors font-medium">
+                  Best Sellers Collection
+                </Link>
+              </li>
+              <li>
                 <Link href="/products" className="text-[#555f6d] hover:text-[#9b7842] transition-colors">
-                  Product Catalogue 2026
+                  Product Catalogue
                 </Link>
               </li>
               <li>

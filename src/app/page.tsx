@@ -40,12 +40,12 @@ import {
 import { clsx } from "clsx";
 
 const HERO_CONTENT = {
-  badge: "The Architecture of Water",
-  headline: "Sculptural Luxury For Discerning Bathrooms",
-  subtitle: "Prakash Ceramics crafts architectural faucets, hydro-sensory rainfall showers, seamless bathtubs, and wellness sanctuaries engineered to perfection.",
-  primaryCta: "Explore 2026 Collection",
+  badge: "PREMIUM BATHROOMS. BEAUTIFULLY DONE.",
+  headline: "Make Your Bathroom Feel Special",
+  subtitle: "Premium faucets, showers, sanitaryware and bathtubs from brands you can trust. See them, touch them and choose the right ones for your home.",
+  primaryCta: "Explore Products",
   primaryHref: "/products",
-  secondaryCta: "Consult Architect & Tour",
+  secondaryCta: "Visit Our Showroom",
   secondaryHref: "/contact",
   videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-water-falling-from-a-luxury-shower-head-41617-large.mp4",
   posterImage: "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&q=80&w=2400"
@@ -322,11 +322,14 @@ export default function HomePage() {
             <div>
               <div className="flex items-center gap-2 text-xs uppercase tracking-[0.25em] text-[#9b7842] font-semibold mb-2">
                 <Compass className="w-3.5 h-3.5" />
-                <span>All 16 Collections</span>
+                <span>FIND WHAT YOU NEED</span>
               </div>
               <h2 className="text-3xl sm:text-4xl lg:text-5xl font-serif font-semibold text-[#151a22] tracking-tight">
-                Architectural Categories
+                Shop By Category
               </h2>
+              <p className="text-xs sm:text-sm text-[#6b7280] mt-2 max-w-xl">
+                Everything you need to build a beautiful bathroom.
+              </p>
             </div>
 
             {/* Scroll navigation controls */}
@@ -463,7 +466,7 @@ export default function HomePage() {
                           href={`/categories/${cat.slug}`}
                           className="inline-flex items-center gap-2 bg-gradient-to-r from-[#fcfbf9] via-[#F2ECE7] to-[#e6ddd6] hover:from-white hover:to-[#ded5cb] text-[#1c1815] font-semibold text-xs uppercase tracking-wider px-6 py-3 rounded-full shadow-lg transition-all"
                         >
-                          <span>Explore {cat.name} Series</span>
+                          <span>{cat.slug === "cloud" ? "EXPLORE CLOUD" : "EXPLORE"}</span>
                           <ArrowRight className="w-3.5 h-3.5" />
                         </Link>
                       </motion.div>
@@ -484,7 +487,7 @@ export default function HomePage() {
                       </div>
 
                       <div className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-[#dec49a] pt-3">
-                        <span>Explore</span>
+                        <span>{cat.slug === "cloud" ? "EXPLORE CLOUD" : "EXPLORE"}</span>
                         <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" />
                       </div>
                     </Link>
@@ -505,21 +508,21 @@ export default function HomePage() {
             <div>
               <div className="flex items-center gap-2 text-xs uppercase tracking-[0.25em] text-[#9b7842] font-bold mb-2">
                 <Sparkles className="w-3.5 h-3.5 text-[#9b7842]" />
-                <span>Best Sellers</span>
+                <span>OUR MOST LOVED</span>
               </div>
               <h2 className="text-3xl sm:text-4xl lg:text-5xl font-serif font-semibold text-[#1c1815] tracking-tight">
-                Best Selling Products
+                Best Sellers
               </h2>
               <p className="text-xs sm:text-sm text-[#6b7280] mt-2 max-w-xl">
-                Our most requested architectural faucets, precision basin mixers, and luxury bath fittings specified by top architects and luxury homeowners.
+                See the faucets, showers and bathroom products our customers choose most.
               </p>
             </div>
 
             <Link
-              href="/products"
+              href="/bestsellers"
               className="inline-flex items-center gap-2 text-xs uppercase tracking-wider font-semibold text-[#8c7764] hover:text-[#1c1815] transition-colors group"
             >
-              <span>Explore All Best Sellers</span>
+              <span>VIEW ALL BEST SELLERS</span>
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </Link>
           </MotionReveal>
@@ -953,8 +956,8 @@ export default function HomePage() {
                   <div className="w-9 h-9 rounded-xl bg-[#9b7842]/30 border border-[#dec49a]/30 text-[#dec49a] flex items-center justify-center mb-3">
                     <ShieldCheck className="w-5 h-5" />
                   </div>
-                  <span className="text-2xl sm:text-3xl font-serif font-semibold text-white block">10-15 Yrs</span>
-                  <span className="text-[11px] uppercase tracking-wider text-neutral-300 font-semibold mt-0.5 block">Full Warranty</span>
+                  <span className="text-2xl sm:text-3xl font-serif font-semibold text-white block">10–15 YRS</span>
+                  <span className="text-[11px] uppercase tracking-wider text-neutral-300 font-semibold mt-0.5 block">Long Warranty</span>
                 </motion.div>
               </StaggerItem>
 
@@ -963,8 +966,8 @@ export default function HomePage() {
                   <div className="w-9 h-9 rounded-xl bg-[#9b7842]/30 border border-[#dec49a]/30 text-[#dec49a] flex items-center justify-center mb-3">
                     <Droplets className="w-5 h-5" />
                   </div>
-                  <span className="text-2xl sm:text-3xl font-serif font-semibold text-white block">500,000+</span>
-                  <span className="text-[11px] uppercase tracking-wider text-neutral-300 font-semibold mt-0.5 block">Cycle Cartridge Life</span>
+                  <span className="text-2xl sm:text-3xl font-serif font-semibold text-white block">500K+</span>
+                  <span className="text-[11px] uppercase tracking-wider text-neutral-300 font-semibold mt-0.5 block">Tested Cycles</span>
                 </motion.div>
               </StaggerItem>
 
@@ -973,8 +976,8 @@ export default function HomePage() {
                   <div className="w-9 h-9 rounded-xl bg-[#9b7842]/30 border border-[#dec49a]/30 text-[#dec49a] flex items-center justify-center mb-3">
                     <Layers className="w-5 h-5" />
                   </div>
-                  <span className="text-2xl sm:text-3xl font-serif font-semibold text-white block">100% PVD</span>
-                  <span className="text-[11px] uppercase tracking-wider text-neutral-300 font-semibold mt-0.5 block">Molecular Vacuum Coat</span>
+                  <span className="text-2xl sm:text-3xl font-serif font-semibold text-white block">PREMIUM</span>
+                  <span className="text-[11px] uppercase tracking-wider text-neutral-300 font-semibold mt-0.5 block">Long-Lasting Finishes</span>
                 </motion.div>
               </StaggerItem>
 
@@ -983,8 +986,8 @@ export default function HomePage() {
                   <div className="w-9 h-9 rounded-xl bg-[#9b7842]/30 border border-[#dec49a]/30 text-[#dec49a] flex items-center justify-center mb-3">
                     <Compass className="w-5 h-5" />
                   </div>
-                  <span className="text-2xl sm:text-3xl font-serif font-semibold text-white block">16 Lines</span>
-                  <span className="text-[11px] uppercase tracking-wider text-neutral-300 font-semibold mt-0.5 block">Integrated Suites</span>
+                  <span className="text-2xl sm:text-3xl font-serif font-semibold text-white block">16+</span>
+                  <span className="text-[11px] uppercase tracking-wider text-neutral-300 font-semibold mt-0.5 block">Collections</span>
                 </motion.div>
               </StaggerItem>
             </StaggerContainer>
@@ -1026,12 +1029,12 @@ export default function HomePage() {
               >
                 <div>
                   <span className="text-2xl sm:text-3xl font-serif font-semibold text-[#151a22] block">500,000+</span>
-                  <span className="text-[10px] uppercase tracking-wider text-[#84786d] font-semibold">Tested Cycle Longevity</span>
+                  <span className="text-[10px] uppercase tracking-wider text-[#84786d] font-semibold">TESTED FOR DAILY USE</span>
                 </div>
                 <div className="h-8 w-px bg-[#ede8df]" />
                 <div>
-                  <span className="text-2xl sm:text-3xl font-serif font-semibold text-[#9b7842] block">10-15 Yrs</span>
-                  <span className="text-[10px] uppercase tracking-wider text-[#84786d] font-semibold">Comprehensive Warranty</span>
+                  <span className="text-2xl sm:text-3xl font-serif font-semibold text-[#9b7842] block">10–15 YRS</span>
+                  <span className="text-[10px] uppercase tracking-wider text-[#84786d] font-semibold">WARRANTY</span>
                 </div>
               </motion.div>
             </MotionReveal>
@@ -1040,15 +1043,15 @@ export default function HomePage() {
             <MotionReveal direction="left" className="lg:pl-6">
               <div className="flex items-center gap-2 text-xs uppercase tracking-[0.25em] text-[#9b7842] font-semibold mb-3">
                 <Award className="w-3.5 h-3.5" />
-                <span>The Prakash Ceramics Benchmark</span>
+                <span>WHY CHOOSE PRAKASH CERAMICS?</span>
               </div>
 
               <h2 className="text-3xl sm:text-4xl lg:text-5xl font-serif font-semibold text-[#151a22] tracking-tight leading-tight mb-6">
-                Where Master Craftsmanship Meets Fluid Dynamics
+                Good Products. Honest Advice. Great Bathrooms.
               </h2>
 
               <p className="text-sm sm:text-base text-[#374151] leading-relaxed mb-6">
-                For over two decades, Prakash Ceramics has supplied visionary architects, interior designers, and luxury homeowners with bathroom fixtures that transcend utility. We combine German ceramic cartridge precision, French thermostatic regulation, and Physical Vapor Deposition (PVD) to deliver surfaces that remain immaculate for a lifetime.
+                For years, we have helped homeowners, architects and designers choose the right bathroom products for their spaces.
               </p>
 
               <div className="space-y-4 mb-8">
@@ -1057,8 +1060,8 @@ export default function HomePage() {
                     <CheckCircle2 className="w-4 h-4" />
                   </div>
                   <div>
-                    <h4 className="text-sm sm:text-base font-semibold text-[#151a22]">Lead-Free Dezincification Resistant Brass</h4>
-                    <p className="text-xs sm:text-sm text-[#6b7280]">Pure DR brass prevents heavy metal water contamination and eliminates internal corrosion.</p>
+                    <h4 className="text-sm sm:text-base font-semibold text-[#151a22] uppercase tracking-wide">MADE TO LAST</h4>
+                    <p className="text-xs sm:text-sm text-[#6b7280]">We choose products from trusted brands that are built for daily use.</p>
                   </div>
                 </div>
 
@@ -1067,8 +1070,8 @@ export default function HomePage() {
                     <CheckCircle2 className="w-4 h-4" />
                   </div>
                   <div>
-                    <h4 className="text-sm sm:text-base font-semibold text-[#151a22]">Tornado Rimless Ceramic Hygiene</h4>
-                    <p className="text-xs sm:text-sm text-[#6b7280]">360-degree vortex centrifugal flush scrubs every millimeter without splashing or overspray.</p>
+                    <h4 className="text-sm sm:text-base font-semibold text-[#151a22] uppercase tracking-wide">DESIGNED FOR REAL HOMES</h4>
+                    <p className="text-xs sm:text-sm text-[#6b7280]">Good-looking products that also work well every day.</p>
                   </div>
                 </div>
 
@@ -1077,8 +1080,8 @@ export default function HomePage() {
                     <CheckCircle2 className="w-4 h-4" />
                   </div>
                   <div>
-                    <h4 className="text-sm sm:text-base font-semibold text-[#151a22]">Architectural CAD & BIM Library</h4>
-                    <p className="text-xs sm:text-sm text-[#6b7280]">Complete 3D Revit models, dimensional blueprints, and rough-in guides ready for specification.</p>
+                    <h4 className="text-sm sm:text-base font-semibold text-[#151a22] uppercase tracking-wide">HELP FROM START TO FINISH</h4>
+                    <p className="text-xs sm:text-sm text-[#6b7280]">Not sure what to buy? Our team can help you choose the right products for your bathroom.</p>
                   </div>
                 </div>
               </div>
