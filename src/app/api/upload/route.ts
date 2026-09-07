@@ -1,9 +1,17 @@
 import { NextRequest, NextResponse } from "next/server";
-import { put } from "@vercel/blob";
-import { writeFile } from "fs/promises";
-import path from "path";
+import { v2 as cloudinary } from "cloudinary";
 
-const IS_VERCEL = process.env.VERCEL === "1";
+// Default Cloudinary configuration (can also be overridden by env vars)
+const CLOUD_NAME = process.env.CLOUDINARY_CLOUD_NAME || "dtk1pspib";
+const API_KEY = process.env.CLOUDINARY_API_KEY || "656293611855564";
+const API_SECRET = process.env.CLOUDINARY_API_SECRET || "xkovNeymd_0DWeA3AVTaEshm6M4";
+
+cloudinary.config({
+  cloud_name: CLOUD_NAME,
+  api_key: API_KEY,
+  api_secret: API_SECRET,
+  secure: true,
+});
 
 export async function POST(request: NextRequest) {
   try {
@@ -14,42 +22,37 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "No file uploaded" }, { status: 400 });
     }
 
-    // On Vercel: use Vercel Blob (cloud storage)
-    // Locally: write to public/images/ as before
-    if (IS_VERCEL) {
-      const blob = await put(file.name, file, {
-        access: "public",
-      });
+    const bytes = await file.arrayBuffer();
+    const buffer = Buffer.from(bytes);
 
-      return NextResponse.json({
-        success: true,
-        url: blob.url,
-        fileName: file.name,
-      });
-    } else {
-      const bytes = await file.arrayBuffer();
-      const buffer = Buffer.from(bytes);
+    const cleanPublicId = `${Date.now()}_${file.name.replace(/\.[^/.]+$/, "").replace(/[^a-zA-Z0-9_-]/g, "_")}`;
 
-      // Clean file name
-      const sanitizedName = file.name
-        .toLowerCase()
-        .replace(/[^a-z0-9.-]/g, "_");
-      const fileName = `${Date.now()}_${sanitizedName}`;
-      const uploadDir = path.join(process.cwd(), "public", "images");
-      const filePath = path.join(uploadDir, fileName);
+    // Upload directly to Cloudinary
+    const uploadResult = await new Promise<any>((resolve, reject) => {
+      const stream = cloudinary.uploader.upload_stream(
+        {
+          folder: "parkash-ceramics",
+          resource_type: "auto",
+          public_id: cleanPublicId,
+        },
+        (error, result) => {
+          if (error) reject(error);
+          else resolve(result);
+        }
+      );
+      stream.end(buffer);
+    });
 
-      await writeFile(filePath, buffer);
-
-      const publicPath = `/images/${fileName}`;
-
-      return NextResponse.json({
-        success: true,
-        url: publicPath,
-        fileName,
-      });
-    }
+    return NextResponse.json({
+      success: true,
+      url: uploadResult.secure_url || uploadResult.url,
+      fileName: file.name,
+    });
   } catch (error: any) {
-    console.error("Upload error:", error);
-    return NextResponse.json({ error: error.message || "Failed to upload image" }, { status: 500 });
+    console.error("Cloudinary upload error:", error);
+    return NextResponse.json(
+      { error: error.message || "Failed to upload image to Cloudinary" },
+      { status: 500 }
+    );
   }
 }

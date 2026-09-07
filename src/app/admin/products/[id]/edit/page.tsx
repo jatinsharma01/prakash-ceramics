@@ -579,11 +579,13 @@ export default function EditProductPage() {
                                   body: formData,
                                 });
                                 const data = await res.json();
-                                if (data.url) {
+                                if (res.ok && data.url) {
                                   handleFinishImageChange(finish, data.url);
+                                } else {
+                                  alert(data.error || "Failed to upload image. Check server storage settings.");
                                 }
-                              } catch {
-                                alert("Failed to upload image");
+                              } catch (err: any) {
+                                alert(err.message || "Failed to upload image");
                               }
                             }}
                           />
