@@ -55,7 +55,12 @@ export default function ProductDetailClient({ product }: { product: Product }) {
     }
   };
 
-  const activePrice = (product.finishPrices && product.finishPrices[selectedFinish]) || product.price;
+  // Per-finish pricing: MRP and Offer Price
+  const activeMrp = (product.finishPrices && product.finishPrices[selectedFinish]) || 0;
+  const activeOfferPrice = (product.finishOfferPrices && product.finishOfferPrices[selectedFinish]) || 0;
+  const hasBothPrices = activeMrp > 0 && activeOfferPrice > 0;
+  // The price used for cart/enquiry: prefer offer price, then MRP, then base price
+  const activePrice = activeOfferPrice > 0 ? activeOfferPrice : (activeMrp > 0 ? activeMrp : product.price);
   const activeSku = (product.finishSkus && product.finishSkus[selectedFinish]) || product.sku;
 
   const handleAdd = () => {
@@ -202,24 +207,54 @@ export default function ProductDetailClient({ product }: { product: Product }) {
             </div>
 
             {/* Pricing Section */}
-            <div className="py-6 border-b border-[#ede8df] flex items-baseline justify-between">
+            <div className="py-6 border-b border-[#ede8df] flex items-start justify-between">
               <div>
-                <span className="text-[10px] text-[#84786d] uppercase tracking-widest block mb-1 font-semibold">
-                  Catalogue MRP ({selectedFinish})
-                </span>
-                <div className="flex items-baseline gap-3">
-                  <span className="text-3xl sm:text-4xl font-serif font-semibold text-[#151a22]">
-                    ₹{activePrice.toLocaleString("en-IN")}
-                  </span>
-                  {product.originalPrice && (
-                    <span className="text-sm text-neutral-400 line-through">
-                      ₹{product.originalPrice.toLocaleString("en-IN")}
+                {hasBothPrices ? (
+                  <>
+                    {/* MRP row */}
+                    <div className="flex items-baseline gap-2 mb-1">
+                      <span className="text-[10px] text-[#84786d] uppercase tracking-widest font-semibold">
+                        MRP ({selectedFinish})
+                      </span>
+                      <span className="text-sm text-neutral-400 line-through font-medium">
+                        ₹{activeMrp.toLocaleString("en-IN")}
+                      </span>
+                    </div>
+                    {/* Offer Price row */}
+                    <div className="flex items-baseline gap-2">
+                      <span className="text-[10px] text-emerald-700 uppercase tracking-widest font-semibold">
+                        Offer Price
+                      </span>
+                    </div>
+                    <div className="flex items-baseline gap-3 mt-0.5">
+                      <span className="text-3xl sm:text-4xl font-serif font-semibold text-[#151a22]">
+                        ₹{activeOfferPrice.toLocaleString("en-IN")}
+                      </span>
+                      {activeMrp > activeOfferPrice && (
+                        <span className="text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full">
+                          {Math.round(((activeMrp - activeOfferPrice) / activeMrp) * 100)}% off
+                        </span>
+                      )}
+                      {activeOfferPrice > activeMrp && (
+                        <span className="text-xs font-semibold text-amber-700 bg-amber-50 px-2 py-0.5 rounded-full">
+                          Premium Finish
+                        </span>
+                      )}
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <span className="text-[10px] text-[#84786d] uppercase tracking-widest block mb-1 font-semibold">
+                      {activeMrp > 0 ? `MRP (${selectedFinish})` : `Catalogue Price (${selectedFinish})`}
                     </span>
-                  )}
-                </div>
+                    <span className="text-3xl sm:text-4xl font-serif font-semibold text-[#151a22]">
+                      ₹{activePrice.toLocaleString("en-IN")}
+                    </span>
+                  </>
+                )}
               </div>
 
-              <span className="text-[11px] font-semibold text-emerald-800 bg-emerald-50 border border-emerald-300 px-3 py-1 rounded-full">
+              <span className="text-[11px] font-semibold text-emerald-800 bg-emerald-50 border border-emerald-300 px-3 py-1 rounded-full mt-2">
                 In Stock & Ready for Dispatch
               </span>
             </div>

@@ -183,17 +183,33 @@ export function ProductCard({ product }: ProductCardProps) {
         {/* Pricing & Cart Icon Button */}
         <div className="mt-2.5 pt-2 flex items-center justify-between border-t border-[#f0ece4]">
           <div className="flex flex-col">
-            <span className="text-[8px] text-[#84786d] uppercase tracking-wider font-bold">Catalogue MRP</span>
-            <div className="flex items-baseline gap-1.5">
-              <span className="text-xs sm:text-sm font-extrabold text-[#151a22]">
-                ₹{product.price.toLocaleString("en-IN")}
-              </span>
-              {product.originalPrice && (
-                <span className="text-[10px] text-neutral-400 line-through font-medium">
-                  ₹{product.originalPrice.toLocaleString("en-IN")}
+            {product.originalPrice && product.originalPrice !== product.price ? (
+              <>
+                <div className="flex items-baseline gap-1.5">
+                  <span className="text-[8px] text-[#84786d] uppercase tracking-wider font-bold">MRP</span>
+                  <span className="text-[10px] text-neutral-400 line-through font-medium">
+                    ₹{product.originalPrice.toLocaleString("en-IN")}
+                  </span>
+                </div>
+                <div className="flex items-baseline gap-1.5">
+                  <span className="text-xs sm:text-sm font-extrabold text-[#151a22]">
+                    ₹{product.price.toLocaleString("en-IN")}
+                  </span>
+                  {product.originalPrice > product.price && (
+                    <span className="text-[8px] font-bold text-emerald-600">
+                      {Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)}% off
+                    </span>
+                  )}
+                </div>
+              </>
+            ) : (
+              <>
+                <span className="text-[8px] text-[#84786d] uppercase tracking-wider font-bold">Catalogue MRP</span>
+                <span className="text-xs sm:text-sm font-extrabold text-[#151a22]">
+                  ₹{product.price.toLocaleString("en-IN")}
                 </span>
-              )}
-            </div>
+              </>
+            )}
           </div>
 
           {/* Cart Icon Button with spring animation */}

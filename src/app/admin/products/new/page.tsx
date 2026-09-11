@@ -17,7 +17,9 @@ import {
   CheckCircle2,
   Flame,
   Award,
-  Star
+  Star,
+  Plus,
+  Palette
 } from "lucide-react";
 import { CATEGORIES } from "@/lib/categories";
 import { FinishType } from "@/lib/types";
@@ -60,9 +62,13 @@ export default function AdminNewProductPage() {
     "Black Chrome",
   ]);
   const [finishPrices, setFinishPrices] = useState<Record<string, number | "">>({});
+  const [finishOfferPrices, setFinishOfferPrices] = useState<Record<string, number | "">>({});
   const [finishSkus, setFinishSkus] = useState<Record<string, string>>({});
   const [finishStocks, setFinishStocks] = useState<Record<string, number | "">>({});
   const [finishImages, setFinishImages] = useState<Record<string, string>>({});
+
+  // Custom color input
+  const [customColorInput, setCustomColorInput] = useState("");
 
   // Highlights
   const [features, setFeatures] = useState<string[]>([
@@ -100,6 +106,10 @@ export default function AdminNewProductPage() {
     setFinishPrices((prev) => ({ ...prev, [finish]: val === "" ? "" : Number(val) }));
   };
 
+  const handleFinishOfferPriceChange = (finish: string, val: string) => {
+    setFinishOfferPrices((prev) => ({ ...prev, [finish]: val === "" ? "" : Number(val) }));
+  };
+
   const handleFinishSkuChange = (finish: string, val: string) => {
     setFinishSkus((prev) => ({ ...prev, [finish]: val }));
   };
@@ -110,6 +120,17 @@ export default function AdminNewProductPage() {
 
   const handleFinishImageChange = (finish: string, val: string) => {
     setFinishImages((prev) => ({ ...prev, [finish]: val }));
+  };
+
+  const addCustomColor = () => {
+    const color = customColorInput.trim();
+    if (color && !selectedFinishes.includes(color)) {
+      setSelectedFinishes([...selectedFinishes, color]);
+      // Auto-generate SKU for custom color
+      const short = color.substring(0, 3).toUpperCase();
+      setFinishSkus((prev) => ({ ...prev, [color]: `FUP-${short}-${Math.floor(10000 + Math.random() * 90000)}` }));
+      setCustomColorInput("");
+    }
   };
 
   const addFeature = () => {
@@ -147,19 +168,24 @@ export default function AdminNewProductPage() {
 
     try {
       const cleanedFinishPrices: Record<string, number> = {};
+      const cleanedFinishOfferPrices: Record<string, number> = {};
       const cleanedFinishSkus: Record<string, string> = {};
       const cleanedFinishStocks: Record<string, number> = {};
       const cleanedFinishImages: Record<string, string> = {};
 
       selectedFinishes.forEach((f) => {
         cleanedFinishPrices[f] = typeof finishPrices[f] === "number" ? (finishPrices[f] as number) : 0;
+        cleanedFinishOfferPrices[f] = typeof finishOfferPrices[f] === "number" ? (finishOfferPrices[f] as number) : 0;
         cleanedFinishSkus[f] = finishSkus[f] || `${sku || "PC-ITM"}-${f.slice(0, 3).toUpperCase()}`;
         cleanedFinishStocks[f] = typeof finishStocks[f] === "number" ? (finishStocks[f] as number) : 15;
         if (finishImages[f]) cleanedFinishImages[f] = finishImages[f];
       });
 
-      const priceValues = Object.values(cleanedFinishPrices).filter((v) => v > 0);
-      const computedBasePrice = priceValues.length > 0 ? Math.min(...priceValues) : 9400;
+      // Use offer prices for the base price (minimum offer price), fallback to MRP
+      const offerValues = Object.values(cleanedFinishOfferPrices).filter((v) => v > 0);
+      const mrpValues = Object.values(cleanedFinishPrices).filter((v) => v > 0);
+      const computedBasePrice = offerValues.length > 0 ? Math.min(...offerValues) : (mrpValues.length > 0 ? Math.min(...mrpValues) : 9400);
+      const computedOriginalPrice = mrpValues.length > 0 ? Math.min(...mrpValues) : undefined;
       const totalStock = Object.values(cleanedFinishStocks).reduce((a, b) => a + b, 0);
 
       const payload = {
@@ -170,6 +196,7 @@ export default function AdminNewProductPage() {
         tagline: tagline || productName,
         description: description || tagline || productName,
         price: computedBasePrice,
+        originalPrice: computedOriginalPrice,
         stockCount: totalStock || 20,
         isFeatured,
         isNew,
@@ -177,6 +204,7 @@ export default function AdminNewProductPage() {
         finishes: selectedFinishes.length > 0 ? selectedFinishes : ["Chrome"],
         finishImages: cleanedFinishImages,
         finishPrices: cleanedFinishPrices,
+        finishOfferPrices: cleanedFinishOfferPrices,
         finishSkus: cleanedFinishSkus,
         finishStocks: cleanedFinishStocks,
         images: Object.values(cleanedFinishImages),
@@ -192,6 +220,7 @@ export default function AdminNewProductPage() {
           Dimensions: dimensions,
           "Flow Rate": flowRate,
           finishPrices: cleanedFinishPrices,
+          finishOfferPrices: cleanedFinishOfferPrices,
           finishSkus: cleanedFinishSkus,
           finishStocks: cleanedFinishStocks,
         },
@@ -405,6 +434,37 @@ export default function AdminNewProductPage() {
                 </button>
               );
             })}
+
+            {/* Custom Color Input */}
+            <div className="col-span-2 sm:col-span-3 md:col-span-4 flex items-center gap-2 pt-1">
+              <div className="flex items-center gap-2 flex-1">
+                <div className="p-2.5 rounded-xl bg-stone-900/50 border border-stone-800 text-stone-400">
+                  <Palette className="w-4 h-4" />
+                </div>
+                <input
+                  type="text"
+                  value={customColorInput}
+                  onChange={(e) => setCustomColorInput(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      e.preventDefault();
+                      addCustomColor();
+                    }
+                  }}
+                  placeholder="Type a custom color name (e.g. Antique Copper, Ocean Blue)..."
+                  className="flex-1 bg-[#1c222c] border border-stone-700 text-xs text-white placeholder-stone-400 px-4 py-2.5 rounded-xl focus:border-[#9b7842] focus:outline-hidden"
+                />
+              </div>
+              <button
+                type="button"
+                onClick={addCustomColor}
+                disabled={!customColorInput.trim()}
+                className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-[#9b7842]/20 hover:bg-[#9b7842]/30 text-[#dec49a] border border-[#9b7842]/40 text-xs font-semibold transition-all disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
+              >
+                <Plus className="w-3.5 h-3.5" />
+                Add Custom Color
+              </button>
+            </div>
           </div>
 
           {/* Color Variant Matrix Cards */}
@@ -429,7 +489,7 @@ export default function AdminNewProductPage() {
                     </span>
                   </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
                     {/* Item Code / SKU */}
                     <div>
                       <label className="block text-[11px] font-semibold text-stone-300 mb-1">
@@ -453,9 +513,28 @@ export default function AdminNewProductPage() {
                         type="number"
                         value={finishPrices[finish] ?? ""}
                         onChange={(e) => handleFinishPriceChange(finish, e.target.value)}
+                        placeholder="e.g. 11200"
+                        className="w-full bg-[#141822] border border-stone-700 text-xs text-stone-300 font-bold px-3 py-2 rounded-xl focus:border-[#9b7842] focus:outline-hidden"
+                      />
+                    </div>
+
+                    {/* Offer Price */}
+                    <div>
+                      <label className="block text-[11px] font-semibold text-stone-300 mb-1">
+                        Offer Price (₹)
+                      </label>
+                      <input
+                        type="number"
+                        value={finishOfferPrices[finish] ?? ""}
+                        onChange={(e) => handleFinishOfferPriceChange(finish, e.target.value)}
                         placeholder="e.g. 9400"
                         className="w-full bg-[#141822] border border-stone-700 text-xs text-emerald-400 font-bold px-3 py-2 rounded-xl focus:border-[#9b7842] focus:outline-hidden"
                       />
+                      {finishPrices[finish] && finishOfferPrices[finish] && Number(finishOfferPrices[finish]) < Number(finishPrices[finish]) && (
+                        <span className="text-[10px] text-emerald-400 mt-0.5 block">
+                          {Math.round(((Number(finishPrices[finish]) - Number(finishOfferPrices[finish])) / Number(finishPrices[finish])) * 100)}% off
+                        </span>
+                      )}
                     </div>
 
                     {/* Stock Count */}

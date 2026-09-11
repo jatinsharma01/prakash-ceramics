@@ -166,13 +166,20 @@ export function QuickViewModal() {
                 {/* Pricing */}
                 <div className="p-3.5 rounded-xl bg-[#fbf9f5] border border-[#ede8df] flex items-baseline justify-between mb-5">
                   <div>
-                    <span className="text-[10px] text-[#84786d] uppercase tracking-wider block font-bold">MRP</span>
+                    <span className="text-[10px] text-[#84786d] uppercase tracking-wider block font-bold">
+                      {quickViewProduct.originalPrice && quickViewProduct.originalPrice > quickViewProduct.price ? "Offer Price" : "MRP"}
+                    </span>
                     <span className="text-2xl font-bold text-[#151a22]">₹{quickViewProduct.price.toLocaleString("en-IN")}</span>
                   </div>
-                  {quickViewProduct.originalPrice && (
-                    <span className="text-xs text-neutral-400 line-through">
-                      ₹{quickViewProduct.originalPrice.toLocaleString("en-IN")}
-                    </span>
+                  {quickViewProduct.originalPrice && quickViewProduct.originalPrice > quickViewProduct.price && (
+                    <div className="flex items-baseline gap-2">
+                      <span className="text-xs text-neutral-400 line-through">
+                        ₹{quickViewProduct.originalPrice.toLocaleString("en-IN")}
+                      </span>
+                      <span className="text-[10px] font-bold text-emerald-600">
+                        {Math.round(((quickViewProduct.originalPrice - quickViewProduct.price) / quickViewProduct.originalPrice) * 100)}% off
+                      </span>
+                    </div>
                   )}
                 </div>
 

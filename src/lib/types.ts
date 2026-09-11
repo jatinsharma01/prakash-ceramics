@@ -44,6 +44,7 @@ export interface Product {
   finishes: FinishType[];
   finishImages?: Record<string, string>;
   finishPrices?: Record<string, number>;
+  finishOfferPrices?: Record<string, number>;
   finishSkus?: Record<string, string>;
   finishStocks?: Record<string, number>;
   stockCount?: number;
