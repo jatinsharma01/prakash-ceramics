@@ -138,7 +138,11 @@ export function WishlistDrawer() {
                               className="relative w-18 h-18 rounded-xl overflow-hidden bg-white shrink-0 border border-[#e6ddd6]"
                             >
                               <ProductImage
-                                src={prod.images[0]}
+                                src={
+                                  (prod.finishImages && Object.values(prod.finishImages)[0]) ||
+                                  prod.images?.[0] ||
+                                  "https://res.cloudinary.com/dtk1pspib/image/upload/v1788760648/parkash-ceramics/faucets.jpg"
+                                }
                                 alt={prod.name}
                                 fill
                                 className="object-contain p-1.5"
@@ -165,7 +169,11 @@ export function WishlistDrawer() {
 
                               <div className="flex items-center justify-between mt-2 pt-1 border-t border-[#ede8df]/80">
                                 <span className="text-xs font-bold text-[#151a22]">
-                                  ₹{prod.price.toLocaleString("en-IN")}
+                                  ₹{(
+                                    (prod.finishOfferPrices && Object.values(prod.finishOfferPrices)[0]) ||
+                                    (prod.finishPrices && Object.values(prod.finishPrices)[0]) ||
+                                    prod.price
+                                  ).toLocaleString("en-IN")}
                                 </span>
 
                                 <motion.button

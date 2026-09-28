@@ -125,7 +125,8 @@ export default function CartPage() {
                       <ProductImage
                         src={
                           (item.product.finishImages && item.product.finishImages[item.selectedFinish]) ||
-                          item.product.images[0]
+                          item.product.images?.[0] ||
+                          "https://res.cloudinary.com/dtk1pspib/image/upload/v1788760648/parkash-ceramics/faucets.jpg"
                         }
                         alt={item.product.name}
                         fill

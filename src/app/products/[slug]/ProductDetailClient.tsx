@@ -19,12 +19,23 @@ import {
 } from "lucide-react";
 import { CartIcon } from "@/components/CartIcon";
 import { clsx } from "clsx";
+import { 
+  getProductFinishGallery, 
+  getProductPricing, 
+  getProductFinishSku, 
+  getProductFinishStock 
+} from "@/lib/productUtils";
 
 export default function ProductDetailClient({ product }: { product: Product }) {
   const { addToEnquiry } = useEnquiry();
   const { toggleWishlist, isInWishlist } = useWishlist();
-  const [selectedImageIndex, setSelectedImageIndex] = useState(0);
-  const [selectedFinish, setSelectedFinish] = useState<FinishType>(product.finishes[0] || "Chrome");
+
+  // 1. Derive gallery items directly from finishes and finishImages
+  const galleryItems = React.useMemo(() => getProductFinishGallery(product), [product]);
+
+  // Initial finish: first finish from finishes or gallery
+  const initialFinish = (product.finishes && product.finishes[0]) || galleryItems[0]?.finish || ("Chrome" as FinishType);
+  const [selectedFinish, setSelectedFinish] = useState<FinishType>(initialFinish);
   const [quantity, setQuantity] = useState(1);
   const [isAdded, setIsAdded] = useState(false);
 
@@ -34,50 +45,37 @@ export default function ProductDetailClient({ product }: { product: Product }) {
     .filter((p) => p.id !== product.id)
     .slice(0, 4);
 
+  // Active finish image
+  const activeImage = 
+    (product.finishImages && product.finishImages[selectedFinish])
+    || galleryItems.find((g) => g.finish === selectedFinish)?.image
+    || galleryItems[0]?.image
+    || "https://res.cloudinary.com/dtk1pspib/image/upload/v1788760648/parkash-ceramics/faucets.jpg";
+
+  // Per-finish pricing using finishPrices and finishOfferPrices
+  const pricing = getProductPricing(product, selectedFinish);
+  const activePrice = pricing.price;
+  const activeMrp = pricing.mrp;
+  const hasBothPrices = pricing.hasDiscount;
+  const activeSku = getProductFinishSku(product, selectedFinish);
+  const activeStock = getProductFinishStock(product, selectedFinish);
+
   const handleFinishSelect = (finish: FinishType) => {
     setSelectedFinish(finish);
-    if (product.finishImages && product.finishImages[finish]) {
-      const idx = product.images.indexOf(product.finishImages[finish]);
-      if (idx !== -1) {
-        setSelectedImageIndex(idx);
-      }
-    }
   };
-
-  const handleThumbnailClick = (idx: number) => {
-    setSelectedImageIndex(idx);
-    const imgUrl = product.images[idx];
-    if (product.finishImages) {
-      const matching = Object.entries(product.finishImages).find(([_, url]) => url === imgUrl);
-      if (matching) {
-        setSelectedFinish(matching[0] as FinishType);
-      }
-    }
-  };
-
-  // Per-finish pricing: MRP and Offer Price
-  const activeMrp = (product.finishPrices && product.finishPrices[selectedFinish]) || 0;
-  const activeOfferPrice = (product.finishOfferPrices && product.finishOfferPrices[selectedFinish]) || 0;
-  const hasBothPrices = activeMrp > 0 && activeOfferPrice > 0;
-  // The price used for cart/enquiry: prefer offer price, then MRP, then base price
-  const activePrice = activeOfferPrice > 0 ? activeOfferPrice : (activeMrp > 0 ? activeMrp : product.price);
-  const activeSku = (product.finishSkus && product.finishSkus[selectedFinish]) || product.sku;
 
   const handleAdd = () => {
     const variantProduct: Product = {
       ...product,
       price: activePrice,
+      originalPrice: activeMrp > activePrice ? activeMrp : undefined,
       sku: activeSku,
+      images: [activeImage],
     };
     addToEnquiry(variantProduct, selectedFinish, quantity);
     setIsAdded(true);
     setTimeout(() => setIsAdded(false), 2000);
   };
-
-  const activeImage = 
-    (product.finishImages && product.finishImages[selectedFinish]) 
-    || product.images[selectedImageIndex] 
-    || product.images[0];
 
   const getColorClass = (f: FinishType) => {
     switch (f) {
@@ -147,30 +145,39 @@ export default function ProductDetailClient({ product }: { product: Product }) {
               />
             </div>
 
-            {/* Thumbnails */}
-            {product.images.length > 1 && (
-              <div className="grid grid-cols-5 gap-2.5">
-                {product.images.map((img, idx) => (
-                  <button
-                    key={idx}
-                    type="button"
-                    onClick={() => handleThumbnailClick(idx)}
-                    className={clsx(
-                      "relative aspect-square rounded-xl overflow-hidden border-2 transition-all bg-white shadow-xs cursor-pointer",
-                      selectedImageIndex === idx
-                        ? "border-[#9b7842] ring-2 ring-[#9b7842]/20 scale-105"
-                        : "border-[#e5e0d8] opacity-70 hover:opacity-100"
-                    )}
-                  >
-                    <ProductImage
-                      src={img}
-                      alt={`${product.name} finish ${idx + 1}`}
-                      fill
-                      className="object-cover"
-                      sizes="120px"
-                    />
-                  </button>
-                ))}
+            {/* Thumbnails mapped directly from finish images */}
+            {galleryItems.length > 1 && (
+              <div className="grid grid-cols-4 sm:grid-cols-5 gap-2.5">
+                {galleryItems.map((item, idx) => {
+                  const isSelected = selectedFinish === item.finish;
+                  return (
+                    <button
+                      key={item.finish || idx}
+                      type="button"
+                      onClick={() => handleFinishSelect(item.finish)}
+                      className={clsx(
+                        "relative aspect-square rounded-xl overflow-hidden border-2 transition-all bg-white shadow-xs cursor-pointer group text-left",
+                        isSelected
+                          ? "border-[#9b7842] ring-2 ring-[#9b7842]/30 scale-105 z-10"
+                          : "border-[#e5e0d8] opacity-75 hover:opacity-100"
+                      )}
+                      title={`${item.finish} - ₹${(item.offerPrice || item.mrp || activePrice).toLocaleString("en-IN")}`}
+                    >
+                      <ProductImage
+                        src={item.image}
+                        alt={`${product.name} - ${item.finish}`}
+                        fill
+                        className="object-cover transition-transform group-hover:scale-105"
+                        sizes="120px"
+                      />
+                      <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/85 via-black/40 to-transparent p-1 pointer-events-none">
+                        <p className="text-[9px] text-white font-medium truncate leading-tight">
+                          {item.finish}
+                        </p>
+                      </div>
+                    </button>
+                  );
+                })}
               </div>
             )}
           </div>
@@ -223,21 +230,16 @@ export default function ProductDetailClient({ product }: { product: Product }) {
                     {/* Offer Price row */}
                     <div className="flex items-baseline gap-2">
                       <span className="text-[10px] text-emerald-700 uppercase tracking-widest font-semibold">
-                        Offer Price
+                        Offer Price ({selectedFinish})
                       </span>
                     </div>
                     <div className="flex items-baseline gap-3 mt-0.5">
                       <span className="text-3xl sm:text-4xl font-serif font-semibold text-[#151a22]">
-                        ₹{activeOfferPrice.toLocaleString("en-IN")}
+                        ₹{activePrice.toLocaleString("en-IN")}
                       </span>
-                      {activeMrp > activeOfferPrice && (
-                        <span className="text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full">
-                          {Math.round(((activeMrp - activeOfferPrice) / activeMrp) * 100)}% off
-                        </span>
-                      )}
-                      {activeOfferPrice > activeMrp && (
-                        <span className="text-xs font-semibold text-amber-700 bg-amber-50 px-2 py-0.5 rounded-full">
-                          Premium Finish
+                      {pricing.discountPercent > 0 && (
+                        <span className="text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
+                          {pricing.discountPercent}% off
                         </span>
                       )}
                     </div>
@@ -254,9 +256,15 @@ export default function ProductDetailClient({ product }: { product: Product }) {
                 )}
               </div>
 
-              <span className="text-[11px] font-semibold text-emerald-800 bg-emerald-50 border border-emerald-300 px-3 py-1 rounded-full mt-2">
-                In Stock & Ready for Dispatch
-              </span>
+              {activeStock > 0 ? (
+                <span className="text-[11px] font-semibold text-emerald-800 bg-emerald-50 border border-emerald-300 px-3 py-1 rounded-full mt-2">
+                  In Stock ({activeStock} units available)
+                </span>
+              ) : (
+                <span className="text-[11px] font-semibold text-amber-800 bg-amber-50 border border-amber-300 px-3 py-1 rounded-full mt-2">
+                  Available on Order
+                </span>
+              )}
             </div>
 
             {/* Description */}

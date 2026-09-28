@@ -8,6 +8,7 @@ import { QuickViewModal } from "@/components/QuickViewModal";
 import { MotionReveal } from "@/components/MotionWrappers";
 import { CATEGORIES } from "@/lib/categories";
 import { FinishType, Product } from "@/lib/types";
+import { getProductPricing } from "@/lib/productUtils";
 import { 
   Search, 
   SlidersHorizontal, 
@@ -162,8 +163,9 @@ function ProductsContent({ initialProducts }: ProductsClientProps) {
           return false;
         }
       }
-      // Price filter (Min and Max)
-      if (p.price < minPrice || p.price > maxPrice) {
+      // Price filter (Min and Max) using finish-based pricing
+      const effectivePrice = getProductPricing(p).price;
+      if (effectivePrice < minPrice || effectivePrice > maxPrice) {
         return false;
       }
       // Finish filter
@@ -173,8 +175,8 @@ function ProductsContent({ initialProducts }: ProductsClientProps) {
       }
       return true;
     }).sort((a, b) => {
-      if (sortBy === "price-low") return a.price - b.price;
-      if (sortBy === "price-high") return b.price - a.price;
+      if (sortBy === "price-low") return getProductPricing(a).price - getProductPricing(b).price;
+      if (sortBy === "price-high") return getProductPricing(b).price - getProductPricing(a).price;
       if (sortBy === "rating") return b.rating - a.rating;
       return (b.isFeatured ? 1 : 0) - (a.isFeatured ? 1 : 0);
     });

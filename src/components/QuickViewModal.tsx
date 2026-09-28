@@ -6,7 +6,7 @@ import { useEnquiry } from "@/context/EnquiryContext";
 import { useWishlist } from "@/context/WishlistContext";
 import { ProductImage } from "./ProductImage";
 import { CartIcon } from "./CartIcon";
-import { FinishType } from "@/lib/types";
+import { FinishType, Product } from "@/lib/types";
 import { 
   X, 
   Check, 
@@ -16,27 +16,54 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { clsx } from "clsx";
+import { 
+  getProductFinishGallery, 
+  getProductPricing, 
+  getProductFinishSku, 
+  getProductFinishStock 
+} from "@/lib/productUtils";
 
 export function QuickViewModal() {
   const { quickViewProduct, setQuickViewProduct, addToEnquiry } = useEnquiry();
   const { toggleWishlist, isInWishlist } = useWishlist();
-  const [activeImageIndex, setActiveImageIndex] = useState(0);
   const [selectedFinish, setSelectedFinish] = useState<FinishType | null>(null);
   const [quantity, setQuantity] = useState(1);
   const [isAdded, setIsAdded] = useState(false);
 
+  const galleryItems = React.useMemo(() => {
+    return quickViewProduct ? getProductFinishGallery(quickViewProduct) : [];
+  }, [quickViewProduct]);
+
   const isFavorited = quickViewProduct ? isInWishlist(quickViewProduct.id) : false;
-  const currentFinish = selectedFinish || (quickViewProduct?.finishes[0] || "Chrome");
+  const currentFinish = selectedFinish || (quickViewProduct?.finishes[0] || galleryItems[0]?.finish || ("Chrome" as FinishType));
+
+  const pricing = React.useMemo(() => {
+    return quickViewProduct 
+      ? getProductPricing(quickViewProduct, currentFinish) 
+      : { price: 0, mrp: 0, hasDiscount: false, discountPercent: 0 };
+  }, [quickViewProduct, currentFinish]);
+
+  const activeSku = quickViewProduct ? getProductFinishSku(quickViewProduct, currentFinish) : "";
+  const activeStock = quickViewProduct ? getProductFinishStock(quickViewProduct, currentFinish) : 0;
+
   const activeImage = quickViewProduct ? (
-    (selectedFinish && quickViewProduct.finishImages && quickViewProduct.finishImages[selectedFinish])
-    || (quickViewProduct.finishImages && quickViewProduct.finishImages[currentFinish])
-    || quickViewProduct.images[activeImageIndex] 
-    || quickViewProduct.images[0]
+    quickViewProduct.finishImages?.[currentFinish]
+    || galleryItems.find((g) => g.finish === currentFinish)?.image
+    || galleryItems[0]?.image
+    || (quickViewProduct.images && quickViewProduct.images[0])
+    || ""
   ) : "";
 
   const handleAddToCart = () => {
     if (!quickViewProduct) return;
-    addToEnquiry(quickViewProduct, currentFinish, quantity);
+    const variantProduct: Product = {
+      ...quickViewProduct,
+      price: pricing.price,
+      originalPrice: pricing.mrp > pricing.price ? pricing.mrp : undefined,
+      sku: activeSku,
+      images: [activeImage],
+    };
+    addToEnquiry(variantProduct, currentFinish, quantity);
     setIsAdded(true);
     setTimeout(() => {
       setIsAdded(false);
@@ -46,24 +73,6 @@ export function QuickViewModal() {
 
   const handleFinishChange = (finish: FinishType) => {
     setSelectedFinish(finish);
-    if (quickViewProduct?.finishImages && quickViewProduct.finishImages[finish]) {
-      const idx = quickViewProduct.images.indexOf(quickViewProduct.finishImages[finish]);
-      if (idx !== -1) {
-        setActiveImageIndex(idx);
-      }
-    }
-  };
-
-  const handleThumbnailClick = (idx: number) => {
-    if (!quickViewProduct) return;
-    setActiveImageIndex(idx);
-    const imgUrl = quickViewProduct.images[idx];
-    if (quickViewProduct.finishImages) {
-      const matching = Object.entries(quickViewProduct.finishImages).find(([_, url]) => url === imgUrl);
-      if (matching) {
-        setSelectedFinish(matching[0] as FinishType);
-      }
-    }
   };
 
   return (
@@ -113,25 +122,26 @@ export function QuickViewModal() {
               </div>
 
               {/* Thumbnails */}
-              {quickViewProduct.images.length > 1 && (
+              {galleryItems.length > 1 && (
                 <div className="flex items-center gap-3 overflow-x-auto pb-2">
-                  {quickViewProduct.images.map((img, idx) => (
+                  {galleryItems.map((item, idx) => (
                     <motion.button
-                      key={idx}
+                      key={item.finish || idx}
                       type="button"
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
-                      onClick={() => handleThumbnailClick(idx)}
+                      onClick={() => handleFinishChange(item.finish)}
                       className={clsx(
                         "relative w-16 h-16 rounded-xl overflow-hidden shrink-0 border-2 transition-all bg-white shadow-xs cursor-pointer",
-                        activeImageIndex === idx
+                        currentFinish === item.finish
                           ? "border-[#9b7842] ring-2 ring-[#9b7842]/20 scale-105"
                           : "border-[#e5e0d8] opacity-70 hover:opacity-100"
                       )}
+                      title={item.finish}
                     >
                       <ProductImage
-                        src={img}
-                        alt={`${quickViewProduct.name} angle ${idx + 1}`}
+                        src={item.image}
+                        alt={`${quickViewProduct.name} - ${item.finish}`}
                         fill
                         className="object-contain p-1"
                         sizes="64px"
@@ -150,7 +160,7 @@ export function QuickViewModal() {
                   <span className="uppercase tracking-widest">
                     {quickViewProduct.range ? `${quickViewProduct.range} • ` : ""}{quickViewProduct.category}
                   </span>
-                  <span className="text-[#84786d] font-mono">Code: {quickViewProduct.sku}</span>
+                  <span className="text-[#84786d] font-mono">Code: {activeSku}</span>
                 </div>
 
                 {/* Title */}
@@ -167,17 +177,17 @@ export function QuickViewModal() {
                 <div className="p-3.5 rounded-xl bg-[#fbf9f5] border border-[#ede8df] flex items-baseline justify-between mb-5">
                   <div>
                     <span className="text-[10px] text-[#84786d] uppercase tracking-wider block font-bold">
-                      {quickViewProduct.originalPrice && quickViewProduct.originalPrice > quickViewProduct.price ? "Offer Price" : "MRP"}
+                      {pricing.hasDiscount ? `Offer Price (${currentFinish})` : `MRP (${currentFinish})`}
                     </span>
-                    <span className="text-2xl font-bold text-[#151a22]">₹{quickViewProduct.price.toLocaleString("en-IN")}</span>
+                    <span className="text-2xl font-bold text-[#151a22]">₹{pricing.price.toLocaleString("en-IN")}</span>
                   </div>
-                  {quickViewProduct.originalPrice && quickViewProduct.originalPrice > quickViewProduct.price && (
+                  {pricing.hasDiscount && (
                     <div className="flex items-baseline gap-2">
                       <span className="text-xs text-neutral-400 line-through">
-                        ₹{quickViewProduct.originalPrice.toLocaleString("en-IN")}
+                        ₹{pricing.mrp.toLocaleString("en-IN")}
                       </span>
-                      <span className="text-[10px] font-bold text-emerald-600">
-                        {Math.round(((quickViewProduct.originalPrice - quickViewProduct.price) / quickViewProduct.originalPrice) * 100)}% off
+                      <span className="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
+                        {pricing.discountPercent}% off
                       </span>
                     </div>
                   )}

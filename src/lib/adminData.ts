@@ -13,6 +13,7 @@ export interface AdminOrder {
     state: string;
   };
   date: string;
+  createdAt?: string;
   items: {
     id: string;
     name: string;

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { 
@@ -22,43 +22,71 @@ import {
   Lock,
   Eye,
   EyeOff,
-  UserCheck
+  UserCheck,
+  Loader2,
+  PackageCheck
 } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 
-const NOTIFICATIONS = [
-  {
-    id: "n-1",
-    title: "High Value Order Received",
-    description: "Ar. Raghav Malhotra placed order #PC-ORD-8942 for ₹1,10,242",
-    time: "10 mins ago",
-    type: "order",
-    unread: true,
-  },
-  {
-    id: "n-2",
-    title: "Low Inventory Alert",
-    description: "Lumina Smart Heated Wall-Hung Toilet has only 3 units remaining.",
-    time: "1 hour ago",
-    type: "warning",
-    unread: true,
-  },
-  {
-    id: "n-3",
-    title: "New VIP Architect Registered",
-    description: "Goenka & Partners Architects joined the wholesale trade portal.",
-    time: "4 hours ago",
-    type: "user",
-    unread: false,
-  },
-];
+interface NotificationItem {
+  id: string;
+  orderId?: string;
+  orderNumber?: string;
+  title: string;
+  description: string;
+  time: string;
+  type: "order" | "warning" | "user" | "info";
+  unread: boolean;
+  link?: string;
+  amount?: number;
+  customerName?: string;
+  timestamp?: string;
+}
 
 export function AdminHeader() {
   const pathname = usePathname();
   const router = useRouter();
   const [showNotifications, setShowNotifications] = useState(false);
-  const [notifications, setNotifications] = useState(NOTIFICATIONS);
+  const [notifications, setNotifications] = useState<NotificationItem[]>([]);
+  const [isLoadingNotifications, setIsLoadingNotifications] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
+
+  // Fetch latest 5 order notifications from API
+  const fetchNotifications = useCallback(async () => {
+    try {
+      const res = await fetch("/api/admin/notifications?limit=5");
+      const data = await res.json();
+      if (data.success && Array.isArray(data.notifications)) {
+        // Retrieve locally stored read notification IDs
+        let readSet = new Set<string>();
+        try {
+          const stored = localStorage.getItem("pc_read_notifications");
+          if (stored) {
+            readSet = new Set(JSON.parse(stored));
+          }
+        } catch {
+          // ignore localStorage errors
+        }
+
+        const merged: NotificationItem[] = data.notifications.map((item: NotificationItem) => ({
+          ...item,
+          unread: item.unread && !readSet.has(item.id),
+        }));
+        setNotifications(merged);
+      }
+    } catch (err) {
+      console.error("Failed to load notifications:", err);
+    } finally {
+      setIsLoadingNotifications(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchNotifications();
+    // Poll every 25 seconds for new incoming orders
+    const timer = setInterval(fetchNotifications, 25000);
+    return () => clearInterval(timer);
+  }, [fetchNotifications]);
 
   // Password Change Modal States
   const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
@@ -88,8 +116,58 @@ export function AdminHeader() {
   const breadcrumbs = getBreadcrumbs();
   const unreadCount = notifications.filter((n) => n.unread).length;
 
-  const markAllAsRead = () => {
+  const markAllAsRead = async () => {
+    const allIds = notifications.map((n) => n.id);
+    try {
+      const stored = localStorage.getItem("pc_read_notifications");
+      const prev = stored ? JSON.parse(stored) : [];
+      const updated = Array.from(new Set([...prev, ...allIds]));
+      localStorage.setItem("pc_read_notifications", JSON.stringify(updated));
+    } catch {
+      // ignore localStorage errors
+    }
+
     setNotifications((prev) => prev.map((n) => ({ ...n, unread: false })));
+
+    try {
+      await fetch("/api/admin/notifications", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "mark_all_read" }),
+      });
+    } catch {
+      // ignore network errors for background mark
+    }
+  };
+
+  const handleNotificationClick = (item: NotificationItem) => {
+    if (item.unread) {
+      try {
+        const stored = localStorage.getItem("pc_read_notifications");
+        const prev = stored ? JSON.parse(stored) : [];
+        if (!prev.includes(item.id)) {
+          prev.push(item.id);
+          localStorage.setItem("pc_read_notifications", JSON.stringify(prev));
+        }
+      } catch {
+        // ignore localStorage errors
+      }
+
+      setNotifications((prev) =>
+        prev.map((n) => (n.id === item.id ? { ...n, unread: false } : n))
+      );
+
+      fetch("/api/admin/notifications", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "mark_read", id: item.id }),
+      }).catch(() => {});
+    }
+
+    setShowNotifications(false);
+    if (item.link) {
+      router.push(item.link);
+    }
   };
 
   const handleLogout = async () => {
@@ -213,7 +291,12 @@ export function AdminHeader() {
           {/* Notifications Dropdown */}
           <div className="relative">
             <button
-              onClick={() => setShowNotifications(!showNotifications)}
+              onClick={() => {
+                if (!showNotifications) {
+                  fetchNotifications();
+                }
+                setShowNotifications(!showNotifications);
+              }}
               className="relative p-2 text-stone-300 hover:text-white bg-stone-800 hover:bg-stone-700 border border-stone-700/80 rounded-xl transition-all"
               aria-label="Notifications"
             >
@@ -260,55 +343,74 @@ export function AdminHeader() {
                       )}
                     </div>
 
-                    <div className="divide-y divide-stone-800/80 max-h-80 overflow-y-auto">
-                      {notifications.map((item) => (
-                        <div
-                          key={item.id}
-                          className={`p-3.5 hover:bg-stone-800/50 transition-colors ${
-                            item.unread ? "bg-[#1c222c]/50" : ""
-                          }`}
-                        >
-                          <div className="flex items-start gap-3">
-                            <div
-                              className={`p-2 rounded-lg shrink-0 mt-0.5 ${
-                                item.type === "warning"
-                                  ? "bg-amber-500/10 text-amber-400 border border-amber-500/20"
-                                  : item.type === "order"
-                                  ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"
-                                  : "bg-blue-500/10 text-blue-400 border border-blue-500/20"
-                              }`}
-                            >
-                              {item.type === "warning" ? (
-                                <AlertTriangle className="w-3.5 h-3.5" />
-                              ) : item.type === "order" ? (
-                                <CheckCircle2 className="w-3.5 h-3.5" />
-                              ) : (
-                                <Sparkles className="w-3.5 h-3.5" />
-                              )}
-                            </div>
-                            <div className="flex-1 min-w-0">
-                              <div className="flex items-center justify-between">
-                                <p className="text-xs font-semibold text-white truncate">
-                                  {item.title}
-                                </p>
-                                <span className="text-[10px] text-stone-500">
-                                  {item.time}
-                                </span>
+                    <div className="divide-y divide-stone-800/80 max-h-84 overflow-y-auto">
+                      {isLoadingNotifications && notifications.length === 0 ? (
+                        <div className="p-6 flex flex-col items-center justify-center gap-2 text-stone-400">
+                          <Loader2 className="w-5 h-5 animate-spin text-[#dec49a]" />
+                          <span className="text-xs">Loading order alerts...</span>
+                        </div>
+                      ) : notifications.length === 0 ? (
+                        <div className="p-8 text-center">
+                          <PackageCheck className="w-7 h-7 text-stone-500 mx-auto mb-2 opacity-60" />
+                          <p className="text-xs font-semibold text-stone-300">All caught up!</p>
+                          <p className="text-[11px] text-stone-500 mt-0.5">No recent order notifications.</p>
+                        </div>
+                      ) : (
+                        notifications.map((item) => (
+                          <div
+                            key={item.id}
+                            onClick={() => handleNotificationClick(item)}
+                            className={`p-3.5 hover:bg-stone-800/70 transition-colors cursor-pointer relative group ${
+                              item.unread ? "bg-[#1c222c]/70" : ""
+                            }`}
+                          >
+                            <div className="flex items-start gap-3">
+                              <div
+                                className={`p-2 rounded-lg shrink-0 mt-0.5 transition-transform group-hover:scale-105 ${
+                                  item.type === "warning"
+                                    ? "bg-amber-500/10 text-amber-400 border border-amber-500/20"
+                                    : item.type === "order"
+                                    ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"
+                                    : "bg-blue-500/10 text-blue-400 border border-blue-500/20"
+                                }`}
+                              >
+                                {item.type === "warning" ? (
+                                  <AlertTriangle className="w-3.5 h-3.5" />
+                                ) : item.type === "order" ? (
+                                  <CheckCircle2 className="w-3.5 h-3.5" />
+                                ) : (
+                                  <Sparkles className="w-3.5 h-3.5" />
+                                )}
                               </div>
-                              <p className="text-[11px] text-stone-400 mt-0.5 line-clamp-2">
-                                {item.description}
-                              </p>
+                              <div className="flex-1 min-w-0">
+                                <div className="flex items-center justify-between gap-1">
+                                  <div className="flex items-center gap-1.5 min-w-0">
+                                    <p className="text-xs font-semibold text-white truncate">
+                                      {item.title}
+                                    </p>
+                                    {item.unread && (
+                                      <span className="w-1.5 h-1.5 rounded-full bg-amber-400 shrink-0 animate-pulse" />
+                                    )}
+                                  </div>
+                                  <span className="text-[10px] text-stone-500 shrink-0">
+                                    {item.time}
+                                  </span>
+                                </div>
+                                <p className="text-[11px] text-stone-400 mt-0.5 line-clamp-2 leading-relaxed">
+                                  {item.description}
+                                </p>
+                              </div>
                             </div>
                           </div>
-                        </div>
-                      ))}
+                        ))
+                      )}
                     </div>
 
                     <div className="p-3 bg-stone-900 border-t border-stone-800 text-center">
                       <Link
                         href="/admin/orders"
                         onClick={() => setShowNotifications(false)}
-                        className="text-xs text-[#dec49a] hover:text-white font-medium inline-flex items-center gap-1"
+                        className="text-xs text-[#dec49a] hover:text-white font-medium inline-flex items-center gap-1.5 transition-colors"
                       >
                         <span>View all order history</span>
                         <ArrowUpRight className="w-3.5 h-3.5" />

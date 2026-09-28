@@ -16,7 +16,6 @@ import {
   ChevronRight, 
   Menu, 
   X, 
-  ShieldCheck, 
   Sparkles,
   Sliders,
   Settings,
@@ -224,54 +223,6 @@ export function AdminSidebar() {
             </Link>
           );
         })}
-      </div>
-
-      {/* System Status Pill */}
-      <div className="px-4 py-3 mx-4 mb-3 rounded-xl bg-stone-900/80 border border-stone-800">
-        <div className="flex items-center justify-between text-xs mb-1.5">
-          <div className="flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-            <span className="text-stone-300 font-medium">Catalog Sync Active</span>
-          </div>
-          <span className="text-[10px] text-emerald-400 font-mono">v2.4</span>
-        </div>
-        <div className="w-full bg-stone-800 h-1.5 rounded-full overflow-hidden">
-          <div className="bg-gradient-to-r from-emerald-500 to-[#dec49a] h-full w-[94%]" />
-        </div>
-      </div>
-
-      {/* Admin Profile Footer */}
-      <div className="p-4 border-t border-stone-800 bg-[#0d1017]">
-        <div className="flex items-center gap-3">
-          <div className="relative">
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#9b7842] to-[#836433] text-white flex items-center justify-center font-bold text-xs border border-[#dec49a]/40 shadow-sm">
-              PA
-            </div>
-            <span className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-emerald-500 rounded-full border-2 border-[#0d1017]" />
-          </div>
-          <div className="flex-1 min-w-0">
-            <p className="text-xs font-semibold text-white truncate">
-              Prakash Admin
-            </p>
-            <p className="text-[10px] text-stone-400 truncate font-mono">
-              admin-parkash@gmail.com
-            </p>
-          </div>
-          <button
-            onClick={async () => {
-              try {
-                await fetch("/api/admin/logout", { method: "POST" });
-                window.location.href = "/admin/login";
-              } catch {
-                window.location.href = "/admin/login";
-              }
-            }}
-            className="p-1.5 rounded-lg text-stone-400 hover:text-red-400 hover:bg-stone-800 transition-colors"
-            title="Sign Out"
-          >
-            <ShieldCheck className="w-4 h-4 text-[#dec49a]" />
-          </button>
-        </div>
       </div>
     </div>
   );

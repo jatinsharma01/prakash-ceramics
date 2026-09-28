@@ -10,6 +10,7 @@ import { useWishlist } from "@/context/WishlistContext";
 import { Eye, Check, Star, Heart } from "lucide-react";
 import { CartIcon } from "./CartIcon";
 import { clsx } from "clsx";
+import { getProductDisplayImages, getProductPricing, getProductFinishSku } from "@/lib/productUtils";
 
 interface ProductCardProps {
   product: Product;
@@ -24,19 +25,25 @@ export function ProductCard({ product }: ProductCardProps) {
 
   const isFavorited = isInWishlist(product.id);
 
+  // Derive card images strictly prioritizing finishImages
+  const cardImages = React.useMemo(() => getProductDisplayImages(product), [product]);
+
+  // Derive card pricing strictly prioritizing finishOfferPrices and finishPrices
+  const pricing = React.useMemo(() => getProductPricing(product), [product]);
+
   // Smoothly cycle images while hovering over the card
   useEffect(() => {
-    if (!isHovered || product.images.length <= 1) {
+    if (!isHovered || cardImages.length <= 1) {
       setCurrentImageIndex(0);
       return;
     }
 
     const interval = setInterval(() => {
-      setCurrentImageIndex((prev) => (prev + 1) % product.images.length);
+      setCurrentImageIndex((prev) => (prev + 1) % cardImages.length);
     }, 1500);
 
     return () => clearInterval(interval);
-  }, [isHovered, product.images.length]);
+  }, [isHovered, cardImages.length]);
 
   const handleWishlistToggle = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -47,7 +54,15 @@ export function ProductCard({ product }: ProductCardProps) {
   const handleAdd = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    addToEnquiry(product, product.finishes[0], 1);
+    const activeFinish = product.finishes[0] || "Chrome";
+    const variantProduct: Product = {
+      ...product,
+      price: pricing.price,
+      originalPrice: pricing.mrp > pricing.price ? pricing.mrp : undefined,
+      sku: getProductFinishSku(product, activeFinish),
+      images: cardImages,
+    };
+    addToEnquiry(variantProduct, activeFinish, 1);
     setIsAdded(true);
     setTimeout(() => setIsAdded(false), 2000);
   };
@@ -58,7 +73,7 @@ export function ProductCard({ product }: ProductCardProps) {
     setQuickViewProduct(product);
   };
 
-  const activeImage = product.images[currentImageIndex] || product.images[0];
+  const activeImage = cardImages[currentImageIndex] || cardImages[0];
 
   return (
     <motion.div
@@ -72,7 +87,7 @@ export function ProductCard({ product }: ProductCardProps) {
     >
       {/* 1. Hero Product Showcase Canvas (Smooth Crossfading Images on Hover) */}
       <Link href={`/products/${product.slug}`} className="absolute inset-0 block w-full h-full">
-        {product.images.map((img, idx) => {
+        {cardImages.map((img, idx) => {
           const isCurrent = activeImage === img;
           return (
             <div
@@ -183,30 +198,30 @@ export function ProductCard({ product }: ProductCardProps) {
         {/* Pricing & Cart Icon Button */}
         <div className="mt-2.5 pt-2 flex items-center justify-between border-t border-[#f0ece4]">
           <div className="flex flex-col">
-            {product.originalPrice && product.originalPrice !== product.price ? (
+            {pricing.hasDiscount ? (
               <>
                 <div className="flex items-baseline gap-1.5">
                   <span className="text-[8px] text-[#84786d] uppercase tracking-wider font-bold">MRP</span>
                   <span className="text-[10px] text-neutral-400 line-through font-medium">
-                    ₹{product.originalPrice.toLocaleString("en-IN")}
+                    ₹{pricing.mrp.toLocaleString("en-IN")}
                   </span>
                 </div>
                 <div className="flex items-baseline gap-1.5">
                   <span className="text-xs sm:text-sm font-extrabold text-[#151a22]">
-                    ₹{product.price.toLocaleString("en-IN")}
+                    ₹{pricing.price.toLocaleString("en-IN")}
                   </span>
-                  {product.originalPrice > product.price && (
+                  {pricing.discountPercent > 0 && (
                     <span className="text-[8px] font-bold text-emerald-600">
-                      {Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)}% off
+                      {pricing.discountPercent}% off
                     </span>
                   )}
                 </div>
               </>
             ) : (
               <>
-                <span className="text-[8px] text-[#84786d] uppercase tracking-wider font-bold">Catalogue MRP</span>
+                <span className="text-[8px] text-[#84786d] uppercase tracking-wider font-bold">Price</span>
                 <span className="text-xs sm:text-sm font-extrabold text-[#151a22]">
-                  ₹{product.price.toLocaleString("en-IN")}
+                  ₹{pricing.price.toLocaleString("en-IN")}
                 </span>
               </>
             )}
