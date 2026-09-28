@@ -33,11 +33,39 @@ export default function ProductDetailClient({ product }: { product: Product }) {
   // 1. Derive gallery items directly from finishes and finishImages
   const galleryItems = React.useMemo(() => getProductFinishGallery(product), [product]);
 
-  // Initial finish: first finish from finishes or gallery
-  const initialFinish = (product.finishes && product.finishes[0]) || galleryItems[0]?.finish || ("Chrome" as FinishType);
+  // Robust list of all available finishes across finishes, finishImages, finishPrices, finishOfferPrices, and gallery
+  const availableFinishes = React.useMemo(() => {
+    const list: FinishType[] = [];
+    const seen = new Set<string>();
+
+    const addFinish = (f: any) => {
+      if (typeof f === "string" && f.trim().length > 0 && !seen.has(f.trim())) {
+        seen.add(f.trim());
+        list.push(f.trim() as FinishType);
+      }
+    };
+
+    (product.finishes || []).forEach(addFinish);
+    Object.keys(product.finishImages || {}).forEach(addFinish);
+    galleryItems.forEach((item) => addFinish(item.finish));
+    Object.keys(product.finishPrices || {}).forEach(addFinish);
+    Object.keys(product.finishOfferPrices || {}).forEach(addFinish);
+
+    return list.length > 0 ? list : (["Chrome"] as FinishType[]);
+  }, [product.finishes, product.finishImages, product.finishPrices, product.finishOfferPrices, galleryItems]);
+
+  // Initial finish: first finish from available finishes or gallery
+  const initialFinish = availableFinishes[0] || galleryItems[0]?.finish || ("Chrome" as FinishType);
   const [selectedFinish, setSelectedFinish] = useState<FinishType>(initialFinish);
   const [quantity, setQuantity] = useState(1);
   const [isAdded, setIsAdded] = useState(false);
+
+  // Sync selectedFinish if product changes
+  React.useEffect(() => {
+    if (!availableFinishes.includes(selectedFinish)) {
+      setSelectedFinish(availableFinishes[0] || ("Chrome" as FinishType));
+    }
+  }, [availableFinishes, selectedFinish]);
 
   const isFavorited = isInWishlist(product.id);
 
@@ -282,7 +310,7 @@ export default function ProductDetailClient({ product }: { product: Product }) {
                 </span>
               </label>
               <div className="flex flex-wrap gap-2.5">
-                {product.finishes.map((finish) => (
+                {availableFinishes.map((finish) => (
                   <button
                     key={finish}
                     type="button"

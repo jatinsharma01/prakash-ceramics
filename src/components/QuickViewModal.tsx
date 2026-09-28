@@ -35,7 +35,29 @@ export function QuickViewModal() {
   }, [quickViewProduct]);
 
   const isFavorited = quickViewProduct ? isInWishlist(quickViewProduct.id) : false;
-  const currentFinish = selectedFinish || (quickViewProduct?.finishes[0] || galleryItems[0]?.finish || ("Chrome" as FinishType));
+
+  const availableFinishes = React.useMemo(() => {
+    if (!quickViewProduct) return [];
+    const list: FinishType[] = [];
+    const seen = new Set<string>();
+
+    const addFinish = (f: any) => {
+      if (typeof f === "string" && f.trim().length > 0 && !seen.has(f.trim())) {
+        seen.add(f.trim());
+        list.push(f.trim() as FinishType);
+      }
+    };
+
+    (quickViewProduct.finishes || []).forEach(addFinish);
+    Object.keys(quickViewProduct.finishImages || {}).forEach(addFinish);
+    galleryItems.forEach((item) => addFinish(item.finish));
+    Object.keys(quickViewProduct.finishPrices || {}).forEach(addFinish);
+    Object.keys(quickViewProduct.finishOfferPrices || {}).forEach(addFinish);
+
+    return list.length > 0 ? list : (["Chrome"] as FinishType[]);
+  }, [quickViewProduct, galleryItems]);
+
+  const currentFinish = selectedFinish || (availableFinishes[0] || ("Chrome" as FinishType));
 
   const pricing = React.useMemo(() => {
     return quickViewProduct 
@@ -199,7 +221,7 @@ export function QuickViewModal() {
                     Select Finish: <span className="text-[#8c7764]">{currentFinish}</span>
                   </label>
                   <div className="flex flex-wrap gap-2">
-                    {quickViewProduct.finishes.map((finish) => (
+                    {availableFinishes.map((finish) => (
                       <motion.button
                         key={finish}
                         type="button"

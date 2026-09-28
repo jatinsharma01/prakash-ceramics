@@ -23,9 +23,15 @@ export interface ProductPriceSummary {
 export function getProductFinishGallery(product: Product): FinishDetail[] {
   if (!product) return [];
 
-  const finishNames = (product.finishes && product.finishes.length > 0)
-    ? product.finishes
-    : Object.keys(product.finishImages || {});
+  // Robustly derive all finish names from finishes, finishImages, finishPrices, finishOfferPrices
+  const finishNames = Array.from(
+    new Set([
+      ...(Array.isArray(product.finishes) ? product.finishes : []),
+      ...Object.keys(product.finishImages || {}),
+      ...Object.keys(product.finishPrices || {}),
+      ...Object.keys(product.finishOfferPrices || {}),
+    ])
+  ).filter((f) => typeof f === "string" && f.trim().length > 0);
 
   const gallery: FinishDetail[] = [];
 
@@ -133,7 +139,10 @@ export function getProductPricing(product: Product, selectedFinish?: string): Pr
   }
 
   // Default / overall product pricing for catalog / product cards
-  const firstFinish = product.finishes?.[0];
+  const firstFinish =
+    (product.finishes && product.finishes.length > 0 ? product.finishes[0] : undefined) ||
+    Object.keys(product.finishImages || {})[0] ||
+    Object.keys(product.finishPrices || {})[0];
   const allOfferPrices = product.finishOfferPrices
     ? Object.values(product.finishOfferPrices).map(Number).filter((p) => p > 0)
     : [];

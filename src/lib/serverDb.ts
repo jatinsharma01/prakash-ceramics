@@ -218,6 +218,21 @@ export async function getProducts(options?: {
           }
         }
 
+        const finishImagesObj = (p.finishImages as Record<string, string>) || (p.specs as any)?.finishImages || (p as any).finishImages || undefined;
+        const finishPricesObj = (p.specs as any)?.finishPrices || (p as any).finishPrices || undefined;
+        const finishOfferPricesObj = (p.specs as any)?.finishOfferPrices || (p as any).finishOfferPrices || undefined;
+        const finishSkusObj = (p.specs as any)?.finishSkus || (p as any).finishSkus || undefined;
+
+        const mergedFinishes = Array.from(
+          new Set([
+            ...(Array.isArray(p.finishes) ? p.finishes : []),
+            ...Object.keys(finishImagesObj || {}),
+            ...Object.keys(finishPricesObj || {}),
+            ...Object.keys(finishOfferPricesObj || {}),
+            ...Object.keys(finishSkusObj || {}),
+          ])
+        ).filter((f) => typeof f === "string" && f.trim().length > 0);
+
         return {
           id: p.id,
           name: p.name,
@@ -234,11 +249,11 @@ export async function getProducts(options?: {
           isFeatured: p.isFeatured,
           isNew: p.isNew,
           isBestseller: p.isBestseller,
-          finishes: p.finishes as any,
-          finishImages: (p.finishImages as Record<string, string>) || (p.specs as any)?.finishImages || (p as any).finishImages || undefined,
-          finishPrices: (p.specs as any)?.finishPrices || (p as any).finishPrices || undefined,
-          finishOfferPrices: (p.specs as any)?.finishOfferPrices || (p as any).finishOfferPrices || undefined,
-          finishSkus: (p.specs as any)?.finishSkus || (p as any).finishSkus || undefined,
+          finishes: (mergedFinishes.length > 0 ? mergedFinishes : p.finishes) as any,
+          finishImages: finishImagesObj,
+          finishPrices: finishPricesObj,
+          finishOfferPrices: finishOfferPricesObj,
+          finishSkus: finishSkusObj,
           finishStocks: adjustedFinishStocks || (p.specs as any)?.finishStocks || (p as any).finishStocks,
           stockCount: remainingStock,
           salesCount: sales.count,
@@ -375,6 +390,21 @@ export async function getProductByIdOrSlug(idOrSlug: string): Promise<Product | 
 
       const remainingStock = Math.max(0, calculatedStock - totalSold);
 
+      const finishImagesObj = (p.finishImages as Record<string, string>) || (p.specs as any)?.finishImages || (p as any).finishImages || undefined;
+      const finishPricesObj = (p.specs as any)?.finishPrices || (p as any).finishPrices || undefined;
+      const finishOfferPricesObj = (p.specs as any)?.finishOfferPrices || (p as any).finishOfferPrices || undefined;
+      const finishSkusObj = (p.specs as any)?.finishSkus || (p as any).finishSkus || undefined;
+
+      const mergedFinishes = Array.from(
+        new Set([
+          ...(Array.isArray(p.finishes) ? p.finishes : []),
+          ...Object.keys(finishImagesObj || {}),
+          ...Object.keys(finishPricesObj || {}),
+          ...Object.keys(finishOfferPricesObj || {}),
+          ...Object.keys(finishSkusObj || {}),
+        ])
+      ).filter((f) => typeof f === "string" && f.trim().length > 0);
+
       return {
         id: p.id,
         name: p.name,
@@ -391,11 +421,11 @@ export async function getProductByIdOrSlug(idOrSlug: string): Promise<Product | 
         isFeatured: p.isFeatured,
         isNew: p.isNew,
         isBestseller: p.isBestseller,
-        finishes: p.finishes as any,
-        finishImages: (p.finishImages as Record<string, string>) || (p.specs as any)?.finishImages || (p as any).finishImages || undefined,
-        finishPrices: (p.specs as any)?.finishPrices || (p as any).finishPrices || undefined,
-        finishOfferPrices: (p.specs as any)?.finishOfferPrices || (p as any).finishOfferPrices || undefined,
-        finishSkus: (p.specs as any)?.finishSkus || (p as any).finishSkus || undefined,
+        finishes: (mergedFinishes.length > 0 ? mergedFinishes : p.finishes) as any,
+        finishImages: finishImagesObj,
+        finishPrices: finishPricesObj,
+        finishOfferPrices: finishOfferPricesObj,
+        finishSkus: finishSkusObj,
         finishStocks: adjustedFinishStocks || (p.specs as any)?.finishStocks || (p as any).finishStocks,
         stockCount: remainingStock,
         salesCount: totalSold,
@@ -481,6 +511,32 @@ export async function updateProduct(id: string, data: any): Promise<Product | nu
         finishStocks: data.finishStocks || (data.specs as any)?.finishStocks || (existing.specs as any)?.finishStocks || {},
       };
 
+      const finishImagesObj = data.finishImages !== undefined ? data.finishImages : ((existing.finishImages as any) || {});
+      const finishPricesObj = updatedSpecs.finishPrices || {};
+      const finishOfferPricesObj = updatedSpecs.finishOfferPrices || {};
+      const finishSkusObj = updatedSpecs.finishSkus || {};
+
+      const rawFinishes = data.finishes !== undefined
+        ? (Array.isArray(data.finishes) ? data.finishes : [data.finishes])
+        : (Array.isArray(existing.finishes) ? existing.finishes : []);
+
+      const mergedFinishes = Array.from(
+        new Set([
+          ...rawFinishes,
+          ...Object.keys(finishImagesObj || {}),
+          ...Object.keys(finishPricesObj || {}),
+          ...Object.keys(finishOfferPricesObj || {}),
+          ...Object.keys(finishSkusObj || {}),
+        ])
+      ).filter((f) => typeof f === "string" && f.trim().length > 0);
+
+      const finalFinishes = mergedFinishes.length > 0 ? mergedFinishes : ["Chrome"];
+
+      const existingImages = Array.isArray(existing.images) ? existing.images : [];
+      const dataImages = data.images !== undefined ? (Array.isArray(data.images) ? data.images : [data.images]) : existingImages;
+      const allVariantImages = Object.values(finishImagesObj || {}).filter((v) => typeof v === "string" && v.length > 0) as string[];
+      const combinedImages = Array.from(new Set([...dataImages, ...allVariantImages])).filter(Boolean);
+
       const updated = await prisma.product.update({
         where: { id: existing.id },
         data: {
@@ -497,9 +553,9 @@ export async function updateProduct(id: string, data: any): Promise<Product | nu
           isFeatured: data.isFeatured !== undefined ? !!data.isFeatured : existing.isFeatured,
           isNew: data.isNew !== undefined ? !!data.isNew : existing.isNew,
           isBestseller: data.isBestseller !== undefined ? !!data.isBestseller : existing.isBestseller,
-          finishes: data.finishes !== undefined ? data.finishes : existing.finishes,
+          finishes: finalFinishes,
           finishImages: data.finishImages !== undefined ? JSON.parse(JSON.stringify(data.finishImages)) : existing.finishImages,
-          images: data.images !== undefined ? data.images : existing.images,
+          images: combinedImages.length > 0 ? combinedImages : existing.images,
           material: data.material !== undefined ? data.material : existing.material,
           warranty: data.warranty !== undefined ? data.warranty : existing.warranty,
           dimensions: data.dimensions !== undefined ? data.dimensions : existing.dimensions,
@@ -595,6 +651,28 @@ export async function createProduct(data: {
   const categorySlug = data.category.toLowerCase().replace(/[^a-z0-9]+/g, "-");
   const sku = data.sku || `PC-${data.category.slice(0, 3).toUpperCase()}-${Math.floor(1000 + Math.random() * 9000)}`;
 
+  const finishImagesObj = data.finishImages || {};
+  const finishPricesObj = (data as any).finishPrices || (data.specs as any)?.finishPrices || {};
+  const finishOfferPricesObj = (data as any).finishOfferPrices || (data.specs as any)?.finishOfferPrices || {};
+  const finishSkusObj = (data as any).finishSkus || (data.specs as any)?.finishSkus || {};
+
+  const rawFinishes = Array.isArray(data.finishes) ? data.finishes : (data.finishes ? [data.finishes] : []);
+  const mergedFinishes = Array.from(
+    new Set([
+      ...rawFinishes,
+      ...Object.keys(finishImagesObj),
+      ...Object.keys(finishPricesObj),
+      ...Object.keys(finishOfferPricesObj),
+      ...Object.keys(finishSkusObj),
+    ])
+  ).filter((f) => typeof f === "string" && f.trim().length > 0);
+
+  const finalFinishes = mergedFinishes.length > 0 ? mergedFinishes : ["Chrome"];
+
+  const initialImages = Array.isArray(data.images) ? data.images : [];
+  const allVariantImages = Object.values(finishImagesObj).filter((v) => typeof v === "string" && v.length > 0) as string[];
+  const combinedImages = Array.from(new Set([...initialImages, ...allVariantImages])).filter(Boolean);
+
   const newProduct: Product = {
     id: `prod-${Date.now()}`,
     name: data.name,
@@ -609,9 +687,9 @@ export async function createProduct(data: {
     isFeatured: !!data.isFeatured,
     isNew: data.isNew !== undefined ? data.isNew : true,
     isBestseller: !!data.isBestseller,
-    finishes: (data.finishes as any) || ["Chrome"],
-    finishImages: data.finishImages || {},
-    images: data.images?.length > 0 ? data.images : ["https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&q=80&w=800"],
+    finishes: finalFinishes,
+    finishImages: finishImagesObj,
+    images: combinedImages.length > 0 ? combinedImages : ["https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&q=80&w=800"],
     dimensions: data.dimensions || "Standard Luxury Fit",
     flowRate: data.flowRate || "5.0 LPM Eco-Aerated",
     material: data.material || "Solid Forged Brass",

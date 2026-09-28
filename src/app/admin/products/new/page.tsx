@@ -120,6 +120,16 @@ export default function AdminNewProductPage() {
 
   const handleFinishImageChange = (finish: string, val: string) => {
     setFinishImages((prev) => ({ ...prev, [finish]: val }));
+    if (!selectedFinishes.includes(finish)) {
+      setSelectedFinishes((prev) => [...prev, finish]);
+      if (!finishSkus[finish]) {
+        const short = finish.substring(0, 3).toUpperCase();
+        setFinishSkus((prev) => ({ ...prev, [finish]: `FUP-${short}-${Math.floor(10000 + Math.random() * 90000)}` }));
+      }
+      if (!finishStocks[finish]) {
+        setFinishStocks((prev) => ({ ...prev, [finish]: 15 }));
+      }
+    }
   };
 
   const addCustomColor = () => {
@@ -173,7 +183,17 @@ export default function AdminNewProductPage() {
       const cleanedFinishStocks: Record<string, number> = {};
       const cleanedFinishImages: Record<string, string> = {};
 
-      selectedFinishes.forEach((f) => {
+      // Merge all active finishes from selectedFinishes, finishImages, finishPrices
+      const allActiveFinishes = Array.from(
+        new Set([
+          ...selectedFinishes,
+          ...Object.keys(finishImages).filter((k) => !!finishImages[k]),
+          ...Object.keys(finishPrices).filter((k) => finishPrices[k] !== "" && finishPrices[k] !== undefined),
+          ...Object.keys(finishOfferPrices).filter((k) => finishOfferPrices[k] !== "" && finishOfferPrices[k] !== undefined),
+        ])
+      ).filter(Boolean);
+
+      allActiveFinishes.forEach((f) => {
         cleanedFinishPrices[f] = typeof finishPrices[f] === "number" ? (finishPrices[f] as number) : 0;
         cleanedFinishOfferPrices[f] = typeof finishOfferPrices[f] === "number" ? (finishOfferPrices[f] as number) : 0;
         cleanedFinishSkus[f] = finishSkus[f] || `${sku || "PC-ITM"}-${f.slice(0, 3).toUpperCase()}`;
@@ -188,6 +208,8 @@ export default function AdminNewProductPage() {
       const computedOriginalPrice = mrpValues.length > 0 ? Math.min(...mrpValues) : undefined;
       const totalStock = Object.values(cleanedFinishStocks).reduce((a, b) => a + b, 0);
 
+      const allImages = Array.from(new Set(Object.values(cleanedFinishImages).filter(Boolean)));
+
       const payload = {
         name: productName,
         sku: sku || generateAutoSku(productName),
@@ -201,13 +223,13 @@ export default function AdminNewProductPage() {
         isFeatured,
         isNew,
         isBestseller,
-        finishes: selectedFinishes.length > 0 ? selectedFinishes : ["Chrome"],
+        finishes: allActiveFinishes.length > 0 ? allActiveFinishes : ["Chrome"],
         finishImages: cleanedFinishImages,
         finishPrices: cleanedFinishPrices,
         finishOfferPrices: cleanedFinishOfferPrices,
         finishSkus: cleanedFinishSkus,
         finishStocks: cleanedFinishStocks,
-        images: Object.values(cleanedFinishImages),
+        images: allImages.length > 0 ? allImages : Object.values(cleanedFinishImages),
         material,
         warranty,
         dimensions: dimensions || "Standard Luxury Fit",

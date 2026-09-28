@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getProducts, createProduct } from "@/lib/serverDb";
+import { revalidatePath } from "next/cache";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -47,6 +48,15 @@ export async function POST(request: NextRequest) {
     }
 
     const created = await createProduct(body);
+
+    try {
+      revalidatePath("/products");
+      revalidatePath(`/products/${created.slug}`);
+      revalidatePath("/admin/products");
+      revalidatePath("/");
+    } catch (e) {
+      console.warn("Revalidation warning:", e);
+    }
 
     return NextResponse.json(
       {

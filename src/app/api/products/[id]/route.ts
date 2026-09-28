@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getProductByIdOrSlug, updateProduct, deleteProduct } from "@/lib/serverDb";
+import { revalidatePath } from "next/cache";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -47,6 +48,16 @@ export async function PUT(
       );
     }
 
+    try {
+      revalidatePath("/products");
+      revalidatePath(`/products/${updated.slug}`);
+      revalidatePath(`/products/${id}`);
+      revalidatePath("/admin/products");
+      revalidatePath("/");
+    } catch (e) {
+      console.warn("Revalidation warning:", e);
+    }
+
     return NextResponse.json({
       success: true,
       message: "Product updated successfully!",
@@ -80,6 +91,16 @@ export async function DELETE(
         { success: false, message: "Product not found or already removed" },
         { status: 404 }
       );
+    }
+
+    try {
+      revalidatePath("/products");
+      revalidatePath(`/products/${deleted.slug}`);
+      revalidatePath(`/products/${id}`);
+      revalidatePath("/admin/products");
+      revalidatePath("/");
+    } catch (e) {
+      console.warn("Revalidation warning:", e);
     }
 
     return NextResponse.json({

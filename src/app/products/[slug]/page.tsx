@@ -5,6 +5,8 @@ import { notFound } from "next/navigation";
 
 import type { Metadata } from "next";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 export const dynamicParams = true;
 
 export async function generateMetadata({
@@ -56,11 +58,6 @@ export async function generateMetadata({
   };
 }
 
-export async function generateStaticParams() {
-  return PRODUCTS.map((product) => ({
-    slug: product.slug,
-  }));
-}
 
 export default async function ProductDetailPage({
   params,
