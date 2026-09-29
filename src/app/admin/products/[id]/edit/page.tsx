@@ -173,6 +173,16 @@ export default function EditProductPage() {
     }
   };
 
+  const removeFinish = (finish: string) => {
+    if (selectedFinishes.length <= 1) return;
+    setSelectedFinishes((prev) => prev.filter((f) => f !== finish));
+    setFinishPrices((prev) => { const next = { ...prev }; delete next[finish]; return next; });
+    setFinishOfferPrices((prev) => { const next = { ...prev }; delete next[finish]; return next; });
+    setFinishSkus((prev) => { const next = { ...prev }; delete next[finish]; return next; });
+    setFinishStocks((prev) => { const next = { ...prev }; delete next[finish]; return next; });
+    setFinishImages((prev) => { const next = { ...prev }; delete next[finish]; return next; });
+  };
+
   const handleFinishPriceChange = (finish: string, val: string) => {
     setFinishPrices((prev) => ({ ...prev, [finish]: val === "" ? "" : Number(val) }));
   };
@@ -601,9 +611,20 @@ export default function EditProductPage() {
                       <span className="w-3 h-3 rounded-full bg-[#9b7842]" />
                       <span className="font-bold text-white text-sm">{finish}</span>
                     </div>
-                    <span className="text-[11px] text-stone-400 font-mono">
-                      Code: {finishSkus[finish] || "Not Set"}
-                    </span>
+                    <div className="flex items-center gap-3">
+                      <span className="text-[11px] text-stone-400 font-mono">
+                        Code: {finishSkus[finish] || "Not Set"}
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() => removeFinish(finish)}
+                        disabled={selectedFinishes.length <= 1}
+                        title={selectedFinishes.length <= 1 ? "Cannot remove the last finish" : `Remove ${finish}`}
+                        className="p-1.5 rounded-lg bg-red-500/10 hover:bg-red-500/25 text-red-400 hover:text-red-300 border border-red-500/20 hover:border-red-500/40 transition-all disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
