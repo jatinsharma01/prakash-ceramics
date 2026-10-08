@@ -19,17 +19,17 @@ export async function generateMetadata({
 
   if (!product) {
     return {
-      title: "Product Not Found | PARKASH CERAMICS",
-      description: "Explore luxury bathroom fixtures, faucets, showers and bathtubs at Parkash Ceramics.",
+      title: "Product Not Found | PRAKASH CERAMICS",
+      description: "Explore luxury bathroom fixtures, faucets, showers and bathtubs at Prakash Ceramics.",
     };
   }
 
   // Meta title and description generated directly from product title and description
-  const title = `${product.name} | PARKASH CERAMICS`;
+  const title = `${product.name} | PRAKASH CERAMICS`;
   const description =
     product.description ||
     product.tagline ||
-    `Discover ${product.name}, a luxury architectural bath fitting crafted with precision engineering and Swiss cartridges by Parkash Ceramics.`;
+    `Discover ${product.name}, a luxury architectural bath fitting crafted with precision engineering and Swiss cartridges by Prakash Ceramics.`;
 
   const ogImages = product.images && product.images.length > 0 ? [product.images[0]] : undefined;
 
@@ -39,7 +39,7 @@ export async function generateMetadata({
     keywords: [
       product.name,
       product.category,
-      "Parkash Ceramics",
+      "Prakash Ceramics",
       "luxury bathroom",
       ...(product.finishes || []),
     ],

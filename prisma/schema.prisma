@@ -257,9 +257,35 @@ model PageSeo {
   ogImage     String?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
-
   @@index([path])
 }
 
+model BlogPost {
+  id              String   @id @default(cuid())
+  title           String
+  slug            String   @unique
+  excerpt         String   @db.Text
+  content         String   @db.Text
+  coverImage      String?
+  images          String[] @default([])
+  category        String   @default("Design & Architecture")
+  author          String   @default("Prakash Editorial Studio")
+  authorRole      String?  @default("Senior Architectural Consultant")
+  authorAvatar    String?
+  readTime        String?  @default("5 min read")
+  tags            String[] @default([])
+  metaTitle       String?
+  metaDescription String?  @db.Text
+  keywords        String?
+  isPublished     Boolean  @default(true)
+  isFeatured      Boolean  @default(false)
+  views           Int      @default(0)
+  publishedAt     DateTime @default(now())
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
 
-
+  @@index([slug])
+  @@index([category])
+  @@index([isPublished])
+  @@index([publishedAt])
+}

@@ -195,7 +195,7 @@ function ProductsContent({ initialProducts }: ProductsClientProps) {
           <MotionReveal direction="up" className="flex flex-col md:flex-row md:items-end justify-between gap-6">
             <div>
               <span className="text-xs uppercase tracking-[0.25em] text-[#9b7842] font-semibold block mb-2">
-                Parkash Ceramics Master Catalogue
+                Prakash Ceramics Master Catalogue
               </span>
               <h1 className="text-3xl sm:text-5xl font-serif font-semibold text-[#151a22] tracking-tight">
                 Architectural Fittings & Suites

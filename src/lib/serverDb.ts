@@ -14,7 +14,7 @@ import {
   AdminOrder, 
   AdminUser 
 } from "./adminData";
-import { Product, Category } from "./types";
+import { Product, Category, BlogPost } from "./types";
 
 export interface SaleItem {
   id: string;
@@ -2134,4 +2134,495 @@ export async function deletePageSeo(idOrPath: string): Promise<boolean> {
     }
   );
 }
+
+// -------------------------------------------------------------
+// BLOG POSTS STORE & OPERATIONS
+// -------------------------------------------------------------
+
+export const INITIAL_BLOG_POSTS: BlogPost[] = [
+  {
+    id: "blog-pvd-finishes-guide",
+    title: "The Art of PVD Architectural Finishes: Molecular Durability Meets Warm Metallics",
+    slug: "art-of-pvd-architectural-finishes",
+    excerpt: "Discover how Physical Vapor Deposition (PVD) molecular bonding produces lustrous gold, rose gold, and brushed brass finishes that resist scratches, tarnish, and harsh water.",
+    content: `<h2>The Renaissance of Metallic Bathware</h2>
+<p>Modern luxury bathrooms have moved decisively beyond standard sterile chrome. Architects and interior connoisseurs increasingly seek warmer, tactile palettes that create sanctuary spaces: brushed gold, blush rose gold, matte graphite, and black chrome. However, traditional electroplating often succumbs to abrasion, calcification, and peeling over time.</p>
+
+<blockquote>"True architectural luxury is not merely how an ensemble gleams upon handover, but how gracefully it endures a decade of daily rituals." — Ar. Vikram Singhania</blockquote>
+
+<h3>What is Physical Vapor Deposition (PVD)?</h3>
+<p>Physical Vapor Deposition is a vacuum coating process utilized in high-performance aerospace and Swiss horology. Solid metal targets are vaporized in a high-vacuum chamber and ionized with reactive gases. The vaporized metal atoms then condense onto the brass substrate, forming a molecular ceramic-metallic lattice that is physically bonded to the brass rather than merely painted or plated on top.</p>
+
+<h3>Key Advantages of Prakash Ceramics PVD Fixtures</h3>
+<ul>
+  <li><strong>Extreme Surface Hardness:</strong> Up to 3x harder than standard chrome and 10x more scratch-resistant.</li>
+  <li><strong>Corrosion & Salt Spray Immunity:</strong> Tested to withstand over 2,000 hours of continuous neutral salt spray without pitting.</li>
+  <li><strong>Color Consistency:</strong> Micro-controlled deposition ensures exact color temperature matches across tall boy mixers, rain shower arms, and concealed spouts.</li>
+  <li><strong>Eco-Responsible Production:</strong> Zero hazardous chemical effluent and zero volatile organic compounds (VOCs).</li>
+</ul>
+
+<h3>Caring for Your PVD Bathroom Suite</h3>
+<p>Because the finish is non-porous, maintenance is effortless. Use a soft microfiber cloth with warm water and mild neutral soap. Avoid abrasive scouring pads and aggressive hydrochloric acid descalers, as standard pure water wipe-downs preserve the lustrous showroom patina indefinitely.</p>`,
+    coverImage: "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&q=80&w=1600",
+    images: [
+      "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&q=80&w=1600",
+      "https://images.unsplash.com/photo-1620626011761-996317b8d101?auto=format&fit=crop&q=80&w=1600"
+    ],
+    category: "Material & Craft",
+    author: "Ar. Vikram Singhania",
+    authorRole: "Chief Architectural Consultant",
+    authorAvatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=200",
+    readTime: "6 min read",
+    tags: ["PVD Finishes", "Bathroom Design", "Architecture", "Luxury Interiors"],
+    metaTitle: "PVD Bathroom Finishes Guide | Prakash Ceramics Architecture Journal",
+    metaDescription: "Explore why architectural PVD finishes are the premier choice for luxury villas, offering superior durability, corrosion resistance, and timeless aesthetic beauty.",
+    keywords: "PVD finishes, gold faucets, luxury bathroom design, brassware, scratch resistant bathware",
+    isPublished: true,
+    isFeatured: true,
+    views: 342,
+    publishedAt: new Date("2026-09-15T10:00:00Z"),
+    createdAt: new Date("2026-09-15T10:00:00Z"),
+    updatedAt: new Date("2026-09-15T10:00:00Z"),
+  },
+  {
+    id: "blog-ensuite-trends-2026",
+    title: "Master Ensuite Trends 2026: Biophilic Wellness, Rain Sky Showers & Sculptural Basins",
+    slug: "master-ensuite-trends-2026",
+    excerpt: "From integrated chromotherapy rain ceilings to monolithic stone vanity bowls, explore the key design elements redefining private luxury estates in 2026.",
+    content: `<h2>The Evolution of the Private Spa</h2>
+<p>The contemporary master bath is no longer a purely utilitarian room; it has ascended to the pinnacle of residential design as a private sanctuary for daily rejuvenation. In 2026, homeowners and architectural studios are harmonizing raw organic textures with aerospace-grade water control.</p>
+
+<h3>1. Monolithic Freestanding Bathtubs</h3>
+<p>Freestanding bathtubs act as sculptural centerpieces. Whether carved from composite stone or finished in velvety matte white resin, positioning the bath alongside panoramic glass windows or botanical indoor courtyards creates an unhurried retreat.</p>
+
+<h3>2. Multi-Sensory Sky Showers</h3>
+<p>Flush-mounted ceiling showerplates measuring 500x500mm or larger provide complete cascading body coverage. Integrating dual mist jets and therapeutic rainfall simulates natural rainforest downpours, especially when paired with concealed thermostatic mixers maintaining precise 38°C water flow.</p>
+
+<blockquote>"A master suite succeeds when every sensory transition — from ambient warmth to the tactile weight of a solid brass lever — reinforces serene tranquility."</blockquote>
+
+<h3>3. Natural Stone & Warm Earth Palettes</h3>
+<p>Calacatta marble, Roman travertine, and slate grey porcelain provide the organic foundation. Accenting these stone slabs with Brushed Gold or Rose Gold brassware strikes a harmonious balance between natural warmth and opulent refinement.</p>`,
+    coverImage: "https://images.unsplash.com/photo-1620626011761-996317b8d101?auto=format&fit=crop&q=80&w=1600",
+    images: [
+      "https://images.unsplash.com/photo-1620626011761-996317b8d101?auto=format&fit=crop&q=80&w=1600"
+    ],
+    category: "Architectural Trends",
+    author: "Prakash Editorial Studio",
+    authorRole: "Interior Trend Specialists",
+    authorAvatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=200",
+    readTime: "8 min read",
+    tags: ["Ensuite Trends", "Wellness Spa", "Rain Showers", "Modern Villa"],
+    metaTitle: "Luxury Master Ensuite Trends 2026 | Prakash Ceramics Design Insights",
+    metaDescription: "A comprehensive look into modern master bath designs, biophilic natural elements, thermostatic concealed valves, and bespoke bathroom planning.",
+    keywords: "master ensuite, luxury bathroom 2026, rain shower ceiling, biophilic bathroom, freestanding bathtub",
+    isPublished: true,
+    isFeatured: false,
+    views: 518,
+    publishedAt: new Date("2026-09-28T14:30:00Z"),
+    createdAt: new Date("2026-09-28T14:30:00Z"),
+    updatedAt: new Date("2026-09-28T14:30:00Z"),
+  },
+  {
+    id: "blog-thermostatic-precision",
+    title: "Thermostatic vs Manual Diverters: Engineering Precision for High-Pressure Hydrotherapy",
+    slug: "thermostatic-vs-manual-diverters-engineering-precision",
+    excerpt: "Why Swiss-calibrated thermostatic cartridges prevent temperature shock, conserve water, and deliver a spa-grade shower experience in luxury penthouses.",
+    content: `<h2>Understanding Temperature Precision in Luxury Showers</h2>
+<p>When engineering high-end multi-outlet showers involving overhead rain, body massage jets, and hand showers simultaneously, standard manual mixer cartridges frequently struggle with pressure fluctuations when other outlets in the residence are utilized.</p>
+
+<h3>How Thermostatic Valves Work</h3>
+<p>A thermostatic shower valve incorporates a responsive wax-element or bimetallic coil cartridge engineered by Swiss precision manufacturers like Kerox®. The element continuously measures the incoming hot and cold supplies, reacting within 0.2 seconds to pressure shifts to keep the output temperature locked to within ±0.5°C of your selected comfort level.</p>
+
+<h3>Safety & Anti-Scald Protection</h3>
+<ul>
+  <li><strong>38°C Safety Stop:</strong> Pre-set lock prevents accidental scalding by children or elderly family members.</li>
+  <li><strong>Instant Auto-Shutoff:</strong> If the cold water supply fails entirely, the valve instantly closes hot flow to eliminate burn risk.</li>
+  <li><strong>Simultaneous Multi-Flow:</strong> 3-way and 4-way diverters allow simultaneous operation of hand shower and rain cascade without sacrificing pressure.</li>
+</ul>
+
+<h3>Architectural Concealed Installation</h3>
+<p>For minimalist, clutter-free aesthetics, Prakash Ceramics thermostatic bodies are recessed cleanly into the wall substrate using solid brass rough-in boxes, presenting only sleek architectural trim plates and tactile knurled dials on the finished tile surface.</p>`,
+    coverImage: "https://images.unsplash.com/photo-1507652313519-d4e9174996dd?auto=format&fit=crop&q=80&w=1600",
+    images: [
+      "https://images.unsplash.com/photo-1507652313519-d4e9174996dd?auto=format&fit=crop&q=80&w=1600"
+    ],
+    category: "Engineering & Craft",
+    author: "Er. Rajesh Verma",
+    authorRole: "Senior Hydrotherapy Engineer",
+    authorAvatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=200",
+    readTime: "5 min read",
+    tags: ["Thermostatic Showers", "Plumbing Engineering", "Hydrotherapy", "Water Efficiency"],
+    metaTitle: "Thermostatic Shower Valves Explained | Prakash Ceramics Technical Guide",
+    metaDescription: "Understand the mechanics of thermostatic diverters and Swiss Kerox ceramic cartridges for constant 38°C water temperature control.",
+    keywords: "thermostatic valve, anti scald, shower diverter, luxury shower engineering, kerox cartridge",
+    isPublished: true,
+    isFeatured: false,
+    views: 289,
+    publishedAt: new Date("2026-10-02T11:15:00Z"),
+    createdAt: new Date("2026-10-02T11:15:00Z"),
+    updatedAt: new Date("2026-10-02T11:15:00Z"),
+  }
+];
+
+let memoryBlogPosts: BlogPost[] = [...INITIAL_BLOG_POSTS];
+
+export async function getAllBlogPosts(options?: {
+  publishedOnly?: boolean;
+  category?: string;
+  search?: string;
+}): Promise<BlogPost[]> {
+  return withDbFallback<BlogPost[]>(
+    async () => {
+      const where: any = {};
+      if (options?.publishedOnly) {
+        where.isPublished = true;
+      }
+      if (options?.category && options.category !== "All") {
+        where.category = options.category;
+      }
+      if (options?.search) {
+        where.OR = [
+          { title: { contains: options.search, mode: "insensitive" } },
+          { excerpt: { contains: options.search, mode: "insensitive" } },
+          { content: { contains: options.search, mode: "insensitive" } },
+          { author: { contains: options.search, mode: "insensitive" } },
+        ];
+      }
+
+      if (!(prisma as any)?.blogPost?.findMany) {
+        return [];
+      }
+
+      const posts = await (prisma as any).blogPost.findMany({
+        where,
+        orderBy: [{ isFeatured: "desc" }, { publishedAt: "desc" }, { createdAt: "desc" }],
+      });
+
+      if (!posts || posts.length === 0) {
+        // Seed default sample blogs into database if empty
+        try {
+          for (const item of INITIAL_BLOG_POSTS) {
+            await (prisma as any).blogPost.upsert({
+              where: { slug: item.slug },
+              update: {},
+              create: {
+                id: item.id,
+                title: item.title,
+                slug: item.slug,
+                excerpt: item.excerpt,
+                content: item.content,
+                coverImage: item.coverImage,
+                images: item.images || [],
+                category: item.category,
+                author: item.author,
+                authorRole: item.authorRole,
+                authorAvatar: item.authorAvatar,
+                readTime: item.readTime,
+                tags: item.tags || [],
+                metaTitle: item.metaTitle,
+                metaDescription: item.metaDescription,
+                keywords: item.keywords,
+                isPublished: item.isPublished,
+                isFeatured: item.isFeatured,
+                views: item.views || 0,
+                publishedAt: item.publishedAt,
+              },
+            });
+          }
+          return (prisma as any).blogPost.findMany({
+            where,
+            orderBy: [{ isFeatured: "desc" }, { publishedAt: "desc" }],
+          });
+        } catch {
+          // fallback to memory
+        }
+      }
+
+      return posts;
+    },
+    () => {
+      let filtered = [...memoryBlogPosts];
+      if (options?.publishedOnly) {
+        filtered = filtered.filter((p) => p.isPublished);
+      }
+      if (options?.category && options.category !== "All") {
+        filtered = filtered.filter((p) => p.category.toLowerCase() === options.category!.toLowerCase());
+      }
+      if (options?.search) {
+        const q = options.search.toLowerCase();
+        filtered = filtered.filter(
+          (p) =>
+            p.title.toLowerCase().includes(q) ||
+            p.excerpt.toLowerCase().includes(q) ||
+            p.content.toLowerCase().includes(q) ||
+            p.author.toLowerCase().includes(q)
+        );
+      }
+      return filtered.sort((a, b) => {
+        if (a.isFeatured && !b.isFeatured) return -1;
+        if (!a.isFeatured && b.isFeatured) return 1;
+        return new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime();
+      });
+    }
+  );
+}
+
+export async function getBlogPostBySlugOrId(slugOrId: string): Promise<BlogPost | null> {
+  return withDbFallback<BlogPost | null>(
+    async () => {
+      if (!(prisma as any)?.blogPost?.findFirst) {
+        return memoryBlogPosts.find((p) => p.slug === slugOrId || p.id === slugOrId) || null;
+      }
+
+      const post = await (prisma as any).blogPost.findFirst({
+        where: {
+          OR: [{ slug: slugOrId }, { id: slugOrId }],
+        },
+      });
+
+      if (!post) {
+        // check memory
+        return memoryBlogPosts.find((p) => p.slug === slugOrId || p.id === slugOrId) || null;
+      }
+
+      return post;
+    },
+    () => {
+      return memoryBlogPosts.find((p) => p.slug === slugOrId || p.id === slugOrId) || null;
+    }
+  );
+}
+
+export async function createBlogPost(data: Partial<BlogPost>): Promise<BlogPost> {
+  const id = `blog-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`;
+  const title = (data.title || "Untitled Article").trim();
+  const baseSlug = (
+    data.slug ||
+    title
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/(^-|-$)+/g, "")
+  ) || `article-${Date.now()}`;
+
+  let slug = baseSlug;
+  const excerpt = data.excerpt || "";
+  const content = data.content || `<p>${excerpt || title}</p>`;
+  const coverImage = data.coverImage || null;
+  const images = data.images || (coverImage ? [coverImage] : []);
+  const category = data.category || "Design & Architecture";
+  const author = data.author || "Prakash Editorial Studio";
+  const authorRole = data.authorRole || "Senior Architectural Consultant";
+  const authorAvatar = data.authorAvatar || null;
+  const readTime = data.readTime || `${Math.max(3, Math.ceil(content.split(/\s+/).length / 200))} min read`;
+  const tags = data.tags || [];
+  const metaTitle = data.metaTitle || `${title} | Prakash Ceramics Journal`;
+  const metaDescription = data.metaDescription || excerpt;
+  const keywords = data.keywords || null;
+  const isPublished = data.isPublished !== undefined ? data.isPublished : true;
+  const isFeatured = !!data.isFeatured;
+  const publishedAt = data.publishedAt ? new Date(data.publishedAt) : new Date();
+
+  return withDbFallback<BlogPost>(
+    async () => {
+      if (!(prisma as any)?.blogPost?.create) {
+        throw new Error("Prisma client blogPost model not ready");
+      }
+      
+      let finalSlug = slug;
+      if ((prisma as any)?.blogPost?.findUnique) {
+        const existing = await (prisma as any).blogPost.findUnique({
+          where: { slug: finalSlug },
+        });
+        if (existing) {
+          finalSlug = `${baseSlug}-${Math.floor(1000 + Math.random() * 9000)}`;
+        }
+      }
+
+      let created;
+      try {
+        created = await (prisma as any).blogPost.create({
+          data: {
+            id,
+            title,
+            slug: finalSlug,
+            excerpt,
+            content,
+            coverImage,
+            images,
+            category,
+            author,
+            authorRole,
+            authorAvatar,
+            readTime,
+            tags,
+            metaTitle,
+            metaDescription,
+            keywords,
+            isPublished,
+            isFeatured,
+            views: 0,
+            publishedAt,
+          },
+        });
+      } catch (err: any) {
+        if (err?.code === "P2002") {
+          finalSlug = `${baseSlug}-${Date.now().toString().slice(-4)}`;
+          created = await (prisma as any).blogPost.create({
+            data: {
+              id,
+              title,
+              slug: finalSlug,
+              excerpt,
+              content,
+              coverImage,
+              images,
+              category,
+              author,
+              authorRole,
+              authorAvatar,
+              readTime,
+              tags,
+              metaTitle,
+              metaDescription,
+              keywords,
+              isPublished,
+              isFeatured,
+              views: 0,
+              publishedAt,
+            },
+          });
+        } else {
+          throw err;
+        }
+      }
+      memoryBlogPosts.unshift(created);
+      return created;
+    },
+    () => {
+      const newPost: BlogPost = {
+        id,
+        title,
+        slug,
+        excerpt,
+        content,
+        coverImage,
+        images,
+        category,
+        author,
+        authorRole,
+        authorAvatar,
+        readTime,
+        tags,
+        metaTitle,
+        metaDescription,
+        keywords,
+        isPublished,
+        isFeatured,
+        views: 0,
+        publishedAt,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      };
+      memoryBlogPosts.unshift(newPost);
+      return newPost;
+    }
+  );
+}
+
+export async function updateBlogPost(id: string, data: Partial<BlogPost>): Promise<BlogPost | null> {
+  return withDbFallback<BlogPost | null>(
+    async () => {
+      if (!(prisma as any)?.blogPost?.update) {
+        throw new Error("Prisma client blogPost model not ready");
+      }
+      const updateData: any = { ...data };
+      delete updateData.id;
+      delete updateData.createdAt;
+
+      if (updateData.publishedAt) {
+        updateData.publishedAt = new Date(updateData.publishedAt);
+      }
+      if (updateData.title && !updateData.slug && !data.slug) {
+        updateData.slug = updateData.title
+          .toLowerCase()
+          .replace(/[^a-z0-9]+/g, "-")
+          .replace(/(^-|-$)+/g, "");
+      }
+
+      const updated = await (prisma as any).blogPost.update({
+        where: { id },
+        data: updateData,
+      });
+
+      const idx = memoryBlogPosts.findIndex((p) => p.id === id);
+      if (idx !== -1) {
+        memoryBlogPosts[idx] = { ...memoryBlogPosts[idx], ...updated };
+      }
+      return updated;
+    },
+    () => {
+      const idx = memoryBlogPosts.findIndex((p) => p.id === id);
+      if (idx === -1) return null;
+      const existing = memoryBlogPosts[idx];
+      const updated: BlogPost = {
+        ...existing,
+        ...data,
+        id: existing.id,
+        updatedAt: new Date(),
+      };
+      memoryBlogPosts[idx] = updated;
+      return updated;
+    }
+  );
+}
+
+export async function deleteBlogPost(id: string): Promise<boolean> {
+  return withDbFallback<boolean>(
+    async () => {
+      if (!(prisma as any)?.blogPost?.delete) {
+        throw new Error("Prisma client blogPost model not ready");
+      }
+      await (prisma as any).blogPost.delete({
+        where: { id },
+      });
+      memoryBlogPosts = memoryBlogPosts.filter((p) => p.id !== id);
+      return true;
+    },
+    () => {
+      const initialLength = memoryBlogPosts.length;
+      memoryBlogPosts = memoryBlogPosts.filter((p) => p.id !== id);
+      return memoryBlogPosts.length < initialLength;
+    }
+  );
+}
+
+export async function incrementBlogViews(idOrSlug: string): Promise<number> {
+  return withDbFallback<number>(
+    async () => {
+      if (!(prisma as any)?.blogPost?.updateMany) {
+        throw new Error("Prisma client blogPost model not ready");
+      }
+      try {
+        const post = await (prisma as any).blogPost.updateMany({
+          where: { OR: [{ id: idOrSlug }, { slug: idOrSlug }] },
+          data: { views: { increment: 1 } },
+        });
+        const current = memoryBlogPosts.find((p) => p.id === idOrSlug || p.slug === idOrSlug);
+        if (current) current.views = (current.views || 0) + 1;
+        return post.count || 1;
+      } catch {
+        return 1;
+      }
+    },
+    () => {
+      const post = memoryBlogPosts.find((p) => p.id === idOrSlug || p.slug === idOrSlug);
+      if (post) {
+        post.views = (post.views || 0) + 1;
+        return post.views;
+      }
+      return 1;
+    }
+  );
+}
+
 

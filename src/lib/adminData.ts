@@ -461,7 +461,7 @@ export const ADMIN_USERS: AdminUser[] = [
 export const ADMIN_COUPONS: AdminCoupon[] = [
   {
     id: "c-1",
-    code: "PARKASH10",
+    code: "PRAKASH10",
     discountType: "percentage",
     discountValue: 10,
     minOrderValue: 25000,

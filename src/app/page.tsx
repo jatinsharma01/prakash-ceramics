@@ -582,7 +582,8 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 4. INTERACTIVE LOOKBOOK & HOTSPOT SHOWCASE */}
+      {/* 4. INTERACTIVE LOOKBOOK & HOTSPOT SHOWCASE (COMMENTED OUT) */}
+      {false && (
       <section id="lookbook" className="py-24 bg-gradient-to-b from-white via-[#faf8f6] to-white border-b border-[#ede8df] relative overflow-hidden">
         <div className="max-w-[1600px] mx-auto px-4 sm:px-8 lg:px-12">
 
@@ -678,6 +679,7 @@ export default function HomePage() {
 
         </div>
       </section>
+      )}
 
       {/* 5. CURATED BATHROOM PACKAGES & SUITE ENSEMBLES */}
       <section className="py-24 bg-gradient-to-b from-[#fbf9f7] via-white to-[#fbf9f7] relative overflow-hidden">

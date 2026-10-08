@@ -566,7 +566,7 @@ export default function AdminEnquiriesPage() {
                           {cleanPhone && (
                             <a
                               href={`https://wa.me/${cleanPhone.startsWith("91") ? cleanPhone : "91" + cleanPhone}?text=${encodeURIComponent(
-                                `Hello ${enquiry.name}, thank you for contacting Parkash Ceramics regarding your ${enquiry.projectType} inquiry.`
+                                `Hello ${enquiry.name}, thank you for contacting Prakash Ceramics regarding your ${enquiry.projectType} inquiry.`
                               )}`}
                               target="_blank"
                               rel="noopener noreferrer"
@@ -705,7 +705,7 @@ export default function AdminEnquiriesPage() {
                       {/* WhatsApp */}
                       <a
                         href={`https://wa.me/${getCleanPhone(selectedEnquiry.phone).startsWith("91") ? getCleanPhone(selectedEnquiry.phone) : "91" + getCleanPhone(selectedEnquiry.phone)}?text=${encodeURIComponent(
-                          `Hello ${selectedEnquiry.name}, thank you for reaching out to Parkash Ceramics regarding your ${selectedEnquiry.projectType} consultation.`
+                          `Hello ${selectedEnquiry.name}, thank you for reaching out to Prakash Ceramics regarding your ${selectedEnquiry.projectType} consultation.`
                         )}`}
                         target="_blank"
                         rel="noopener noreferrer"
@@ -726,7 +726,7 @@ export default function AdminEnquiriesPage() {
 
                       {/* Email */}
                       <a
-                        href={`mailto:${selectedEnquiry.email}?subject=Parkash Ceramics Luxury Bath Consultation&body=Hello ${selectedEnquiry.name},`}
+                        href={`mailto:${selectedEnquiry.email}?subject=Prakash Ceramics Luxury Bath Consultation&body=Hello ${selectedEnquiry.name},`}
                         className="p-3 rounded-xl bg-purple-500/10 hover:bg-purple-500/20 text-purple-300 border border-purple-500/30 transition-all flex flex-col items-center justify-center gap-1.5 text-center font-medium text-xs"
                       >
                         <Mail className="w-4 h-4 text-purple-400" />

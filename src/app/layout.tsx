@@ -80,8 +80,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${outfit.variable} ${playfair.variable} light scroll-smooth`}>
-      <body className="min-h-screen bg-[#fbf9f7] text-[#1c1815] flex flex-col antialiased selection:bg-[#F2ECE7] selection:text-[#1c1815]">
+    <html
+      lang="en"
+      className={`${outfit.variable} ${playfair.variable} light scroll-smooth`}
+      data-scroll-behavior="smooth"
+      suppressHydrationWarning
+    >
+      <body
+        className="min-h-screen bg-[#fbf9f7] text-[#1c1815] flex flex-col antialiased selection:bg-[#F2ECE7] selection:text-[#1c1815]"
+        suppressHydrationWarning
+      >
         <ScrollProgressBar />
         <UserAuthProvider>
           <WishlistProvider>

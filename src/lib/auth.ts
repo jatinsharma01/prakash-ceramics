@@ -4,7 +4,7 @@ import { cookies } from "next/headers";
 // Default in-memory fallback admin credentials
 let memoryAdmin = {
   id: "admin-default",
-  email: "admin-parkash@gmail.com",
+  email: "admin-prakash@gmail.com",
   password: "123456",
   name: "Prakash Executive Admin",
   role: "Super Admin",

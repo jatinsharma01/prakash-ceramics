@@ -65,14 +65,14 @@ export default function AuthPage() {
       if (!res.success) {
         setError(res.message || "Registration failed.");
       } else {
-        setSuccess("Welcome to Parkash Ceramics! Redirecting to dashboard...");
+        setSuccess("Welcome to Prakash Ceramics! Redirecting to dashboard...");
         setTimeout(() => router.push("/account"), 600);
       }
     }
   };
 
   const fillDemo = () => {
-    setEmail("client@parkash.com");
+    setEmail("client@prakash.com");
     setPassword("password123");
     setError(null);
   };
@@ -184,7 +184,7 @@ export default function AuthPage() {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="client@parkash.com"
+                placeholder="client@prakash.com"
                 className="w-full bg-[#fbf9f7] border border-[#ded5cb] rounded-xl pl-10 pr-3.5 py-2.5 text-xs text-[#151a22]"
               />
             </div>
@@ -220,7 +220,7 @@ export default function AuthPage() {
                 className="text-[11px] font-medium text-[#9b7842] hover:underline inline-flex items-center gap-1 cursor-pointer"
               >
                 <KeyRound className="w-3 h-3" />
-                <span>Fill Demo (client@parkash.com)</span>
+                <span>Fill Demo (client@prakash.com)</span>
               </button>
             </div>
           )}

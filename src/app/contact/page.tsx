@@ -159,7 +159,7 @@ export default function ContactPage() {
             <div className="relative aspect-[16/10] rounded-3xl overflow-hidden border border-[#d8d2c6] shadow-sm bg-white">
               <ProductImage
                 src="https://images.unsplash.com/photo-1620626011761-996317b8d101?auto=format&fit=crop&q=80&w=1000"
-                alt="Parkash Ceramics Showroom Master Bath Suite"
+                alt="Prakash Ceramics Showroom Master Bath Suite"
                 fill
                 className="object-cover"
               />

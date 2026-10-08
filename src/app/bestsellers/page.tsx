@@ -7,7 +7,7 @@ export const revalidate = 0;
 
 export async function generateMetadata(): Promise<Metadata> {
   const seo = await getPageSeoByPath("/bestsellers");
-  const title = seo?.title || "Best Sellers Collection | PARKASH CERAMICS Luxury Bathware";
+  const title = seo?.title || "Best Sellers Collection | PRAKASH CERAMICS Luxury Bathware";
   const description =
     seo?.description ||
     "Explore our most loved and customer-favorite faucets, rainfall showers, wellness bathtubs, and sanitaryware pieces.";

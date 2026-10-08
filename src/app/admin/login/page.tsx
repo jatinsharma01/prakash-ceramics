@@ -75,7 +75,7 @@ export default function AdminLoginPage() {
           <div className="relative inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-[#9b7842] to-[#836433] text-white shadow-xl shadow-[#9b7842]/30 mb-2 border border-[#dec49a]/30 p-2 overflow-hidden">
             <Image
               src="/pc-mark.png"
-              alt="Parkash Ceramics Logo"
+              alt="Prakash Ceramics Logo"
               fill
               priority
               sizes="70px"
@@ -88,7 +88,7 @@ export default function AdminLoginPage() {
             </span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-serif font-bold text-white tracking-tight">
-            PARKASH CERAMICS
+            PRAKASH CERAMICS
           </h1>
           <p className="text-stone-300 text-xs sm:text-sm">
             Sign in with authorized administrator credentials
@@ -204,7 +204,7 @@ export default function AdminLoginPage() {
             href="/"
             className="text-xs text-stone-300 hover:text-[#dec49a] transition-colors"
           >
-            ← Return to Parkash Ceramics Storefront
+            ← Return to Prakash Ceramics Storefront
           </Link>
         </div>
       </motion.div>

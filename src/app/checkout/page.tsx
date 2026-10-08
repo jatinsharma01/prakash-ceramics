@@ -559,7 +559,7 @@ export default function CheckoutPage() {
                 </div>
                 <div>
                   <h4 className="text-xs font-bold text-[#151a22] uppercase tracking-wider">
-                    Direct Insured Dispatch from Parkash Ceramics
+                    Direct Insured Dispatch from Prakash Ceramics
                   </h4>
                   <p className="text-[11px] text-[#6b7280]">
                     All ceramic fixtures and PVD fittings are shipped in multi-layer foam crates.

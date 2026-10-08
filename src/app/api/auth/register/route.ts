@@ -51,7 +51,7 @@ export async function POST(request: NextRequest) {
 
     const response = NextResponse.json({
       success: true,
-      message: "Account created successfully! Welcome to Parkash Ceramics.",
+      message: "Account created successfully! Welcome to Prakash Ceramics.",
       user: {
         id: newUser.id,
         name: newUser.name,

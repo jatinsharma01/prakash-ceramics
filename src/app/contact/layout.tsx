@@ -6,7 +6,7 @@ export const revalidate = 0;
 
 export async function generateMetadata(): Promise<Metadata> {
   const seo = await getPageSeoByPath("/contact");
-  const title = seo?.title || "Experience Centre & Architectural Consultations | PARKASH CERAMICS";
+  const title = seo?.title || "Experience Centre & Architectural Consultations | PRAKASH CERAMICS";
   const description =
     seo?.description ||
     "Book a private design consultation or visit our experiential flagship showrooms to explore working hydrotherapy suites and bespoke PVD finishes.";

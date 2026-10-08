@@ -51,7 +51,7 @@ export default function CategoryDetailClient({
         <div className="absolute inset-0 z-0">
           <ProductImage
             src={category.image}
-            alt={`${category.name} by Parkash Ceramics`}
+            alt={`${category.name} by Prakash Ceramics`}
             fill
             priority
             className="object-cover"

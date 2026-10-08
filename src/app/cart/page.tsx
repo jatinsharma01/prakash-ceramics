@@ -40,7 +40,7 @@ export default function CartPage() {
 
   const handleApplyPromo = (e: React.FormEvent) => {
     e.preventDefault();
-    if (promoCode.trim().toUpperCase() === "PARKASH5" || promoCode.trim().toUpperCase() === "ARCHITECT") {
+    if (promoCode.trim().toUpperCase() === "PRAKASH5" || promoCode.trim().toUpperCase() === "ARCHITECT") {
       setPromoApplied(true);
     }
   };
@@ -268,7 +268,7 @@ export default function CartPage() {
                 <div className="flex gap-2">
                   <input
                     type="text"
-                    placeholder="Try PARKASH5"
+                    placeholder="Try PRAKASH5"
                     value={promoCode}
                     onChange={(e) => setPromoCode(e.target.value)}
                     disabled={promoApplied}

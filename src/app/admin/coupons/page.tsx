@@ -142,7 +142,7 @@ export default function AdminCouponsPage() {
   };
 
   const generateRandomCode = () => {
-    const prefixes = ["LUXURY", "PARKASH", "DESIGN", "VILLA", "BATH"];
+    const prefixes = ["LUXURY", "PRAKASH", "DESIGN", "VILLA", "BATH"];
     const prefix = prefixes[Math.floor(Math.random() * prefixes.length)];
     const val = discountType === "percentage" ? discountValue || 15 : "OFF";
     const num = Math.floor(100 + Math.random() * 900);
@@ -217,7 +217,7 @@ export default function AdminCouponsPage() {
         <div className="p-4 rounded-xl bg-[#141822] border border-stone-800">
           <p className="text-xs text-stone-300">Highest Volume Code</p>
           <p className="text-xl font-bold text-[#dec49a] mt-1 font-mono">
-            PARKASH10
+            PRAKASH10
           </p>
         </div>
         <div className="p-4 rounded-xl bg-[#141822] border border-stone-800">

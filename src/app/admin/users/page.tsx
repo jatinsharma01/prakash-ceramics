@@ -186,7 +186,7 @@ export default function AdminUsersPage() {
     const encodedUri = encodeURI(csvContent);
     const link = document.createElement("a");
     link.setAttribute("href", encodedUri);
-    link.setAttribute("download", `parkash_registered_clients_${Date.now()}.csv`);
+    link.setAttribute("download", `prakash_registered_clients_${Date.now()}.csv`);
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);

@@ -35,7 +35,7 @@ export async function POST(request: NextRequest) {
 
     const response = NextResponse.json({
       success: true,
-      message: "Authentication successful! Welcome to Parkash Ceramics Admin Console.",
+      message: "Authentication successful! Welcome to Prakash Ceramics Admin Console.",
       user: admin,
     });
 

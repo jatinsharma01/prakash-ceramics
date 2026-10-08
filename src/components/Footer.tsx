@@ -177,6 +177,11 @@ export function Footer() {
                 </Link>
               </li>
               <li>
+                <Link href="/blogs" className="text-[#555f6d] hover:text-[#9b7842] transition-colors font-medium">
+                  Architectural Journal &amp; Blogs
+                </Link>
+              </li>
+              <li>
                 <Link href="/contact#consultation" className="text-[#555f6d] hover:text-[#9b7842] transition-colors">
                   Architect Trade Enquiries
                 </Link>

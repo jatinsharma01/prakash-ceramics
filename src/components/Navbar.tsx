@@ -61,8 +61,14 @@ export function Navbar() {
     };
   }, [profileDropdownOpen]);
 
-  // Determine if page has a dark hero (like home, about, categories)
-  const isDarkHeroPage = pathname === "/" || pathname.startsWith("/categories/") || pathname === "/about";
+  // Determine if page has a dark hero (like home, about, categories, blogs)
+  const isDarkHeroPage =
+    pathname === "/" ||
+    pathname.startsWith("/categories/") ||
+    pathname === "/about" ||
+    pathname === "/blogs" ||
+    pathname.startsWith("/blogs/") ||
+    pathname === "/blog";
 
   useEffect(() => {
     const handleScroll = () => {
@@ -84,7 +90,7 @@ export function Navbar() {
   const navLinks = [
     { name: "Home", href: "/" },
     { name: "Collections", href: "/products" },
-    { name: "Inspiration & Lookbook", href: "/#lookbook" },
+    { name: "Blogs", href: "/blogs" },
     { name: "About Heritage", href: "/about" },
   ];
 
@@ -228,15 +234,24 @@ export function Navbar() {
             </Link>
 
             <Link
-              href="/#lookbook"
+              href="/blogs"
               className={clsx(
-                "text-sm font-semibold transition-colors",
+                "text-sm font-semibold transition-colors relative py-1",
                 isTransparent
-                  ? "text-white/90 hover:text-[#dec49a]"
-                  : "text-[#374151] hover:text-[#9b7842]"
+                  ? (pathname?.startsWith("/blogs") ? "text-[#dec49a]" : "text-white/90 hover:text-[#dec49a]")
+                  : (pathname?.startsWith("/blogs") ? "text-[#9b7842]" : "text-[#374151] hover:text-[#9b7842]")
               )}
             >
-              Lookbook
+              Blogs
+              {pathname?.startsWith("/blogs") && (
+                <motion.div
+                  layoutId="navUnderline"
+                  className={clsx(
+                    "absolute bottom-0 left-0 right-0 h-[2px] rounded-full",
+                    isTransparent ? "bg-[#dec49a]" : "bg-[#9b7842]"
+                  )}
+                />
+              )}
             </Link>
 
             <Link

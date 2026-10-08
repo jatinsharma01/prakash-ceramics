@@ -6,7 +6,7 @@ export const revalidate = 0;
 
 export async function generateMetadata(): Promise<Metadata> {
   const seo = await getPageSeoByPath("/wishlist");
-  const title = seo?.title || "Saved Curations & Wishlist | PARKASH CERAMICS";
+  const title = seo?.title || "Saved Curations & Wishlist | PRAKASH CERAMICS";
   const description =
     seo?.description ||
     "Your curated luxury faucets, hydrotherapy showers, and bespoke bathtubs saved for architectural projects and interior planning.";

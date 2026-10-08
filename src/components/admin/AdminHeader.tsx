@@ -201,7 +201,7 @@ export function AdminHeader() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          email: "admin-parkash@gmail.com",
+          email: "admin-prakash@gmail.com",
           currentPassword,
           newPassword,
         }),
@@ -458,7 +458,7 @@ export function AdminHeader() {
                   </div>
                   <div>
                     <h3 className="font-bold text-white text-base">Update Admin Password</h3>
-                    <p className="text-xs text-stone-400">admin-parkash@gmail.com</p>
+                    <p className="text-xs text-stone-400">admin-prakash@gmail.com</p>
                   </div>
                 </div>
                 <button

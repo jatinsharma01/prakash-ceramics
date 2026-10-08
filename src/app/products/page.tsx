@@ -7,7 +7,7 @@ export const revalidate = 0;
 
 export async function generateMetadata(): Promise<Metadata> {
   const seo = await getPageSeoByPath("/products");
-  const title = seo?.title || "Luxury Architectural Bathroom Collections | PARKASH CERAMICS";
+  const title = seo?.title || "Luxury Architectural Bathroom Collections | PRAKASH CERAMICS";
   const description =
     seo?.description ||
     "Browse our complete catalogue of precision-engineered Swiss cartridge faucets, rain showers, freestanding tubs, and designer sanitaryware.";

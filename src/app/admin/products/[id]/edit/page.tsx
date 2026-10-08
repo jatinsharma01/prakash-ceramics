@@ -76,6 +76,7 @@ export default function EditProductPage() {
 
   // Custom color input
   const [customColorInput, setCustomColorInput] = useState("");
+  const [customColors, setCustomColors] = useState<string[]>([]);
 
   // Highlights & Media
   const [features, setFeatures] = useState<string[]>([]);
@@ -128,6 +129,13 @@ export default function EditProductPage() {
           ).filter((f) => typeof f === "string" && f.trim().length > 0);
 
           setSelectedFinishes(allLoadedFinishes.length > 0 ? allLoadedFinishes : ["Chrome"]);
+          // Derive custom colors from loaded finishes that aren't in the predefined list
+          const loadedCustomColors = allLoadedFinishes.filter(
+            (f) => !AVAILABLE_FINISHES.includes(f as FinishType)
+          );
+          if (loadedCustomColors.length > 0) {
+            setCustomColors(loadedCustomColors);
+          }
           setFeatures(p.features || []);
           setImages(p.images || []);
           setIsFeatured(!!p.isFeatured);
@@ -220,6 +228,10 @@ export default function EditProductPage() {
     const color = customColorInput.trim();
     if (color && !selectedFinishes.includes(color)) {
       setSelectedFinishes([...selectedFinishes, color]);
+      // Add to custom colors list so it appears as a pill in the grid
+      if (!AVAILABLE_FINISHES.includes(color as FinishType) && !customColors.includes(color)) {
+        setCustomColors((prev) => [...prev, color]);
+      }
       const short = color.substring(0, 3).toUpperCase();
       setFinishSkus((prev) => ({ ...prev, [color]: `FUP-${short}-${Math.floor(10000 + Math.random() * 90000)}` }));
       if (price) setFinishPrices((prev) => ({ ...prev, [color]: Number(price) }));
@@ -539,7 +551,7 @@ export default function EditProductPage() {
 
           {/* Finish selector pills */}
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2.5 pt-1">
-            {AVAILABLE_FINISHES.map((finish) => {
+            {[...AVAILABLE_FINISHES, ...customColors.filter((c) => !AVAILABLE_FINISHES.includes(c as FinishType))].map((finish) => {
               const isSelected = selectedFinishes.includes(finish);
               return (
                 <button

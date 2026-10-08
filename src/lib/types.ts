@@ -66,3 +66,28 @@ export interface EnquiryItem {
   selectedFinish: FinishType;
   quantity: number;
 }
+
+export interface BlogPost {
+  id: string;
+  title: string;
+  slug: string;
+  excerpt: string;
+  content: string;
+  coverImage?: string | null;
+  images?: string[];
+  category: string;
+  author: string;
+  authorRole?: string | null;
+  authorAvatar?: string | null;
+  readTime?: string | null;
+  tags?: string[];
+  metaTitle?: string | null;
+  metaDescription?: string | null;
+  keywords?: string | null;
+  isPublished: boolean;
+  isFeatured: boolean;
+  views?: number;
+  publishedAt: string | Date;
+  createdAt?: string | Date;
+  updatedAt?: string | Date;
+}

@@ -21,7 +21,8 @@ import {
   Settings,
   Bell,
   MessageSquareText,
-  Globe
+  Globe,
+  BookOpen
 } from "lucide-react";
 import { clsx } from "clsx";
 import { motion, AnimatePresence } from "motion/react";
@@ -73,11 +74,18 @@ const NAV_ITEMS = [
     badgeColor: "bg-blue-500/20 text-blue-300 border border-blue-500/30",
   },
   {
-    label: "Sales & Analytics",
-    href: "/admin/sales",
-    icon: TrendingUp,
-    badge: null,
+    label: "Blogs",
+    href: "/admin/blogs",
+    icon: BookOpen,
+    badge: "Editorial",
+    badgeColor: "bg-[#9b7842]/20 text-[#dec49a] border border-[#9b7842]/40",
   },
+  // {
+  //   label: "Sales & Analytics",
+  //   href: "/admin/sales",
+  //   icon: TrendingUp,
+  //   badge: null,
+  // },
 ];
 
 export function AdminSidebar() {
