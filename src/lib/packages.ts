@@ -14,9 +14,9 @@ export interface BathroomPackage {
   id: string;
   slug: string;
   name: string;
-  subtitle: string;
-  badge: string;
-  tagline: string;
+  subtitle?: string | null;
+  badge?: string | null;
+  tagline?: string | null;
   description: string;
   coverImage: string;
   finishTheme: string;
@@ -25,6 +25,10 @@ export interface BathroomPackage {
   originalPrice: number;
   savings: number;
   items: PackageItem[];
+  order?: number;
+  isActive?: boolean;
+  createdAt?: string | Date;
+  updatedAt?: string | Date;
 }
 
 export const BATHROOM_PACKAGES: BathroomPackage[] = [

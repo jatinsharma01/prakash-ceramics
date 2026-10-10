@@ -14,7 +14,9 @@ import {
   AdminOrder, 
   AdminUser 
 } from "./adminData";
-import { Product, Category, BlogPost } from "./types";
+import { Product, Category, BlogPost, BathroomPackage, PackageItem, Brand } from "./types";
+import { BATHROOM_PACKAGES } from "./packages";
+import { INITIAL_BRANDS } from "./brands";
 
 export interface SaleItem {
   id: string;
@@ -35,9 +37,11 @@ export interface SaleItem {
 // In-Memory mutable fallback stores for development/preview when PostgreSQL is pending migration
 let memoryProducts: Product[] = [...PRODUCTS];
 let memoryCategories: Category[] = [...CATEGORIES];
+let memoryBrands: Brand[] = [...INITIAL_BRANDS];
 let memoryCoupons: AdminCoupon[] = [...ADMIN_COUPONS];
 let memoryOrders: AdminOrder[] = [...ADMIN_ORDERS];
 let memoryUsers: AdminUser[] = [...ADMIN_USERS];
+let memoryBathroomPackages: BathroomPackage[] = [...BATHROOM_PACKAGES];
 let memorySales: SaleItem[] = [
   {
     id: "sale-monsoon-fest",
@@ -145,6 +149,7 @@ async function withDbFallback<T>(dbQuery: () => Promise<T>, fallbackQuery: () =>
 // -------------------------------------------------------------
 export async function getProducts(options?: {
   categorySlug?: string;
+  brand?: string;
   search?: string;
   limit?: number;
   featured?: boolean;
@@ -155,6 +160,9 @@ export async function getProducts(options?: {
       const where: Record<string, any> = {};
       if (options?.categorySlug && options.categorySlug !== "all") {
         where.categorySlug = options.categorySlug;
+      }
+      if (options?.brand && options.brand !== "all") {
+        where.brand = { equals: options.brand, mode: "insensitive" };
       }
       if (options?.featured) {
         where.isFeatured = true;
@@ -239,6 +247,7 @@ export async function getProducts(options?: {
           slug: p.slug,
           category: p.category,
           categorySlug: p.categorySlug,
+          brand: (p as any).brand || "Jaquar",
           subcategory: p.subcategory || undefined,
           range: p.range || undefined,
           tagline: p.tagline,
@@ -309,6 +318,7 @@ export async function getProducts(options?: {
 
         return {
           ...p,
+          brand: p.brand || "Jaquar",
           finishStocks: adjustedFinishStocks,
           stockCount: remainingStock,
           salesCount: sales.count,
@@ -317,6 +327,9 @@ export async function getProducts(options?: {
       });
       if (options?.categorySlug && options.categorySlug !== "all") {
         list = list.filter((p) => p.categorySlug.toLowerCase() === options.categorySlug?.toLowerCase());
+      }
+      if (options?.brand && options.brand !== "all") {
+        list = list.filter((p) => (p.brand || "Jaquar").toLowerCase() === options.brand?.toLowerCase());
       }
       if (options?.featured) {
         list = list.filter((p) => p.isFeatured);
@@ -331,6 +344,7 @@ export async function getProducts(options?: {
             p.name.toLowerCase().includes(q) ||
             p.sku.toLowerCase().includes(q) ||
             p.category.toLowerCase().includes(q) ||
+            (p.brand && p.brand.toLowerCase().includes(q)) ||
             p.tagline.toLowerCase().includes(q)
         );
       }
@@ -411,6 +425,7 @@ export async function getProductByIdOrSlug(idOrSlug: string): Promise<Product | 
         slug: p.slug,
         category: p.category,
         categorySlug: p.categorySlug,
+        brand: (p as any).brand || "Jaquar",
         subcategory: p.subcategory || undefined,
         range: p.range || undefined,
         tagline: p.tagline,
@@ -484,6 +499,7 @@ export async function getProductByIdOrSlug(idOrSlug: string): Promise<Product | 
 
       return {
         ...p,
+        brand: p.brand || "Jaquar",
         finishStocks: adjustedFinishStocks,
         stockCount: remainingStock,
         salesCount: totalSold,
@@ -543,6 +559,7 @@ export async function updateProduct(id: string, data: any): Promise<Product | nu
           name: data.name !== undefined ? data.name : existing.name,
           category: data.category !== undefined ? data.category : existing.category,
           categorySlug: data.category ? data.category.toLowerCase().replace(/[^a-z0-9]+/g, "-") : existing.categorySlug,
+          brand: data.brand !== undefined ? data.brand : ((existing as any).brand || "Jaquar"),
           range: data.range !== undefined ? data.range : existing.range,
           tagline: data.tagline !== undefined ? data.tagline : existing.tagline,
           description: data.description !== undefined ? data.description : existing.description,
@@ -571,6 +588,7 @@ export async function updateProduct(id: string, data: any): Promise<Product | nu
         slug: updated.slug,
         category: updated.category,
         categorySlug: updated.categorySlug,
+        brand: (updated as any).brand || data.brand || (existing as any).brand || "Jaquar",
         range: updated.range || undefined,
         tagline: updated.tagline,
         description: updated.description,
@@ -611,6 +629,7 @@ export async function updateProduct(id: string, data: any): Promise<Product | nu
       memoryProducts[idx] = {
         ...memoryProducts[idx],
         ...data,
+        brand: data.brand !== undefined ? data.brand : (memoryProducts[idx].brand || "Jaquar"),
         finishPrices: data.finishPrices || memoryProducts[idx].finishPrices,
         finishOfferPrices: data.finishOfferPrices || (memoryProducts[idx] as any).finishOfferPrices,
         finishSkus: data.finishSkus || memoryProducts[idx].finishSkus,
@@ -624,6 +643,7 @@ export async function updateProduct(id: string, data: any): Promise<Product | nu
 export async function createProduct(data: {
   name: string;
   category: string;
+  brand?: string;
   tagline: string;
   description: string;
   price: number;
@@ -679,6 +699,7 @@ export async function createProduct(data: {
     slug,
     category: data.category,
     categorySlug,
+    brand: data.brand || "Jaquar",
     tagline: data.tagline,
     description: data.description,
     price: Number(data.price),
@@ -710,6 +731,7 @@ export async function createProduct(data: {
           slug: newProduct.slug,
           category: newProduct.category,
           categorySlug: newProduct.categorySlug,
+          brand: newProduct.brand,
           tagline: newProduct.tagline,
           description: newProduct.description,
           price: newProduct.price,
@@ -2621,6 +2643,645 @@ export async function incrementBlogViews(idOrSlug: string): Promise<number> {
         return post.views;
       }
       return 1;
+    }
+  );
+}
+
+// ==========================================
+// BATHROOM PACKAGES SERVICE LAYER
+// ==========================================
+
+function filterMemoryPackages(options?: { activeOnly?: boolean; search?: string }): BathroomPackage[] {
+  let list = [...memoryBathroomPackages];
+  if (options?.activeOnly) {
+    list = list.filter((p) => p.isActive !== false);
+  }
+  if (options?.search) {
+    const q = options.search.toLowerCase();
+    list = list.filter((p) => 
+      p.name.toLowerCase().includes(q) ||
+      p.finishTheme.toLowerCase().includes(q) ||
+      p.description.toLowerCase().includes(q)
+    );
+  }
+  return list;
+}
+
+export async function getAllBathroomPackages(options?: {
+  activeOnly?: boolean;
+  search?: string;
+}): Promise<BathroomPackage[]> {
+  return withDbFallback<BathroomPackage[]>(
+    async () => {
+      if (!(prisma as any)?.bathroomPackage?.findMany) {
+        throw new Error("Prisma client bathroomPackage model not ready");
+      }
+      const where: any = {};
+      if (options?.activeOnly) {
+        where.isActive = true;
+      }
+      if (options?.search) {
+        where.OR = [
+          { name: { contains: options.search, mode: "insensitive" } },
+          { finishTheme: { contains: options.search, mode: "insensitive" } },
+          { description: { contains: options.search, mode: "insensitive" } },
+        ];
+      }
+      const records = await (prisma as any).bathroomPackage.findMany({
+        where,
+        orderBy: [{ order: "asc" }, { createdAt: "desc" }],
+      });
+      if (!records || records.length === 0) {
+        return filterMemoryPackages(options);
+      }
+      return records.map((r: any) => ({
+        ...r,
+        items: Array.isArray(r.items) ? r.items : (typeof r.items === "string" ? JSON.parse(r.items) : []),
+      }));
+    },
+    () => {
+      return filterMemoryPackages(options);
+    }
+  );
+}
+
+export async function getBathroomPackageByIdOrSlug(idOrSlug: string): Promise<BathroomPackage | null> {
+  return withDbFallback<BathroomPackage | null>(
+    async () => {
+      if (!(prisma as any)?.bathroomPackage?.findFirst) {
+        return memoryBathroomPackages.find((p) => p.slug === idOrSlug || p.id === idOrSlug) || null;
+      }
+      const record = await (prisma as any).bathroomPackage.findFirst({
+        where: {
+          OR: [{ slug: idOrSlug }, { id: idOrSlug }],
+        },
+      });
+      if (!record) {
+        return memoryBathroomPackages.find((p) => p.slug === idOrSlug || p.id === idOrSlug) || null;
+      }
+      return {
+        ...record,
+        items: Array.isArray(record.items) ? record.items : (typeof record.items === "string" ? JSON.parse(record.items) : []),
+      };
+    },
+    () => {
+      return memoryBathroomPackages.find((p) => p.slug === idOrSlug || p.id === idOrSlug) || null;
+    }
+  );
+}
+
+export async function createBathroomPackage(data: Partial<BathroomPackage>): Promise<BathroomPackage> {
+  const id = `pkg-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`;
+  const name = (data.name || "Curated Bathroom Suite").trim();
+  const baseSlug = (
+    data.slug ||
+    name
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/(^-|-$)+/g, "")
+  ) || `suite-${Date.now()}`;
+
+  const originalPrice = Number(data.originalPrice) || 0;
+  const packagePrice = Number(data.packagePrice) || 0;
+  const savings = Number(data.savings) || Math.max(0, originalPrice - packagePrice);
+  const items = Array.isArray(data.items) ? data.items : [];
+
+  const newPackage: BathroomPackage = {
+    id,
+    slug: baseSlug,
+    name,
+    subtitle: data.subtitle || `Complete 4-Piece Suite in ${data.finishTheme || "Luxury Finish"}`,
+    badge: data.badge || "Curated Suite",
+    tagline: data.tagline || name,
+    description: data.description || "",
+    coverImage: data.coverImage || "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&q=80&w=1200",
+    finishTheme: data.finishTheme || "Gold Bright PVD",
+    idealFor: data.idealFor || "Master Bedrooms & Luxury Villas",
+    packagePrice,
+    originalPrice,
+    savings,
+    items,
+    order: data.order ?? memoryBathroomPackages.length,
+    isActive: data.isActive !== undefined ? data.isActive : true,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  };
+
+  return withDbFallback<BathroomPackage>(
+    async () => {
+      if (!(prisma as any)?.bathroomPackage?.create) {
+        throw new Error("Prisma client bathroomPackage model not ready");
+      }
+      let finalSlug = baseSlug;
+      if ((prisma as any)?.bathroomPackage?.findUnique) {
+        const existing = await (prisma as any).bathroomPackage.findUnique({
+          where: { slug: finalSlug },
+        });
+        if (existing) {
+          finalSlug = `${baseSlug}-${Math.floor(1000 + Math.random() * 9000)}`;
+        }
+      }
+
+      const created = await (prisma as any).bathroomPackage.create({
+        data: {
+          id,
+          slug: finalSlug,
+          name: newPackage.name,
+          subtitle: newPackage.subtitle,
+          badge: newPackage.badge,
+          tagline: newPackage.tagline,
+          description: newPackage.description,
+          coverImage: newPackage.coverImage,
+          finishTheme: newPackage.finishTheme,
+          idealFor: newPackage.idealFor,
+          packagePrice: newPackage.packagePrice,
+          originalPrice: newPackage.originalPrice,
+          savings: newPackage.savings,
+          items: newPackage.items,
+          order: newPackage.order,
+          isActive: newPackage.isActive,
+        },
+      });
+
+      const parsedCreated: BathroomPackage = {
+        ...created,
+        items: Array.isArray(created.items) ? created.items : [],
+      };
+      memoryBathroomPackages.unshift(parsedCreated);
+      return parsedCreated;
+    },
+    () => {
+      memoryBathroomPackages.unshift(newPackage);
+      return newPackage;
+    }
+  );
+}
+
+export async function updateBathroomPackage(
+  id: string,
+  data: Partial<BathroomPackage>
+): Promise<BathroomPackage | null> {
+  const originalPrice = data.originalPrice !== undefined ? Number(data.originalPrice) : undefined;
+  const packagePrice = data.packagePrice !== undefined ? Number(data.packagePrice) : undefined;
+
+  return withDbFallback<BathroomPackage | null>(
+    async () => {
+      if (!(prisma as any)?.bathroomPackage?.update) {
+        throw new Error("Prisma client bathroomPackage model not ready");
+      }
+      const updatePayload: any = { ...data };
+      delete updatePayload.id;
+
+      if (originalPrice !== undefined && packagePrice !== undefined && data.savings === undefined) {
+        updatePayload.savings = Math.max(0, originalPrice - packagePrice);
+      }
+
+      const updated = await (prisma as any).bathroomPackage.update({
+        where: { id },
+        data: updatePayload,
+      });
+
+      const parsed: BathroomPackage = {
+        ...updated,
+        items: Array.isArray(updated.items) ? updated.items : (typeof updated.items === "string" ? JSON.parse(updated.items) : []),
+      };
+
+      const idx = memoryBathroomPackages.findIndex((p) => p.id === id);
+      if (idx !== -1) {
+        memoryBathroomPackages[idx] = parsed;
+      }
+      return parsed;
+    },
+    () => {
+      const idx = memoryBathroomPackages.findIndex((p) => p.id === id);
+      if (idx === -1) return null;
+      const existing = memoryBathroomPackages[idx];
+      const merged: BathroomPackage = {
+        ...existing,
+        ...data,
+        updatedAt: new Date(),
+      };
+      if (originalPrice !== undefined && packagePrice !== undefined && data.savings === undefined) {
+        merged.savings = Math.max(0, originalPrice - packagePrice);
+      }
+      memoryBathroomPackages[idx] = merged;
+      return merged;
+    }
+  );
+}
+
+export async function deleteBathroomPackage(id: string): Promise<boolean> {
+  return withDbFallback<boolean>(
+    async () => {
+      if (!(prisma as any)?.bathroomPackage?.delete) {
+        throw new Error("Prisma client bathroomPackage model not ready");
+      }
+      await (prisma as any).bathroomPackage.delete({
+        where: { id },
+      });
+      memoryBathroomPackages = memoryBathroomPackages.filter((p) => p.id !== id);
+      return true;
+    },
+    () => {
+      const initLen = memoryBathroomPackages.length;
+      memoryBathroomPackages = memoryBathroomPackages.filter((p) => p.id !== id);
+      return memoryBathroomPackages.length < initLen;
+    }
+  );
+}
+
+// ==========================================
+// CATEGORIES SERVICE LAYER
+// ==========================================
+
+function filterMemoryCategories(options?: { featured?: boolean; search?: string }): Category[] {
+  let list = [...memoryCategories];
+  if (options?.featured) {
+    list = list.filter((c) => c.featured);
+  }
+  if (options?.search) {
+    const q = options.search.toLowerCase();
+    list = list.filter(
+      (c) =>
+        c.name.toLowerCase().includes(q) ||
+        c.slug.toLowerCase().includes(q) ||
+        (c.description && c.description.toLowerCase().includes(q))
+    );
+  }
+  return list;
+}
+
+export async function getAllCategories(options?: {
+  featured?: boolean;
+  search?: string;
+}): Promise<Category[]> {
+  return withDbFallback<Category[]>(
+    async () => {
+      if (!(prisma as any)?.category?.findMany) {
+        return filterMemoryCategories(options);
+      }
+      const where: any = {};
+      if (options?.featured) {
+        where.featured = true;
+      }
+      if (options?.search) {
+        where.OR = [
+          { name: { contains: options.search, mode: "insensitive" } },
+          { slug: { contains: options.search, mode: "insensitive" } },
+          { description: { contains: options.search, mode: "insensitive" } },
+        ];
+      }
+      const records = await (prisma as any).category.findMany({
+        where,
+        orderBy: [{ name: "asc" }],
+      });
+      if (!records || records.length === 0) {
+        return filterMemoryCategories(options);
+      }
+      return records;
+    },
+    () => filterMemoryCategories(options)
+  );
+}
+
+export async function getCategoryByIdOrSlug(idOrSlug: string): Promise<Category | null> {
+  return withDbFallback<Category | null>(
+    async () => {
+      if (!(prisma as any)?.category?.findFirst) {
+        return memoryCategories.find((c) => c.id === idOrSlug || c.slug === idOrSlug) || null;
+      }
+      const record = await (prisma as any).category.findFirst({
+        where: { OR: [{ id: idOrSlug }, { slug: idOrSlug }] },
+      });
+      return record || memoryCategories.find((c) => c.id === idOrSlug || c.slug === idOrSlug) || null;
+    },
+    () => memoryCategories.find((c) => c.id === idOrSlug || c.slug === idOrSlug) || null
+  );
+}
+
+export async function createCategory(data: Partial<Category>): Promise<Category> {
+  const name = (data.name || "New Category").trim();
+  const slug = (
+    data.slug ||
+    name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)+/g, "")
+  ) || `category-${Date.now()}`;
+  const id = data.id || `cat-${slug}`;
+
+  const newCategory: Category = {
+    id,
+    name,
+    slug,
+    shortDescription: data.shortDescription || `${name} collection and luxury fixtures.`,
+    description: data.description || data.shortDescription || `${name} luxury fittings.`,
+    image: data.image || "https://res.cloudinary.com/dtk1pspib/image/upload/v1788760648/parkash-ceramics/faucets.jpg",
+    featured: !!data.featured,
+    itemCount: typeof data.itemCount === "number" ? data.itemCount : 0,
+    tags: Array.isArray(data.tags) ? data.tags : [],
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  };
+
+  return withDbFallback<Category>(
+    async () => {
+      if (!(prisma as any)?.category?.create) {
+        throw new Error("Prisma client category model not ready");
+      }
+      const created = await (prisma as any).category.create({
+        data: {
+          id: newCategory.id,
+          name: newCategory.name,
+          slug: newCategory.slug,
+          shortDescription: newCategory.shortDescription,
+          description: newCategory.description,
+          image: newCategory.image,
+          featured: newCategory.featured,
+          itemCount: newCategory.itemCount,
+          tags: newCategory.tags,
+        },
+      });
+      memoryCategories.unshift(created);
+      return created;
+    },
+    () => {
+      memoryCategories.unshift(newCategory);
+      return newCategory;
+    }
+  );
+}
+
+export async function updateCategory(id: string, data: Partial<Category>): Promise<Category | null> {
+  return withDbFallback<Category | null>(
+    async () => {
+      if (!(prisma as any)?.category?.update) {
+        throw new Error("Prisma client category model not ready");
+      }
+      const updateData: any = { ...data };
+      delete updateData.id;
+      delete updateData.createdAt;
+
+      const updated = await (prisma as any).category.update({
+        where: { id },
+        data: updateData,
+      });
+
+      const idx = memoryCategories.findIndex((c) => c.id === id || c.slug === id);
+      if (idx !== -1) {
+        memoryCategories[idx] = { ...memoryCategories[idx], ...updated };
+      }
+      return updated;
+    },
+    () => {
+      const idx = memoryCategories.findIndex((c) => c.id === id || c.slug === id);
+      if (idx === -1) return null;
+      const updated: Category = {
+        ...memoryCategories[idx],
+        ...data,
+        updatedAt: new Date(),
+      };
+      memoryCategories[idx] = updated;
+      return updated;
+    }
+  );
+}
+
+export async function deleteCategory(id: string): Promise<boolean> {
+  return withDbFallback<boolean>(
+    async () => {
+      if (!(prisma as any)?.category?.delete) {
+        throw new Error("Prisma client category model not ready");
+      }
+      await (prisma as any).category.delete({
+        where: { id },
+      });
+      memoryCategories = memoryCategories.filter((c) => c.id !== id && c.slug !== id);
+      return true;
+    },
+    () => {
+      const initLen = memoryCategories.length;
+      memoryCategories = memoryCategories.filter((c) => c.id !== id && c.slug !== id);
+      return memoryCategories.length < initLen;
+    }
+  );
+}
+
+// ==========================================
+// BRANDS SERVICE LAYER
+// ==========================================
+
+function filterMemoryBrands(options?: { featured?: boolean; search?: string }): Brand[] {
+  let list = memoryBrands.map((b) => {
+    const liveCount = memoryProducts.filter(
+      (p) => (p.brand || "Jaquar").toLowerCase() === b.name.toLowerCase()
+    ).length;
+    return {
+      ...b,
+      itemCount: liveCount,
+    };
+  });
+  if (options?.featured) {
+    list = list.filter((b) => b.isFeatured);
+  }
+  if (options?.search) {
+    const q = options.search.toLowerCase();
+    list = list.filter(
+      (b) =>
+        b.name.toLowerCase().includes(q) ||
+        b.slug.toLowerCase().includes(q) ||
+        (b.description && b.description.toLowerCase().includes(q))
+    );
+  }
+  return list;
+}
+
+export async function getAllBrands(options?: {
+  featured?: boolean;
+  search?: string;
+}): Promise<Brand[]> {
+  return withDbFallback<Brand[]>(
+    async () => {
+      if (!(prisma as any)?.brand?.findMany) {
+        return filterMemoryBrands(options);
+      }
+      const where: any = {};
+      if (options?.featured) {
+        where.isFeatured = true;
+      }
+      if (options?.search) {
+        where.OR = [
+          { name: { contains: options.search, mode: "insensitive" } },
+          { slug: { contains: options.search, mode: "insensitive" } },
+          { description: { contains: options.search, mode: "insensitive" } },
+        ];
+      }
+      const records = await (prisma as any).brand.findMany({
+        where,
+        orderBy: [{ name: "asc" }],
+      });
+      if (!records || records.length === 0) {
+        return filterMemoryBrands(options);
+      }
+
+      // Dynamically compute real live product counts directly from Product table
+      const dynamicCountMap = new Map<string, number>();
+      try {
+        if ((prisma as any)?.product?.groupBy) {
+          const counts = await (prisma as any).product.groupBy({
+            by: ["brand"],
+            _count: { _all: true },
+          });
+          for (const c of counts) {
+            if (c.brand) {
+              dynamicCountMap.set(c.brand.trim().toLowerCase(), c._count._all);
+            }
+          }
+        }
+      } catch (err) {
+        console.warn("Could not calculate dynamic brand product counts:", err);
+      }
+
+      return records.map((b: any) => ({
+        ...b,
+        itemCount: dynamicCountMap.get((b.name || "").trim().toLowerCase()) || 0,
+      }));
+    },
+    () => filterMemoryBrands(options)
+  );
+}
+
+export async function getBrandByIdOrSlug(idOrSlug: string): Promise<Brand | null> {
+  return withDbFallback<Brand | null>(
+    async () => {
+      if (!(prisma as any)?.brand?.findFirst) {
+        return memoryBrands.find((b) => b.id === idOrSlug || b.slug === idOrSlug) || null;
+      }
+      const record = await (prisma as any).brand.findFirst({
+        where: { OR: [{ id: idOrSlug }, { slug: idOrSlug }] },
+      });
+      if (!record) {
+        return memoryBrands.find((b) => b.id === idOrSlug || b.slug === idOrSlug) || null;
+      }
+
+      let count = 0;
+      try {
+        if ((prisma as any)?.product?.count) {
+          count = await (prisma as any).product.count({
+            where: {
+              brand: { equals: record.name, mode: "insensitive" },
+            },
+          });
+        }
+      } catch {
+        count = 0;
+      }
+
+      return {
+        ...record,
+        itemCount: count,
+      };
+    },
+    () => memoryBrands.find((b) => b.id === idOrSlug || b.slug === idOrSlug) || null
+  );
+}
+
+export async function createBrand(data: Partial<Brand>): Promise<Brand> {
+  const name = (data.name || "New Brand").trim();
+  const slug = (
+    data.slug ||
+    name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)+/g, "")
+  ) || `brand-${Date.now()}`;
+  const id = data.id || `brand-${slug}`;
+
+  const newBrand: Brand = {
+    id,
+    name,
+    slug,
+    description: data.description || `${name} luxury sanitaryware and bath fixtures.`,
+    logo: data.logo || "",
+    website: data.website || "",
+    isFeatured: !!data.isFeatured,
+    itemCount: typeof data.itemCount === "number" ? data.itemCount : 0,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  };
+
+  return withDbFallback<Brand>(
+    async () => {
+      if (!(prisma as any)?.brand?.create) {
+        throw new Error("Prisma client brand model not ready");
+      }
+      const created = await (prisma as any).brand.create({
+        data: {
+          id: newBrand.id,
+          name: newBrand.name,
+          slug: newBrand.slug,
+          description: newBrand.description,
+          logo: newBrand.logo,
+          website: newBrand.website,
+          isFeatured: newBrand.isFeatured,
+          itemCount: newBrand.itemCount,
+        },
+      });
+      memoryBrands.unshift(created);
+      return created;
+    },
+    () => {
+      memoryBrands.unshift(newBrand);
+      return newBrand;
+    }
+  );
+}
+
+export async function updateBrand(id: string, data: Partial<Brand>): Promise<Brand | null> {
+  return withDbFallback<Brand | null>(
+    async () => {
+      if (!(prisma as any)?.brand?.update) {
+        throw new Error("Prisma client brand model not ready");
+      }
+      const updateData: any = { ...data };
+      delete updateData.id;
+      delete updateData.createdAt;
+
+      const updated = await (prisma as any).brand.update({
+        where: { id },
+        data: updateData,
+      });
+
+      const idx = memoryBrands.findIndex((b) => b.id === id || b.slug === id);
+      if (idx !== -1) {
+        memoryBrands[idx] = { ...memoryBrands[idx], ...updated };
+      }
+      return updated;
+    },
+    () => {
+      const idx = memoryBrands.findIndex((b) => b.id === id || b.slug === id);
+      if (idx === -1) return null;
+      const updated: Brand = {
+        ...memoryBrands[idx],
+        ...data,
+        updatedAt: new Date(),
+      };
+      memoryBrands[idx] = updated;
+      return updated;
+    }
+  );
+}
+
+export async function deleteBrand(id: string): Promise<boolean> {
+  return withDbFallback<boolean>(
+    async () => {
+      if (!(prisma as any)?.brand?.delete) {
+        throw new Error("Prisma client brand model not ready");
+      }
+      await (prisma as any).brand.delete({
+        where: { id },
+      });
+      memoryBrands = memoryBrands.filter((b) => b.id !== id && b.slug !== id);
+      return true;
+    },
+    () => {
+      const initLen = memoryBrands.length;
+      memoryBrands = memoryBrands.filter((b) => b.id !== id && b.slug !== id);
+      return memoryBrands.length < initLen;
     }
   );
 }

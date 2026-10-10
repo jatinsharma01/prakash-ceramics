@@ -22,7 +22,10 @@ import {
   Bell,
   MessageSquareText,
   Globe,
-  BookOpen
+  BookOpen,
+  Layers,
+  LayoutGrid,
+  Award
 } from "lucide-react";
 import { clsx } from "clsx";
 import { motion, AnimatePresence } from "motion/react";
@@ -39,6 +42,26 @@ const NAV_ITEMS = [
     href: "/admin/products",
     icon: Package,
     badge: null,
+  },
+  {
+    label: "Categories",
+    href: "/admin/categories",
+    icon: LayoutGrid,
+    badge: null,
+  },
+  {
+    label: "Brands",
+    href: "/admin/brands",
+    icon: Award,
+    badge: "8 Active",
+    badgeColor: "bg-[#9b7842]/20 text-[#dec49a] border border-[#9b7842]/40",
+  },
+  {
+    label: "Bathroom Packages",
+    href: "/admin/packages",
+    icon: Layers,
+    badge: "Suites",
+    badgeColor: "bg-emerald-500/20 text-emerald-300 border border-emerald-500/30",
   },
   {
     label: "Orders",

@@ -9,6 +9,7 @@ export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const category = searchParams.get("category") || undefined;
+    const brand = searchParams.get("brand") || undefined;
     const search = searchParams.get("search") || undefined;
     const featured = searchParams.get("featured") === "true";
     const bestseller = searchParams.get("bestseller") === "true";
@@ -16,6 +17,7 @@ export async function GET(request: NextRequest) {
 
     const products = await getProducts({
       categorySlug: category,
+      brand,
       search,
       featured,
       bestseller,

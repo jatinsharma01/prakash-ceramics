@@ -18,7 +18,8 @@ import {
   Sparkles,
   Layers,
   X,
-  Loader2
+  Loader2,
+  Award
 } from "lucide-react";
 import { CATEGORIES } from "@/lib/categories";
 import { motion, AnimatePresence } from "motion/react";
@@ -28,9 +29,37 @@ export default function AdminProductsPage() {
   const [isLoading, setIsLoading] = React.useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
+  const [selectedBrand, setSelectedBrand] = useState<string>("all");
+  const [brandsList, setBrandsList] = useState<{ id: string; name: string }[]>([]);
   const [stockFilter, setStockFilter] = useState<"all" | "in_stock" | "low_stock">("all");
   const [selectedProduct, setSelectedProduct] = useState<any | null>(null);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
+
+  // Fetch brands for filtering
+  React.useEffect(() => {
+    async function loadBrands() {
+      try {
+        const res = await fetch("/api/brands");
+        if (res.ok) {
+          const data = await res.json();
+          if (Array.isArray(data.brands)) {
+            setBrandsList(data.brands);
+          }
+        }
+      } catch (err) {
+        console.warn("Failed to load brands for filter", err);
+      }
+    }
+    loadBrands();
+
+    if (typeof window !== "undefined") {
+      const urlParams = new URLSearchParams(window.location.search);
+      const brandParam = urlParams.get("brand");
+      if (brandParam) {
+        setSelectedBrand(brandParam);
+      }
+    }
+  }, []);
 
   const fetchProducts = React.useCallback(async () => {
     try {
@@ -51,6 +80,7 @@ export default function AdminProductsPage() {
               sku: p.sku,
               category: p.category,
               categorySlug: p.categorySlug,
+              brand: p.brand || "Jaquar",
               price: p.price,
               originalPrice: p.originalPrice,
               stockCount,
@@ -107,21 +137,26 @@ export default function AdminProductsPage() {
       const matchesSearch = 
         item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         item.sku.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        item.category.toLowerCase().includes(searchQuery.toLowerCase());
+        item.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        (item.brand && item.brand.toLowerCase().includes(searchQuery.toLowerCase()));
 
       const matchesCat = 
         selectedCategory === "all" || 
         item.categorySlug === selectedCategory ||
         item.category.toLowerCase() === selectedCategory.toLowerCase();
 
+      const matchesBrand =
+        selectedBrand === "all" ||
+        (item.brand || "Jaquar").toLowerCase() === selectedBrand.toLowerCase();
+
       const matchesStock = 
         stockFilter === "all" ||
         (stockFilter === "in_stock" && item.stockCount > 5) ||
         (stockFilter === "low_stock" && item.stockCount <= 5);
 
-      return matchesSearch && matchesCat && matchesStock;
+      return matchesSearch && matchesCat && matchesBrand && matchesStock;
     });
-  }, [items, searchQuery, selectedCategory, stockFilter]);
+  }, [items, searchQuery, selectedCategory, selectedBrand, stockFilter]);
 
   const totalInventoryValue = items.reduce(
     (acc, curr) => acc + curr.price * curr.stockCount,
@@ -243,6 +278,39 @@ export default function AdminProductsPage() {
               </select>
             </div>
 
+            {/* Brand Dropdown */}
+            <div className="flex items-center gap-2">
+              <span className="text-xs text-stone-300 flex items-center gap-1 font-medium">
+                <Award className="w-3.5 h-3.5 text-[#dec49a]" />
+                Brand:
+              </span>
+              <select
+                value={selectedBrand}
+                onChange={(e) => setSelectedBrand(e.target.value)}
+                className="bg-[#1c222c] border border-stone-700 text-xs text-white px-3 py-2 rounded-xl focus:outline-hidden focus:border-[#9b7842] font-semibold cursor-pointer"
+              >
+                <option value="all">All Brands</option>
+                {brandsList.length > 0 ? (
+                  brandsList.map((b) => (
+                    <option key={b.id || b.name} value={b.name} className="bg-stone-900">
+                      {b.name}
+                    </option>
+                  ))
+                ) : (
+                  <>
+                    <option value="Jaquar" className="bg-stone-900">Jaquar</option>
+                    <option value="Essco" className="bg-stone-900">Essco</option>
+                    <option value="Futura" className="bg-stone-900">Futura</option>
+                    <option value="Franke" className="bg-stone-900">Franke</option>
+                    <option value="Faber" className="bg-stone-900">Faber</option>
+                    <option value="Nirali" className="bg-stone-900">Nirali</option>
+                    <option value="Sparrow" className="bg-stone-900">Sparrow</option>
+                    <option value="FAB" className="bg-stone-900">FAB</option>
+                  </>
+                )}
+              </select>
+            </div>
+
             {/* Stock Level Filter */}
             <div className="flex items-center gap-2">
               <span className="text-xs text-stone-300 flex items-center gap-1">
@@ -339,12 +407,17 @@ export default function AdminProductsPage() {
                       </div>
                     </td>
 
-                    {/* SKU & Category */}
+                    {/* SKU & Category & Brand */}
                     <td className="p-4">
                       <p className="font-mono text-stone-300 font-medium">{p.sku}</p>
-                      <span className="inline-block text-[10px] text-[#dec49a] bg-[#9b7842]/10 px-2 py-0.5 rounded-md border border-[#9b7842]/20 mt-1">
-                        {p.category}
-                      </span>
+                      <div className="flex items-center gap-1.5 mt-1 flex-wrap">
+                        <span className="inline-block text-[10px] text-[#dec49a] bg-[#9b7842]/10 px-2 py-0.5 rounded-md border border-[#9b7842]/20 font-semibold">
+                          {p.category}
+                        </span>
+                        <span className="inline-block text-[10px] text-stone-300 bg-stone-800 px-2 py-0.5 rounded-md border border-stone-700 font-semibold">
+                          {p.brand || "Jaquar"}
+                        </span>
+                      </div>
                     </td>
 
                     {/* Finishes */}

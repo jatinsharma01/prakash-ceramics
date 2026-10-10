@@ -17,6 +17,7 @@ model Product {
   slug          String      @unique
   category      String
   categorySlug  String
+  brand         String?     @default("Jaquar")
   subcategory   String?
   range         String?
   tagline       String
@@ -44,7 +45,23 @@ model Product {
   orderItems    OrderItem[]
 
   @@index([categorySlug])
+  @@index([brand])
   @@index([price])
+}
+
+model Brand {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  slug        String   @unique
+  description String?  @db.Text
+  logo        String?
+  website     String?
+  isFeatured  Boolean  @default(false)
+  itemCount   Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([slug])
 }
 
 model Category {
@@ -288,4 +305,29 @@ model BlogPost {
   @@index([category])
   @@index([isPublished])
   @@index([publishedAt])
+}
+
+model BathroomPackage {
+  id            String   @id @default(cuid())
+  slug          String   @unique
+  name          String
+  subtitle      String?
+  badge         String?  @default("Curated Suite")
+  tagline       String?
+  description   String   @db.Text
+  coverImage    String
+  finishTheme   String   @default("Gold Bright PVD")
+  idealFor      String   @default("Master Bedrooms & Luxury Villas")
+  packagePrice  Float
+  originalPrice Float
+  savings       Float
+  items         Json     // Array of PackageItem objects
+  order         Int      @default(0)
+  isActive      Boolean  @default(true)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([slug])
+  @@index([isActive])
+  @@index([order])
 }

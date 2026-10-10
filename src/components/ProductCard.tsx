@@ -7,7 +7,7 @@ import { Product } from "@/lib/types";
 import { ProductImage } from "./ProductImage";
 import { useEnquiry } from "@/context/EnquiryContext";
 import { useWishlist } from "@/context/WishlistContext";
-import { Eye, Check, Star, Heart } from "lucide-react";
+import { Eye, Check, Heart } from "lucide-react";
 import { CartIcon } from "./CartIcon";
 import { clsx } from "clsx";
 import { getProductDisplayImages, getProductPricing, getProductFinishSku } from "@/lib/productUtils";
@@ -172,15 +172,11 @@ export function ProductCard({ product }: ProductCardProps) {
         transition={{ duration: 0.25 }}
         className="absolute inset-x-2.5 bottom-2.5 sm:inset-x-3 sm:bottom-3 z-20 p-3 sm:p-3.5 bg-white/90 group-hover:bg-white/95 backdrop-blur-xl border border-white/80 group-hover:border-[#c5a880]/60 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.06)] group-hover:shadow-[0_12px_36px_rgb(155,120,66,0.12)] transition-all duration-500 flex flex-col"
       >
-        {/* Category / Range & Star Rating */}
+        {/* Category / Range / Brand */}
         <div className="flex items-center justify-between gap-1 mb-1">
           <span className="text-[10px] font-bold text-[#9b7842] uppercase tracking-wider truncate">
-            {product.range ? `${product.range} • ${product.category}` : product.category}
+            {product.brand ? `${product.brand} • ` : ""}{product.range ? `${product.range} • ${product.category}` : product.category}
           </span>
-          <div className="flex items-center gap-1 text-[11px] text-amber-500 font-semibold shrink-0">
-            <Star className="w-3 h-3 fill-current" />
-            <span className="text-[#1f2937]">{product.rating}</span>
-          </div>
         </div>
 
         {/* Product Title */}

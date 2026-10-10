@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { PRODUCTS } from "@/lib/products";
 import { CATEGORIES } from "@/lib/categories";
+import { INITIAL_BRANDS } from "@/lib/brands";
 import { ADMIN_COUPONS, ADMIN_ORDERS, ADMIN_USERS } from "@/lib/adminData";
 
 export async function POST() {
@@ -15,6 +16,28 @@ export async function GET() {
 async function seedDatabase() {
   try {
     console.log("Starting DB sync / seed...");
+
+    // 0. Brands (Safe upsert)
+    for (const b of INITIAL_BRANDS) {
+      await prisma.brand.upsert({
+        where: { slug: b.slug },
+        update: {
+          name: b.name,
+          description: b.description,
+          website: b.website,
+          isFeatured: b.isFeatured ?? false,
+        },
+        create: {
+          id: b.id,
+          name: b.name,
+          slug: b.slug,
+          description: b.description,
+          website: b.website,
+          isFeatured: b.isFeatured ?? false,
+          itemCount: 0,
+        },
+      });
+    }
 
     // 1. Categories
     for (const cat of CATEGORIES) {
@@ -52,6 +75,7 @@ async function seedDatabase() {
           slug: prod.slug,
           category: prod.category,
           categorySlug: prod.categorySlug,
+          brand: prod.brand || "Jaquar",
           tagline: prod.tagline,
           description: prod.description,
           price: prod.price,
@@ -75,6 +99,7 @@ async function seedDatabase() {
           slug: prod.slug,
           category: prod.category,
           categorySlug: prod.categorySlug,
+          brand: prod.brand || "Jaquar",
           tagline: prod.tagline,
           description: prod.description,
           price: prod.price,

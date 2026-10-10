@@ -1,3 +1,16 @@
+export interface Brand {
+  id: string;
+  name: string;
+  slug: string;
+  description?: string;
+  logo?: string;
+  website?: string;
+  isFeatured?: boolean;
+  itemCount?: number;
+  createdAt?: string | Date;
+  updatedAt?: string | Date;
+}
+
 export interface Category {
   id: string;
   name: string;
@@ -8,6 +21,8 @@ export interface Category {
   featured?: boolean;
   itemCount?: number;
   tags?: string[];
+  createdAt?: string | Date;
+  updatedAt?: string | Date;
 }
 
 export type FinishType = 
@@ -31,6 +46,7 @@ export interface Product {
   slug: string;
   category: string;
   categorySlug: string;
+  brand?: string;
   subcategory?: string;
   range?: string;
   tagline: string;
@@ -91,3 +107,5 @@ export interface BlogPost {
   createdAt?: string | Date;
   updatedAt?: string | Date;
 }
+
+export type { PackageItem, BathroomPackage } from "./packages";

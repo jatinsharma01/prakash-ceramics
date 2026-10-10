@@ -54,6 +54,18 @@ export default function EditProductPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [productName, setProductName] = useState("");
   const [category, setCategory] = useState("Faucets");
+  const [brand, setBrand] = useState("Jaquar");
+  const [categoriesList, setCategoriesList] = useState<{ id: string; name: string }[]>(CATEGORIES);
+  const [brandsList, setBrandsList] = useState<{ id: string; name: string }[]>([
+    { id: "brand-jaquar", name: "Jaquar" },
+    { id: "brand-essco", name: "Essco" },
+    { id: "brand-futura", name: "Futura" },
+    { id: "brand-franke", name: "Franke" },
+    { id: "brand-faber", name: "Faber" },
+    { id: "brand-nirali", name: "Nirali" },
+    { id: "brand-sparrow", name: "Sparrow" },
+    { id: "brand-fab", name: "FAB" },
+  ]);
   const [range, setRange] = useState("Fusion Prime");
   const [tagline, setTagline] = useState("");
   const [description, setDescription] = useState("");
@@ -65,6 +77,33 @@ export default function EditProductPage() {
   const [material, setMaterial] = useState("Solid Virgin DR Brass (Lead-Free)");
   const [flowRate, setFlowRate] = useState("4.8 LPM at 3 Bar (Eco-Save)");
   const [dimensions, setDimensions] = useState("Standard Deck Mount");
+
+  // Load dynamic categories and brands
+  useEffect(() => {
+    async function loadMeta() {
+      try {
+        const [catsRes, brandsRes] = await Promise.all([
+          fetch("/api/categories"),
+          fetch("/api/brands"),
+        ]);
+        if (catsRes.ok) {
+          const catsData = await catsRes.json();
+          if (Array.isArray(catsData.categories) && catsData.categories.length > 0) {
+            setCategoriesList(catsData.categories);
+          }
+        }
+        if (brandsRes.ok) {
+          const brandsData = await brandsRes.json();
+          if (Array.isArray(brandsData.brands) && brandsData.brands.length > 0) {
+            setBrandsList(brandsData.brands);
+          }
+        }
+      } catch (err) {
+        console.warn("Could not load dynamic categories/brands", err);
+      }
+    }
+    loadMeta();
+  }, []);
 
   // Finishes & Variants
   const [selectedFinishes, setSelectedFinishes] = useState<string[]>([]);
@@ -105,6 +144,7 @@ export default function EditProductPage() {
           const p: Product = data.product;
           setProductName(p.name);
           setCategory(p.category);
+          setBrand(p.brand || "Jaquar");
           setRange(p.range || "Fusion Prime");
           setTagline(p.tagline || "");
           setDescription(p.description || "");
@@ -306,6 +346,7 @@ export default function EditProductPage() {
         name: productName,
         sku,
         category,
+        brand: brand || "Jaquar",
         range,
         tagline,
         description,
@@ -328,6 +369,7 @@ export default function EditProductPage() {
         flowRate,
         features,
         specs: {
+          Brand: brand || "Jaquar",
           Range: range,
           Material: material,
           Warranty: warranty,
@@ -461,21 +503,58 @@ export default function EditProductPage() {
               />
             </div>
 
-            <div>
-              <label className="block text-xs font-semibold text-stone-300 mb-1.5">
-                Category
-              </label>
-              <select
-                value={category}
-                onChange={(e) => setCategory(e.target.value)}
-                className="w-full bg-[#1c222c] border border-stone-700 text-xs text-white px-4 py-2.5 rounded-xl focus:border-[#9b7842] focus:outline-hidden"
-              >
-                {CATEGORIES.map((c) => (
-                  <option key={c.slug} value={c.name}>
-                    {c.name}
-                  </option>
-                ))}
-              </select>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <div className="flex items-center justify-between mb-1.5">
+                  <label className="text-xs font-semibold text-stone-300">
+                    Category
+                  </label>
+                  <Link
+                    href="/admin/categories"
+                    target="_blank"
+                    className="text-[10px] text-[#dec49a] hover:underline"
+                  >
+                    + Manage
+                  </Link>
+                </div>
+                <select
+                  value={category}
+                  onChange={(e) => setCategory(e.target.value)}
+                  className="w-full bg-[#1c222c] border border-stone-700 text-xs text-white px-4 py-2.5 rounded-xl focus:border-[#9b7842] focus:outline-hidden"
+                >
+                  {categoriesList.map((c) => (
+                    <option key={c.id || c.name} value={c.name} className="bg-stone-900">
+                      {c.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <div className="flex items-center justify-between mb-1.5">
+                  <label className="text-xs font-semibold text-stone-300">
+                    Brand
+                  </label>
+                  <Link
+                    href="/admin/brands"
+                    target="_blank"
+                    className="text-[10px] text-[#dec49a] hover:underline"
+                  >
+                    + Manage
+                  </Link>
+                </div>
+                <select
+                  value={brand}
+                  onChange={(e) => setBrand(e.target.value)}
+                  className="w-full bg-[#1c222c] border border-stone-700 text-xs text-white px-4 py-2.5 rounded-xl focus:border-[#9b7842] focus:outline-hidden"
+                >
+                  {brandsList.map((b) => (
+                    <option key={b.id || b.name} value={b.name} className="bg-stone-900">
+                      {b.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
             </div>
 
             <div>

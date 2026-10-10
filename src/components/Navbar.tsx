@@ -15,10 +15,13 @@ import {
   Package,
   MapPin,
   LogOut,
-  UserCheck
+  UserCheck,
+  Award
 } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { CATEGORIES } from "@/lib/categories";
+import { INITIAL_BRANDS } from "@/lib/brands";
+import { Brand } from "@/lib/types";
 import { useEnquiry } from "@/context/EnquiryContext";
 import { useWishlist } from "@/context/WishlistContext";
 import { useUserAuth } from "@/context/UserAuthContext";
@@ -35,10 +38,30 @@ export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [megaMenuOpen, setMegaMenuOpen] = useState(false);
+  const [brandsMenuOpen, setBrandsMenuOpen] = useState(false);
+  const [brandsList, setBrandsList] = useState<Brand[]>(INITIAL_BRANDS);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
   const profileDropdownRef = useRef<HTMLDivElement>(null);
+
+  // Fetch live brands on mount
+  useEffect(() => {
+    async function loadBrands() {
+      try {
+        const res = await fetch("/api/brands");
+        if (res.ok) {
+          const data = await res.json();
+          if (Array.isArray(data.brands) && data.brands.length > 0) {
+            setBrandsList(data.brands);
+          }
+        }
+      } catch (err) {
+        console.warn("Could not load brands in Navbar:", err);
+      }
+    }
+    loadBrands();
+  }, []);
 
   // Close profile dropdown when clicking outside
   useEffect(() => {
@@ -61,10 +84,11 @@ export function Navbar() {
     };
   }, [profileDropdownOpen]);
 
-  // Determine if page has a dark hero (like home, about, categories, blogs)
+  // Determine if page has a dark hero (like home, about, categories, brands, blogs)
   const isDarkHeroPage =
     pathname === "/" ||
     pathname.startsWith("/categories/") ||
+    pathname.startsWith("/brands") ||
     pathname === "/about" ||
     pathname === "/blogs" ||
     pathname.startsWith("/blogs/") ||
@@ -83,6 +107,7 @@ export function Navbar() {
   useEffect(() => {
     setMobileMenuOpen(false);
     setMegaMenuOpen(false);
+    setBrandsMenuOpen(false);
     setSearchOpen(false);
     setProfileDropdownOpen(false);
   }, [pathname]);
@@ -206,6 +231,91 @@ export function Navbar() {
                             <span className="text-[11px] text-[#6b7280] line-clamp-1 mt-0.5">
                               {cat.shortDescription}
                             </span>
+                          </Link>
+                        ))}
+                      </div>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+
+            {/* Brands Dropdown Trigger */}
+            <div
+              className="relative"
+              onMouseEnter={() => setBrandsMenuOpen(true)}
+              onMouseLeave={() => setBrandsMenuOpen(false)}
+            >
+              <button
+                type="button"
+                className={clsx(
+                  "flex items-center gap-1.5 text-sm font-semibold py-2 transition-colors cursor-pointer",
+                  isTransparent
+                    ? (pathname?.startsWith("/brands") ? "text-[#dec49a]" : "text-white/90 hover:text-[#dec49a]")
+                    : (pathname?.startsWith("/brands") ? "text-[#9b7842]" : "text-[#374151] hover:text-[#9b7842]")
+                )}
+              >
+                <span>Brands</span>
+                <ChevronDown
+                  className={clsx(
+                    "w-4 h-4 transition-transform duration-200",
+                    brandsMenuOpen ? "rotate-180 text-[#dec49a]" : ""
+                  )}
+                />
+              </button>
+
+              {/* Brands Mega Dropdown Panel with AnimatePresence */}
+              <AnimatePresence>
+                {brandsMenuOpen && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 12, scale: 0.98 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: 8, scale: 0.98 }}
+                    transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
+                    className="absolute top-full -left-20 w-[680px] pt-2 z-50"
+                  >
+                    <div className="bg-white border border-[#e5e0d8] rounded-2xl p-6 shadow-2xl">
+                      <div className="flex items-center justify-between pb-4 mb-4 border-b border-[#ede8df]">
+                        <div className="flex items-center gap-2">
+                          <Award className="w-4 h-4 text-[#9b7842]" />
+                          <span className="text-xs uppercase tracking-widest text-[#6a5028] font-semibold">
+                            Authorized Manufacturing Brands
+                          </span>
+                        </div>
+                        <Link
+                          href="/brands"
+                          className="text-xs font-semibold text-[#9b7842] hover:text-[#543e20] flex items-center gap-1 transition-colors group"
+                        >
+                          <span>Explore All Brands</span>
+                          <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
+                        </Link>
+                      </div>
+
+                      <div className="grid grid-cols-2 gap-3">
+                        {brandsList.map((brand) => (
+                          <Link
+                            key={brand.id || brand.slug}
+                            href={`/brands/${brand.slug}`}
+                            className="group/brand flex items-start gap-3 p-3 rounded-xl hover:bg-[#f7f5f0] transition-all border border-transparent hover:border-[#e5e0d8] hover:translate-y-[-1px]"
+                          >
+                            <div className="w-9 h-9 rounded-lg bg-[#f0eae1] border border-[#dec49a]/40 text-[#836433] flex items-center justify-center font-serif font-bold text-xs shrink-0 group-hover/brand:bg-[#9b7842] group-hover/brand:text-white transition-colors">
+                              {brand.name.slice(0, 2).toUpperCase()}
+                            </div>
+                            <div className="overflow-hidden">
+                              <div className="flex items-center gap-2">
+                                <span className="text-xs font-bold text-[#1f2937] group-hover/brand:text-[#9b7842] transition-colors truncate">
+                                  {brand.name}
+                                </span>
+                                {brand.name.toLowerCase() === "jaquar" && (
+                                  <span className="text-[9px] px-1.5 py-0.2 rounded bg-amber-100 text-amber-800 font-semibold">
+                                    Flagship
+                                  </span>
+                                )}
+                              </div>
+                              <span className="text-[11px] text-[#6b7280] line-clamp-1 mt-0.5 block">
+                                {brand.description || `${brand.name} sanitaryware & fixtures`}
+                              </span>
+                            </div>
                           </Link>
                         ))}
                       </div>
@@ -628,6 +738,37 @@ export function Navbar() {
                         className="text-xs font-medium text-[#4b5563] hover:text-[#1c1815] p-2 rounded bg-gradient-to-r from-[#fcfbf9] via-[#F2ECE7] to-[#e6ddd6] border border-[#ded5cb] truncate"
                       >
                         {cat.name}
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Mobile Partner Brands Section */}
+                <div className="pt-2 pb-1 border-t border-[#e6ddd6]">
+                  <div className="flex items-center justify-between px-3">
+                    <span className="text-[11px] uppercase tracking-widest text-[#8c7764] font-semibold">
+                      Partner Brands
+                    </span>
+                    <Link
+                      href="/brands"
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="text-[10px] text-[#9b7842] font-semibold hover:underline"
+                    >
+                      View All
+                    </Link>
+                  </div>
+                  <div className="grid grid-cols-2 gap-2 mt-2 px-1">
+                    {brandsList.map((brand) => (
+                      <Link
+                        key={brand.id || brand.slug}
+                        href={`/brands/${brand.slug}`}
+                        onClick={() => setMobileMenuOpen(false)}
+                        className="text-xs font-medium text-[#4b5563] hover:text-[#1c1815] p-2 rounded bg-gradient-to-r from-[#fcfbf9] via-[#F2ECE7] to-[#e6ddd6] border border-[#ded5cb] truncate flex items-center gap-2"
+                      >
+                        <span className="w-5 h-5 rounded bg-[#9b7842]/20 text-[#836433] text-[9px] font-bold flex items-center justify-center shrink-0">
+                          {brand.name.slice(0, 2).toUpperCase()}
+                        </span>
+                        <span className="truncate">{brand.name}</span>
                       </Link>
                     ))}
                   </div>

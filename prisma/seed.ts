@@ -1,6 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 import { PRODUCTS } from "../src/lib/products";
 import { CATEGORIES } from "../src/lib/categories";
+import { INITIAL_BRANDS } from "../src/lib/brands";
 import { ADMIN_COUPONS, ADMIN_ORDERS, ADMIN_USERS } from "../src/lib/adminData";
 
 const prisma = new PrismaClient();
@@ -8,7 +9,31 @@ const prisma = new PrismaClient();
 async function main() {
   console.log("🌱 Starting PostgreSQL database seed for Parkash Ceramics...");
 
-  // 1. Seed Categories
+  // 1. Seed Brands
+  console.log("🏷️ Seeding brands...");
+  for (const b of INITIAL_BRANDS) {
+    await prisma.brand.upsert({
+      where: { slug: b.slug },
+      update: {
+        name: b.name,
+        description: b.description,
+        website: b.website,
+        isFeatured: b.isFeatured ?? false,
+        itemCount: b.itemCount ?? 0,
+      },
+      create: {
+        id: b.id,
+        name: b.name,
+        slug: b.slug,
+        description: b.description,
+        website: b.website,
+        isFeatured: b.isFeatured ?? false,
+        itemCount: b.itemCount ?? 0,
+      },
+    });
+  }
+
+  // 2. Seed Categories
   console.log("📁 Seeding categories...");
   for (const cat of CATEGORIES) {
     await prisma.category.upsert({
@@ -36,10 +61,8 @@ async function main() {
     });
   }
 
-  // 2. Seed Products
-  console.log("🛁 Cleaning old products & seeding luxury products...");
-  await prisma.orderItem.deleteMany({});
-  await prisma.product.deleteMany({});
+  // 2. Seed Products safely (upsert so existing data and orders are preserved)
+  console.log("🛁 Seeding luxury products (safe upsert)...");
 
   for (const prod of PRODUCTS) {
     const fullSpecs = {
@@ -48,14 +71,25 @@ async function main() {
       finishSkus: prod.finishSkus || {},
     };
 
-    await prisma.product.create({
-      data: {
+    await prisma.product.upsert({
+      where: { sku: prod.sku },
+      update: {
+        name: prod.name,
+        category: prod.category,
+        categorySlug: prod.categorySlug,
+        brand: prod.brand || "Jaquar",
+        tagline: prod.tagline,
+        description: prod.description,
+        price: prod.price,
+      },
+      create: {
         id: prod.id,
         sku: prod.sku,
         name: prod.name,
         slug: prod.slug,
         category: prod.category,
         categorySlug: prod.categorySlug,
+        brand: prod.brand || "Jaquar",
         subcategory: prod.subcategory || null,
         range: prod.range || null,
         tagline: prod.tagline,

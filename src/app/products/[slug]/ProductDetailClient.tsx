@@ -12,10 +12,9 @@ import { useWishlist } from "@/context/WishlistContext";
 import { FinishType } from "@/lib/types";
 import { 
   ChevronRight, 
-  Star, 
   Check, 
-  Heart,
-  ArrowRight
+  Heart, 
+  ArrowRight 
 } from "lucide-react";
 import { CartIcon } from "@/components/CartIcon";
 import { clsx } from "clsx";
@@ -216,7 +215,7 @@ export default function ProductDetailClient({ product }: { product: Product }) {
             {/* Category, Range & SKU */}
             <div className="flex items-center justify-between text-xs mb-2">
               <span className="text-[#9b7842] uppercase tracking-[0.2em] font-semibold">
-                {product.range ? `${product.range} • ` : ""}{product.category} {product.subcategory && `• ${product.subcategory}`}
+                {product.brand ? `${product.brand} • ` : ""}{product.range ? `${product.range} • ` : ""}{product.category} {product.subcategory && `• ${product.subcategory}`}
               </span>
               <span className="text-[#84786d] font-mono font-semibold">Code: {activeSku}</span>
             </div>
@@ -227,19 +226,9 @@ export default function ProductDetailClient({ product }: { product: Product }) {
             </h1>
 
             {/* Tagline */}
-            <p className="text-sm text-[#6b7280] mt-2 mb-6">
+            <p className="text-sm text-[#6b7280] mt-2 mb-6 pb-6 border-b border-[#ede8df]">
               {product.tagline}
             </p>
-
-            {/* Rating & Reviews */}
-            <div className="flex items-center gap-3 pb-6 border-b border-[#ede8df] text-xs">
-              <div className="flex items-center gap-1 text-amber-500">
-                <Star className="w-4 h-4 fill-current" />
-                <span className="font-semibold text-[#151a22]">{product.rating}</span>
-              </div>
-              <span className="text-neutral-300">|</span>
-              <span className="text-[#6b7280]">{product.reviewsCount} verified architect specifications</span>
-            </div>
 
             {/* Pricing Section */}
             <div className="py-6 border-b border-[#ede8df] flex items-start justify-between">
@@ -431,6 +420,10 @@ export default function ProductDetailClient({ product }: { product: Product }) {
                 Technical Specifications Sheet
               </h4>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                <div className="flex flex-col py-1.5 border-b border-[#ede8df]">
+                  <span className="text-[#84786d] font-medium">Manufacturer Brand</span>
+                  <span className="text-[#151a22] font-semibold">{product.brand || "Jaquar"}</span>
+                </div>
                 <div className="flex flex-col py-1.5 border-b border-[#ede8df]">
                   <span className="text-[#84786d] font-medium">Material Composition</span>
                   <span className="text-[#151a22] font-semibold">{product.material}</span>

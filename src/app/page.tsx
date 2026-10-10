@@ -55,7 +55,8 @@ export default function HomePage() {
   const { addToEnquiry, setIsDrawerOpen } = useEnquiry();
   const [bestsellerProducts, setBestsellerProducts] = useState<Product[]>(getBestsellerProducts());
   const [hoveredCategorySlug, setHoveredCategorySlug] = useState<string>("faucets");
-  const [selectedPackageId, setSelectedPackageId] = useState<string>("pkg-gold-penthouse");
+  const [packages, setPackages] = useState<BathroomPackage[]>(BATHROOM_PACKAGES);
+  const [selectedPackageId, setSelectedPackageId] = useState<string>(BATHROOM_PACKAGES[0]?.id || "pkg-gold-penthouse");
   const [packageAddedId, setPackageAddedId] = useState<string | null>(null);
   const [activeLookbookHotspot, setActiveLookbookHotspot] = useState<number | null>(null);
 
@@ -73,10 +74,29 @@ export default function HomePage() {
         console.warn("Could not load dynamic bestseller products:", err);
       }
     }
+
+    async function loadPackages() {
+      try {
+        const res = await fetch("/api/packages?activeOnly=true");
+        if (res.ok) {
+          const data = await res.json();
+          if (data.packages && Array.isArray(data.packages) && data.packages.length > 0) {
+            setPackages(data.packages);
+            if (!data.packages.some((p: BathroomPackage) => p.id === selectedPackageId)) {
+              setSelectedPackageId(data.packages[0].id);
+            }
+          }
+        }
+      } catch (err) {
+        console.warn("Could not load dynamic bathroom packages:", err);
+      }
+    }
+
     loadBestsellerProducts();
+    loadPackages();
   }, []);
 
-  const selectedPackage = BATHROOM_PACKAGES.find((p) => p.id === selectedPackageId) || BATHROOM_PACKAGES[0];
+  const selectedPackage = packages.find((p) => p.id === selectedPackageId) || packages[0] || BATHROOM_PACKAGES[0];
 
   const handleAddPackageToCart = (pkg: BathroomPackage) => {
     pkg.items.forEach((item) => {
@@ -682,7 +702,7 @@ export default function HomePage() {
       )}
 
       {/* 5. CURATED BATHROOM PACKAGES & SUITE ENSEMBLES */}
-      <section className="py-24 bg-gradient-to-b from-[#fbf9f7] via-white to-[#fbf9f7] relative overflow-hidden">
+      <section id="packages" className="py-24 bg-gradient-to-b from-[#fbf9f7] via-white to-[#fbf9f7] relative overflow-hidden scroll-mt-20">
         <div className="max-w-[1600px] mx-auto px-4 sm:px-8 lg:px-12">
 
           <MotionReveal direction="up" className="text-center max-w-3xl mx-auto mb-12">
@@ -700,7 +720,7 @@ export default function HomePage() {
 
           {/* Suite Selector Tabs with High-Contrast Active Highlight */}
           <div className="flex flex-wrap justify-center gap-2.5 sm:gap-3 mb-10">
-            {BATHROOM_PACKAGES.map((pkg) => {
+            {packages.map((pkg) => {
               const isActive = selectedPackageId === pkg.id;
               return (
                 <motion.button
@@ -800,7 +820,7 @@ export default function HomePage() {
                           Included in this Suite
                         </span>
                         <h4 className="text-base sm:text-lg font-serif font-bold text-[#151a22]">
-                          4-Piece Architect-Matched Fixtures
+                          {selectedPackage.items?.length || 4}-Piece Architect-Matched Fixtures
                         </h4>
                       </div>
 
@@ -814,13 +834,17 @@ export default function HomePage() {
                           </span>
                         </div>
                         <span className="text-[11px] text-emerald-600 font-bold block">
-                          Includes All 4 Fixtures + Free Insured Freight
+                          Includes All {selectedPackage.items?.length || 4} Fixtures + Free Insured Freight
                         </span>
                       </div>
                     </div>
 
-                    {/* Products Grid in this package */}
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 mt-5">
+                    {/* Products Grid in this package (Handles 1 to 8 fixtures cleanly) */}
+                    <div className={`grid grid-cols-1 sm:grid-cols-2 gap-3.5 mt-5 ${
+                      (selectedPackage.items?.length || 0) > 4
+                        ? "max-h-[380px] sm:max-h-[440px] overflow-y-auto pr-1.5 scrollbar-thin"
+                        : ""
+                    }`}>
                       {selectedPackage.items.map((item, idx) => (
                         <div
                           key={idx}
