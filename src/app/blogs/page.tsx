@@ -6,28 +6,28 @@ export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
 export const metadata: Metadata = {
-  title: "Architectural Journal & Luxury Bathroom Insights | PRAKASH CERAMICS",
+  title: "Design Journal & Luxury Bathroom Insights | PRAKASH CERAMICS",
   description:
-    "Explore luxury bathroom architectural trends, PVD finish guides, hydrotherapy engineering, and design inspirations curated by Prakash Ceramics.",
+    "Explore luxury bathroom trends, PVD finish guides, hydrotherapy engineering, and design inspirations curated by Prakash Ceramics.",
   keywords: [
     "Prakash Ceramics Journal",
     "Luxury bathroom blog",
     "PVD finishes guide",
-    "Architectural bathroom trends",
+    "Luxury bathroom trends",
     "Hydrotherapy shower design",
     "Freestanding bathtubs guide",
   ],
   openGraph: {
-    title: "Architectural Journal & Luxury Bathroom Insights | PRAKASH CERAMICS",
+    title: "Design Journal & Luxury Bathroom Insights | PRAKASH CERAMICS",
     description:
-      "Explore luxury bathroom architectural trends, PVD finish guides, hydrotherapy engineering, and design inspirations curated by Prakash Ceramics.",
+      "Explore luxury bathroom trends, PVD finish guides, hydrotherapy engineering, and design inspirations curated by Prakash Ceramics.",
     type: "website",
     images: [
       {
         url: "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&q=80&w=1600",
         width: 1600,
         height: 900,
-        alt: "Prakash Ceramics Architectural Journal",
+        alt: "Prakash Ceramics Design Journal",
       },
     ],
   },

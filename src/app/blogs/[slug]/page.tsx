@@ -18,7 +18,7 @@ export async function generateMetadata({
   if (!blog) {
     return {
       title: "Article Not Found | PRAKASH CERAMICS",
-      description: "Discover luxury architectural bathware articles and guides at Prakash Ceramics.",
+      description: "Discover luxury bathware articles and design guides at Prakash Ceramics.",
     };
   }
 
@@ -26,7 +26,7 @@ export async function generateMetadata({
   const description =
     blog.metaDescription ||
     blog.excerpt ||
-    `Read ${blog.title} on Prakash Ceramics architectural journal.`;
+    `Read ${blog.title} on Prakash Ceramics design journal.`;
 
   const ogImages = blog.coverImage
     ? [

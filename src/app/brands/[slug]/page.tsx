@@ -33,7 +33,7 @@ export async function generateMetadata({
   }
 
   return {
-    title: `${brand.name} Luxury Architectural Collection | PRAKASH CERAMICS`,
+    title: `${brand.name} Luxury Collection | PRAKASH CERAMICS`,
     description:
       brand.description ||
       `Explore official ${brand.name} bathroom fixtures, luxury faucets, sanitaryware and sinks at Prakash Ceramics.`,

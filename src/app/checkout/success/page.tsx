@@ -73,7 +73,7 @@ export default function OrderSuccessPage() {
             Thank You for Your Order
           </h1>
           <p className="text-xs sm:text-sm text-[#6b7280] max-w-lg mx-auto leading-relaxed">
-            Your architectural project order has been logged and forwarded directly to the Prakash Ceramics Concierge desk on WhatsApp (+91 91480 03924).
+            Your luxury order has been logged and forwarded directly to the Prakash Ceramics Concierge desk on WhatsApp (+91 91480 03924).
           </p>
 
           <div className="mt-6 inline-flex items-center gap-2 bg-[#faf8f5] border border-[#ded5cb] px-5 py-2.5 rounded-full text-xs font-mono font-bold text-[#151a22]">

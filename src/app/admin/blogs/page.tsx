@@ -141,7 +141,7 @@ export default function AdminBlogsPage() {
           </div>
           <h1 className="text-2xl sm:text-3xl font-serif font-bold text-white tracking-tight mt-1 flex items-center gap-2">
             <BookOpen className="w-7 h-7 text-[#9b7842]" />
-            Articles &amp; Architecture Journal
+            Articles &amp; Design Journal
           </h1>
           <p className="text-xs text-stone-400 mt-1">
             Publish design guides, material deep-dives, trends, and SEO articles for Prakash Ceramics.
@@ -220,7 +220,7 @@ export default function AdminBlogsPage() {
         </div>
 
         <div className="flex items-center gap-2 overflow-x-auto w-full sm:w-auto pb-1 sm:pb-0">
-          {["All", "Material & Craft", "Architectural Trends", "Engineering & Craft", "Luxury Bathrooms"].map((cat) => (
+          {["All", "Material & Craft", "Design Trends", "Engineering & Craft", "Luxury Bathrooms"].map((cat) => (
             <button
               key={cat}
               type="button"

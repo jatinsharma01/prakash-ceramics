@@ -109,7 +109,7 @@ export function WishlistDrawer() {
                 ) : (
                   <>
                     <div className="flex items-center justify-between pb-2 border-b border-[#ede8df] text-xs text-[#6b7280] font-medium">
-                      <span>Saved Architectural Items ({totalWishlistItems})</span>
+                      <span>Saved Items ({totalWishlistItems})</span>
                       <button
                         type="button"
                         onClick={clearWishlist}

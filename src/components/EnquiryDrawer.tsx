@@ -11,7 +11,7 @@ import {
   ArrowRight, 
   Plus, 
   Minus, 
-  Truck
+  ShieldCheck
 } from "lucide-react";
 import Link from "next/link";
 
@@ -214,10 +214,10 @@ export function EnquiryDrawer() {
                       </AnimatePresence>
                     </div>
 
-                    {/* Dispatch Assurance info */}
+                    {/* Quality Assurance info */}
                     <div className="bg-[#fcfbf9] border border-[#ede8df] p-3.5 rounded-2xl flex items-center gap-2.5 text-xs text-[#6b7280]">
-                      <Truck className="w-4 h-4 text-[#9b7842] shrink-0" />
-                      <span className="text-[11px]">Free insured dispatch across India for all luxury fixtures.</span>
+                      <ShieldCheck className="w-4 h-4 text-[#9b7842] shrink-0" />
+                      <span className="text-[11px]">Official manufacturer warranty & authentic products guaranteed.</span>
                     </div>
                   </>
                 )}
@@ -231,7 +231,6 @@ export function EnquiryDrawer() {
                       <span className="text-[10px] uppercase tracking-wider text-[#84786d] block font-bold">
                         Subtotal ({totalItems} items)
                       </span>
-                      <span className="text-[11px] text-neutral-400">*Free insured delivery included</span>
                     </div>
                     <span className="text-2xl font-serif font-extrabold text-[#151a22]">
                       ₹{totalEstimatedValue.toLocaleString("en-IN")}

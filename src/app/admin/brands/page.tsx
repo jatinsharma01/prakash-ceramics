@@ -374,7 +374,7 @@ export default function AdminBrandsPage() {
 
                     {/* Description */}
                     <p className="text-xs text-stone-400 line-clamp-3 leading-relaxed mt-2 min-h-[50px]">
-                      {brand.description || "Luxury architectural fittings & sanitaryware collection."}
+                      {brand.description || "Luxury bathroom fittings & sanitaryware collection."}
                     </p>
 
                     {/* Website Link */}

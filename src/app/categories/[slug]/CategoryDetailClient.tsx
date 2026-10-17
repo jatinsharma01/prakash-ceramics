@@ -145,7 +145,7 @@ export default function CategoryDetailClient({
             <MotionReveal direction="scale" className="bg-white border border-[#dec49a] rounded-3xl p-8 sm:p-12 text-center max-w-3xl mx-auto shadow-md">
               <Sparkles className="w-10 h-10 text-[#9b7842] mx-auto mb-4" />
               <h3 className="text-xl font-serif font-semibold text-[#151a22] mb-2">
-                Bespoke {category.name} Architectural Catalogue
+                Bespoke {category.name} Luxury Catalogue
               </h3>
               <p className="text-xs sm:text-sm text-[#6b7280] mb-6 leading-relaxed">
                 We manufacture and supply custom {category.name.toLowerCase()} configurations tailored to your room blueprints and finish requirements. Contact our design concierge for complete CAD cut-sheets and volume pricing.
@@ -161,7 +161,7 @@ export default function CategoryDetailClient({
                   href="/contact"
                   className="bg-[#f7f5f0] hover:bg-[#ede8df] text-[#1c1815] border border-[#e5e0d8] text-xs font-semibold px-6 py-3.5 rounded-xl transition-colors"
                 >
-                  Book Showroom Consultation
+                  Visit Our Showroom
                 </Link>
               </div>
             </MotionReveal>

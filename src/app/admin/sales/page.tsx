@@ -272,7 +272,7 @@ export default function AdminSalesPage() {
               <ArrowUpRight className="w-3.5 h-3.5" />
               {stats?.customersGrowth || "+8.7%"}
             </span>
-            <span className="text-stone-400">Architect Network</span>
+            <span className="text-stone-400">Designer Network</span>
           </div>
         </div>
       </div>
@@ -508,7 +508,7 @@ export default function AdminSalesPage() {
             <div className="p-3 rounded-xl bg-stone-900/60 border border-stone-800 flex items-center justify-between">
               <div>
                 <p className="font-semibold text-white">Bank RTGS / Wire Transfer</p>
-                <p className="text-[10px] text-stone-400">Direct architectural project settlement</p>
+                <p className="text-[10px] text-stone-400">Direct trade project settlement</p>
               </div>
               <span className="text-sm font-bold text-[#dec49a]">48%</span>
             </div>

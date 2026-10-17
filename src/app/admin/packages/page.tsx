@@ -192,7 +192,7 @@ export default function AdminPackagesPage() {
             <PackageIcon className="w-4 h-4 text-blue-400" />
           </div>
           <div className="text-2xl font-bold text-blue-400 mt-2">{totalItemsCount}</div>
-          <div className="text-[11px] text-stone-400 mt-1">Architect-matched products</div>
+          <div className="text-[11px] text-stone-400 mt-1">Included products</div>
         </div>
 
         <div className="p-4 rounded-2xl bg-[#141822] border border-stone-800">
@@ -263,7 +263,7 @@ export default function AdminPackagesPage() {
           <p className="text-xs text-stone-400 mt-1 max-w-sm mx-auto">
             {searchQuery || selectedTheme !== "All"
               ? "Try clearing filters to see all suite packages."
-              : "Get started by creating your first architect-matched bathroom suite."}
+              : "Get started by creating your first curated bathroom suite."}
           </p>
           <Link
             href="/admin/packages/new"

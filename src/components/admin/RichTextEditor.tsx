@@ -149,7 +149,7 @@ export function RichTextEditor({ value, onChange, placeholder }: RichTextEditorP
           </button>
           <button
             type="button"
-            onClick={() => insertText("<blockquote class=\"border-l-4 border-[#9b7842] pl-4 italic my-4 text-[#dec49a]\">", "</blockquote>", "Quotation from designer or architect")}
+            onClick={() => insertText("<blockquote class=\"border-l-4 border-[#9b7842] pl-4 italic my-4 text-[#dec49a]\">", "</blockquote>", "Quotation or design statement")}
             title="Quote"
             className="p-2 rounded-lg text-stone-300 hover:text-white hover:bg-stone-800 transition-colors cursor-pointer"
           >

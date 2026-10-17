@@ -15,8 +15,7 @@ import {
   ArrowUpRight,
   Droplets,
   Award,
-  Layers,
-  LayoutDashboard
+  Layers
 } from "lucide-react";
 
 export function Footer() {
@@ -87,13 +86,13 @@ export function Footer() {
             </Link>
 
             <p className="text-xs text-[#6b7280] leading-relaxed max-w-sm">
-              Prakash Ceramics is a benchmark purveyor of luxury sanitaryware, high-performance shower systems, freestanding soaking bathtubs, and wellness hydro-spas for discerning residences, hospitality resorts, and architectural landmarks.
+              Prakash Ceramics is a benchmark purveyor of luxury sanitaryware, high-performance shower systems, freestanding soaking bathtubs, and wellness hydro-spas for discerning residences, hospitality resorts, and luxury spaces.
             </p>
 
             <div className="pt-2 space-y-2 text-xs">
-              <div className="flex items-center gap-2.5 text-[#374151]">
-                <MapPin className="w-4 h-4 text-[#9b7842] shrink-0" />
-                <span>Flagship Experience Center, Marble Market & Bath Boulevard</span>
+              <div className="flex items-start gap-2.5 text-[#374151]">
+                <MapPin className="w-4 h-4 text-[#9b7842] shrink-0 mt-0.5" />
+                <span>No 647, Whitefield Main Rd, nearby Cloudnine Hospital, Palm Meadows, Siddapura, Whitefield, Bengaluru, Karnataka 560066</span>
               </div>
               <div className="flex items-center gap-2.5 text-[#374151]">
                 <Phone className="w-4 h-4 text-[#9b7842] shrink-0" />
@@ -153,7 +152,7 @@ export function Footer() {
           {/* Col 4: Quick Links & Catalogue Download */}
           <div>
             <h3 className="text-xs font-semibold text-[#151a22] uppercase tracking-widest mb-4">
-              Consultation & Specs
+              Catalogue &amp; Specs
             </h3>
             <ul className="space-y-2.5 text-xs mb-6">
               <li>
@@ -178,18 +177,18 @@ export function Footer() {
               </li>
               <li>
                 <Link href="/blogs" className="text-[#555f6d] hover:text-[#9b7842] transition-colors font-medium">
-                  Architectural Journal &amp; Blogs
+                  Design Journal &amp; Blogs
                 </Link>
               </li>
               <li>
-                <Link href="/contact#consultation" className="text-[#555f6d] hover:text-[#9b7842] transition-colors">
-                  Architect Trade Enquiries
+                <Link href="/contact" className="text-[#555f6d] hover:text-[#9b7842] transition-colors">
+                  Trade &amp; Bulk Enquiries
                 </Link>
               </li>
             </ul>
 
             <div className="p-4 rounded-2xl bg-white border border-[#e5ded0] shadow-xs text-xs">
-              <span className="font-semibold text-[#151a22] block mb-1">Architectural Spec Book</span>
+              <span className="font-semibold text-[#151a22] block mb-1">Product Spec Book</span>
               <p className="text-[11px] text-[#6b7280] mb-3">Download complete CAD & specification sheets.</p>
               <Link
                 href="/products"
@@ -212,13 +211,6 @@ export function Footer() {
             <span className="hover:text-[#151a22] cursor-pointer">Terms of Service</span>
             <span className="hover:text-[#151a22] cursor-pointer">Warranty Terms</span>
             <span className="text-[#8a6833] font-semibold">ISO 9001 Certified Quality</span>
-            <Link 
-              href="/admin" 
-              className="inline-flex items-center gap-1 text-[#9b7842] hover:text-[#151a22] font-semibold transition-colors bg-white/70 px-2.5 py-1 rounded-md border border-[#e2dcd0]"
-            >
-              <LayoutDashboard className="w-3 h-3" />
-              <span>Admin Console</span>
-            </Link>
           </div>
         </div>
       </div>

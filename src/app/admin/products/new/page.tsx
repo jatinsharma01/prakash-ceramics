@@ -113,7 +113,7 @@ export default function AdminNewProductPage() {
   // Highlights
   const [features, setFeatures] = useState<string[]>([
     "Swiss Kerox® Precision 35mm Ceramic Cartridge rated for 500,000+ operations",
-    "Multi-Layer Architectural Finish with Ultra-Corrosion Protection",
+    "Multi-Layer Luxury Finish with Ultra-Corrosion Protection",
     "Integrated Neoperl® Aerator with Water-Saving Stream",
   ]);
   const [newFeatureInput, setNewFeatureInput] = useState("");
@@ -491,7 +491,7 @@ export default function AdminNewProductPage() {
                 rows={3}
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-                placeholder="Describe architectural features, durability, cartridge technology..."
+                placeholder="Describe luxury features, durability, cartridge technology..."
                 className="w-full bg-[#1c222c] border border-stone-700 text-xs text-white placeholder-stone-400 p-4 rounded-xl focus:border-[#9b7842] focus:outline-hidden"
               />
             </div>
@@ -778,7 +778,7 @@ export default function AdminNewProductPage() {
         <div className="p-6 rounded-2xl bg-[#141822] border border-stone-800 space-y-4">
           <h3 className="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
             <Tag className="w-4 h-4 text-[#dec49a]" />
-            4. Architectural Key Highlights
+            4. Key Product Highlights
           </h3>
 
           <div className="space-y-2">
@@ -905,7 +905,7 @@ export default function AdminNewProductPage() {
                 </div>
               </div>
               <p className="text-[11px] text-stone-400">
-                Highlights product in curated architectural collections & catalog hero.
+                Highlights product in curated luxury collections & catalog hero.
               </p>
             </div>
 

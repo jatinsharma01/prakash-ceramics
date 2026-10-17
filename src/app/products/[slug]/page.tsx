@@ -29,7 +29,7 @@ export async function generateMetadata({
   const description =
     product.description ||
     product.tagline ||
-    `Discover ${product.name}, a luxury architectural bath fitting crafted with precision engineering and Swiss cartridges by Prakash Ceramics.`;
+    `Discover ${product.name}, a luxury bath fitting crafted with precision engineering and Swiss cartridges by Prakash Ceramics.`;
 
   const ogImages = product.images && product.images.length > 0 ? [product.images[0]] : undefined;
 

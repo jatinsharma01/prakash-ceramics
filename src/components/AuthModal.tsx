@@ -102,7 +102,7 @@ export function AuthModal() {
           <div className="text-center mb-6">
             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#f7f5f0] border border-[#e5e0d8] text-[#9b7842] text-[11px] font-bold tracking-wider uppercase mb-3">
               <Sparkles className="w-3.5 h-3.5" />
-              <span>Client & Architect Portal</span>
+              <span>Customer &amp; Client Portal</span>
             </div>
             <h2 className="text-2xl font-serif font-bold text-[#151a22]">
               {authModalMode === "login" ? "Welcome Back" : "Join Prakash Ceramics"}

@@ -292,7 +292,7 @@ export default function ProductDetailClient({ product }: { product: Product }) {
             {/* Available Finishes with Color Dots */}
             <div className="py-6 border-b border-[#ede8df]">
               <label className="text-xs font-semibold uppercase tracking-wider text-[#1c1815] flex items-center gap-2 mb-3">
-                <span>Architectural Finish:</span>
+                <span>Selected Finish:</span>
                 <span className="text-[#8c7764] font-bold flex items-center gap-1.5">
                   <span className={clsx("w-3 h-3 rounded-full border inline-block shadow-2xs", getColorClass(selectedFinish))} />
                   {selectedFinish}

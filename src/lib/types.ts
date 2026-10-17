@@ -73,6 +73,7 @@ export interface Product {
   reviewsCount: number;
   features: string[];
   specs: Record<string, string>;
+  technicalDrawings?: string[];
   salesCount?: number;
   totalRevenue?: number;
 }

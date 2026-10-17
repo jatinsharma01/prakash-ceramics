@@ -148,7 +148,7 @@ export default function BrandDetailClient({
 
                 <p className="text-sm text-stone-300 mt-2 max-w-2xl leading-relaxed">
                   {brand.description ||
-                    `Premium sanitaryware, bathroom faucets, and architectural fixtures manufactured by ${brand.name}.`}
+                    `Premium sanitaryware, bathroom faucets, and luxury fixtures manufactured by ${brand.name}.`}
                 </p>
               </div>
             </div>
@@ -236,7 +236,7 @@ export default function BrandDetailClient({
             <p className="text-xs text-[#6b7280] mt-2 leading-relaxed">
               {searchQuery
                 ? "Try clearing your search query or exploring our full catalog."
-                : `We carry complete offline catalogs and custom architectural orders for ${brand.name}. Contact our design desk or visit our showroom for price lists and technical specifications.`}
+                : `We carry complete offline catalogs and custom luxury orders for ${brand.name}. Contact our design desk or visit our showroom for price lists and technical specifications.`}
             </p>
             <div className="flex flex-wrap items-center justify-center gap-3 mt-6">
               <Link

@@ -48,6 +48,10 @@ export const PRODUCTS: Product[] = [
       "https://res.cloudinary.com/dtk1pspib/image/upload/v1788760557/parkash-ceramics/0057133_single-lever-basin-mixer-with-popup-waste-black-matt_960.jpg",
       "https://res.cloudinary.com/dtk1pspib/image/upload/v1788760558/parkash-ceramics/0057134_single-lever-basin-mixer-with-popup-waste-blush-gold-pvd_960.jpg",
     ],
+    technicalDrawings: [
+      "/images/drawings/faucet-dimension-schematic.jpg",
+      "/images/drawings/faucet-rough-in-plumbing.jpg",
+    ],
     dimensions: "Standard Deck Mount Basin Mixer",
     flowRate: "4.8 LPM at 3 Bar (Eco-Save Aerated Flow)",
     material: "Lead-free DR Solid Forged Brass & Swiss Ceramic Disc",
@@ -58,7 +62,7 @@ export const PRODUCTS: Product[] = [
       "Single Lever precision ceramic disc cartridge with ultra-smooth gliding control",
       "Fixed Spout design without Popup Waste System",
       "Supplied with 450mm Long Stainless Steel Braided Hoses",
-      "High-durability Multi-Layer PVD & Electroplated Architectural Coatings",
+      "High-durability Multi-Layer PVD & Electroplated Luxury Coatings",
       "Integrated honeycomb aerator for soft splash-free laminar water stream"
     ],
     specs: {

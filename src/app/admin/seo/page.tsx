@@ -625,7 +625,7 @@ export default function AdminSeoPage() {
                   <input
                     type="text"
                     required
-                    placeholder="e.g. Luxury Architectural Faucets & Bathware | PRAKASH CERAMICS"
+                    placeholder="e.g. Luxury Faucets & Bathware | PRAKASH CERAMICS"
                     value={formData.title}
                     onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                     className="w-full bg-[#1c222c] border border-stone-700 text-xs text-white px-3.5 py-2.5 rounded-xl focus:border-[#9b7842] focus:outline-hidden"

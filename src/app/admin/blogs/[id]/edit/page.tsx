@@ -22,7 +22,7 @@ import { BlogPost } from "@/lib/types";
 
 const BLOG_CATEGORIES = [
   "Material & Craft",
-  "Architectural Trends",
+  "Design Trends",
   "Engineering & Craft",
   "Luxury Bathrooms",
   "Design Guides",
@@ -82,7 +82,7 @@ export default function AdminEditBlogPage() {
           setCoverImage(b.coverImage || "");
           setContent(b.content || "");
           setAuthor(b.author || "Prakash Editorial Studio");
-          setAuthorRole(b.authorRole || "Senior Architectural Consultant");
+          setAuthorRole(b.authorRole || "Senior Design Specialist");
           setReadTime(b.readTime || "5 min read");
           setTagsInput(Array.isArray(b.tags) ? b.tags.join(", ") : "");
           setIsPublished(Boolean(b.isPublished));
@@ -158,7 +158,7 @@ export default function AdminEditBlogPage() {
         coverImage: coverImage.trim() || null,
         content: finalContent,
         author: author.trim() || "Prakash Editorial Studio",
-        authorRole: authorRole.trim() || "Senior Architectural Consultant",
+        authorRole: authorRole.trim() || "Senior Design Specialist",
         readTime: readTime.trim() || "5 min read",
         tags,
         metaTitle: metaTitle.trim() || `${title.trim()} | Prakash Ceramics Journal`,

@@ -34,7 +34,7 @@ export async function generateMetadata(): Promise<Metadata> {
     "PRAKASH CERAMICS | Luxury Bathrooms, Sanitaryware & Wellness Solutions";
   const description =
     homeSeo?.description ||
-    "Explore Prakash Ceramics' signature collection of premium architectural faucets, hydrotherapy showers, freestanding bathtubs, saunas, and luxury sanitaryware.";
+    "Explore Prakash Ceramics' signature collection of premium luxury faucets, hydrotherapy showers, freestanding bathtubs, saunas, and designer sanitaryware.";
 
   return {
     title,
@@ -50,7 +50,7 @@ export async function generateMetadata(): Promise<Metadata> {
           "freestanding bathtubs",
           "saunas",
           "steam bath",
-          "architectural fittings",
+          "luxury bath fittings",
         ],
     authors: [{ name: "Prakash Ceramics" }],
     openGraph: {

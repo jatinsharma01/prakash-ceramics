@@ -152,7 +152,7 @@ export default function HomePage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           ...bookingData,
-          source: "Home Page Consultation",
+          source: "Home Page Showroom Tour",
         }),
       });
 
@@ -582,7 +582,7 @@ export default function HomePage() {
             </div>
 
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-serif font-semibold text-white tracking-tight leading-[1.2] mb-4 drop-shadow-md">
-              The Architecture of Pure Water
+              The Elegance of Pure Water
             </h2>
 
             <p className="text-sm sm:text-base text-neutral-200 font-light leading-relaxed mb-8 max-w-xl drop-shadow-sm">
@@ -610,7 +610,7 @@ export default function HomePage() {
           <MotionReveal direction="up" className="text-center max-w-3xl mx-auto mb-16">
             <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-white border border-[#dec49a] text-[#6a5028] text-xs font-semibold uppercase tracking-widest mb-3 shadow-xs">
               <Eye className="w-3.5 h-3.5 text-[#9b7842]" />
-              <span>Architectural Inspiration</span>
+              <span>Design Inspiration</span>
             </div>
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-serif font-semibold text-[#151a22] tracking-tight mb-4">
               The Penthouse Villa Lookbook
@@ -714,7 +714,7 @@ export default function HomePage() {
               Curated Bathroom Suite Packages
             </h2>
             <p className="text-xs sm:text-sm text-[#6b7280] leading-relaxed">
-              Architect-designed complete bathroom bundles featuring harmonized finishes, tall basin mixers, high-flow rain showers, and matching luxury hardware — packaged with exclusive suite savings.
+              Curated complete bathroom bundles featuring harmonized finishes, tall basin mixers, high-flow rain showers, and matching luxury hardware — packaged with exclusive suite savings.
             </p>
           </MotionReveal>
 
@@ -820,7 +820,7 @@ export default function HomePage() {
                           Included in this Suite
                         </span>
                         <h4 className="text-base sm:text-lg font-serif font-bold text-[#151a22]">
-                          {selectedPackage.items?.length || 4}-Piece Architect-Matched Fixtures
+                          {selectedPackage.items?.length || 4}-Piece Curated Fixture Collection
                         </h4>
                       </div>
 
@@ -834,7 +834,7 @@ export default function HomePage() {
                           </span>
                         </div>
                         <span className="text-[11px] text-emerald-600 font-bold block">
-                          Includes All {selectedPackage.items?.length || 4} Fixtures + Free Insured Freight
+                          Includes All {selectedPackage.items?.length || 4} Fixtures
                         </span>
                       </div>
                     </div>
@@ -903,13 +903,6 @@ export default function HomePage() {
                         </>
                       )}
                     </motion.button>
-
-                    <Link
-                      href="/contact"
-                      className="w-full sm:w-auto bg-[#f7f5f0] hover:bg-[#ede8df] text-[#1c1815] border border-[#ded5cb] font-bold py-4 px-6 rounded-2xl text-xs uppercase tracking-wider text-center transition-colors shadow-2xs"
-                    >
-                      Consult Architect
-                    </Link>
                   </div>
                 </div>
 
@@ -925,7 +918,7 @@ export default function HomePage() {
         <div className="absolute inset-0 z-0">
           <ProductImage
             src="https://images.unsplash.com/photo-1600566753376-12c8ab7fb75b?auto=format&fit=crop&q=80&w=2400"
-            alt="Prakash Ceramics Architectural Benchmark"
+            alt="Prakash Ceramics Luxury Benchmark"
             fill
             className="object-cover object-center"
             containerClassName="w-full h-full"
@@ -937,7 +930,7 @@ export default function HomePage() {
         <div className="relative z-10 max-w-[1600px] w-full mx-auto px-4 sm:px-8 lg:px-12 py-20 sm:py-28 lg:py-32">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center">
 
-            {/* Left Column: Architectural Proposition */}
+            {/* Left Column: Master Proposition */}
             <MotionReveal direction="right" className="lg:col-span-7 space-y-4">
               <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#F2ECE7]/20 border border-[#F2ECE7]/40 text-[#F2ECE7] text-xs font-semibold uppercase tracking-widest">
                 <Award className="w-3.5 h-3.5 text-[#F2ECE7]" />
@@ -945,7 +938,7 @@ export default function HomePage() {
               </div>
 
               <h2 className="text-2xl sm:text-3xl lg:text-4xl font-serif font-semibold text-white tracking-tight leading-tight">
-                Engineered For Architectural Precision. Crafted For Timeless Living.
+                Engineered For Precision. Crafted For Timeless Living.
               </h2>
 
               <p className="text-xs sm:text-sm text-neutral-200 leading-relaxed max-w-2xl">
@@ -962,20 +955,10 @@ export default function HomePage() {
                     <span>Download 2026 Spec Book (PDF)</span>
                   </Link>
                 </motion.div>
-
-                <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.96 }}>
-                  <Link
-                    href="/#consultation"
-                    className="inline-flex items-center gap-2 bg-white/10 hover:bg-white/20 text-white border border-white/20 font-semibold text-xs uppercase tracking-wider px-6 py-3.5 rounded-xl backdrop-blur-md transition-colors"
-                  >
-                    <span>Request Architect Consultation</span>
-                    <ArrowRight className="w-3.5 h-3.5 text-[#F2ECE7]" />
-                  </Link>
-                </motion.div>
               </div>
             </MotionReveal>
 
-            {/* Right Column: 4 Architectural Pillars Grid */}
+            {/* Right Column: 4 Core Pillars Grid */}
             <StaggerContainer className="lg:col-span-5 grid grid-cols-2 gap-4">
               <StaggerItem>
                 <motion.div whileHover={{ y: -6, scale: 1.02 }} className="bg-black/40 border border-white/15 rounded-2xl p-5 backdrop-blur-md transition-shadow hover:border-[#dec49a]/40">
@@ -1077,7 +1060,7 @@ export default function HomePage() {
               </h2>
 
               <p className="text-sm sm:text-base text-[#374151] leading-relaxed mb-6">
-                For years, we have helped homeowners, architects and designers choose the right bathroom products for their spaces.
+                For years, we have helped homeowners and interior designers choose the right bathroom products for their spaces.
               </p>
 
               <div className="space-y-4 mb-8">
@@ -1125,8 +1108,8 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 8. ARCHITECTURAL SHOWROOM CONSULTATION & LIVE WORKING DISPLAYS */}
-      <section id="consultation" className="py-20 sm:py-24 bg-gradient-to-b from-white via-[#faf8f6] to-white border-t border-[#ede8df] relative scroll-mt-20">
+      {/* 8. SHOWROOM EXPERIENCE & LIVE WORKING DISPLAYS */}
+      <section id="showroom-tour" className="py-20 sm:py-24 bg-gradient-to-b from-white via-[#faf8f6] to-white border-t border-[#ede8df] relative scroll-mt-20">
         <div className="max-w-[1600px] mx-auto px-4 sm:px-8 lg:px-12">
           
           <MotionReveal direction="up" className="text-center max-w-2xl mx-auto mb-14">
@@ -1134,23 +1117,23 @@ export default function HomePage() {
               Bespoke Concierge & Specification Support
             </span>
             <h2 className="text-3xl sm:text-4xl font-serif font-semibold text-[#151a22] tracking-tight mb-3">
-              Experience Water in Motion
+              Visit Our Flagship Experience Centre
             </h2>
             <p className="text-xs sm:text-sm text-[#6b7280]">
-              Schedule a 1-on-1 private tour at our flagship experience center, test live working hydro-jets, and consult with our senior sanitaryware specialists.
+              Schedule a 1-on-1 private tour at our flagship experience center and test live working hydro-jets.
             </p>
           </MotionReveal>
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
             
-            {/* Left Column: Redesigned Consultation Form (7 Cols) */}
+            {/* Left Column: Showroom Tour Form (7 Cols) */}
             <MotionReveal direction="right" className="lg:col-span-7 flex">
               <div className="bg-white border border-[#e8e2d9] rounded-3xl p-6 sm:p-10 shadow-sm w-full flex flex-col justify-between">
                 <div>
                   <div className="flex items-center gap-2 mb-6">
                     <Sparkles className="w-4 h-4 text-[#9b7842]" />
                     <span className="text-xs uppercase tracking-widest text-[#9b7842] font-bold">
-                      Personalized Consultation
+                      Showroom Tour
                     </span>
                   </div>
 
@@ -1218,7 +1201,7 @@ export default function HomePage() {
                             <input
                               type="email"
                               required
-                              placeholder="name@architect.com"
+                              placeholder="name@example.com"
                               value={bookingData.email}
                               onChange={(e) => setBookingData({ ...bookingData, email: e.target.value })}
                               className="w-full bg-[#fbf9f7] border border-[#ded5cb] rounded-xl px-4 py-3 text-xs text-[#151a22] placeholder-neutral-400 focus:outline-none focus:border-[#9b7842] focus:bg-white transition-colors"
@@ -1238,7 +1221,7 @@ export default function HomePage() {
                               <option value="Luxury Penthouse">Luxury Penthouse / High-Rise</option>
                               <option value="Hospitality Resort">Hospitality Resort / Hotel</option>
                               <option value="Commercial Landmark">Commercial Complex / Office</option>
-                              <option value="Architectural Practice">Architect / Interior Practice</option>
+                              <option value="Interior Design Studio">Interior Design Studio / Private Client</option>
                             </select>
                           </div>
                         </div>

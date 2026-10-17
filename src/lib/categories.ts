@@ -116,7 +116,7 @@ export const CATEGORIES: Category[] = [
     name: "Shower Enclosures",
     slug: "shower-enclosures",
     shortDescription: "Frameless 10mm toughened glass walk-ins, sliding & pivot enclosures.",
-    description: "Constructed with nano-coated anti-limescale glass, solid brass hinges, magnetic seals, and ultra-slim architectural floor profiles.",
+    description: "Constructed with nano-coated anti-limescale glass, solid brass hinges, magnetic seals, and ultra-slim floor profiles.",
     image: "https://res.cloudinary.com/dtk1pspib/image/upload/v1788760660/parkash-ceramics/shower.jpg",
     featured: false,
     itemCount: 30,

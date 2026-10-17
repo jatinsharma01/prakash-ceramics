@@ -163,7 +163,7 @@ export default function AdminOrdersPage() {
             Client Order Management
           </h1>
           <p className="text-stone-300 text-xs sm:text-sm">
-            Track luxury bathware dispatches, verified bank wires, and architect consignments.
+            Track luxury bathware dispatches, verified bank wires, and client consignments.
           </p>
         </div>
 

@@ -190,7 +190,7 @@ export default function BlogDetailClient({ blog, relatedBlogs }: BlogDetailClien
                   </div>
                   <div>
                     <div className="text-sm font-semibold text-white">{blog.author}</div>
-                    <div className="text-xs text-stone-300">{blog.authorRole || "Senior Architectural Contributor"}</div>
+                    <div className="text-xs text-stone-300">{blog.authorRole || "Senior Design Specialist"}</div>
                   </div>
                 </div>
 
@@ -274,7 +274,7 @@ export default function BlogDetailClient({ blog, relatedBlogs }: BlogDetailClien
                 </div>
               )}
 
-              {/* Architectural Advisory Banner */}
+              {/* Design Advisory Banner */}
               <div className="mt-12 p-6 sm:p-8 rounded-2xl bg-gradient-to-br from-[#121620] via-[#1a202c] to-[#121620] text-white space-y-4 border border-[#2d3748]/60 shadow-xl">
                 <div className="flex items-center gap-2">
                   <Sparkles className="w-4 h-4 text-[#dec49a]" />
@@ -286,7 +286,7 @@ export default function BlogDetailClient({ blog, relatedBlogs }: BlogDetailClien
                   Interested in incorporating these finishes into your residential project?
                 </h4>
                 <p className="text-xs sm:text-sm text-stone-300 font-light leading-relaxed">
-                  Our engineering team assists architects, builders, and homeowners with pressure balancing calculations, finish matching, and CAD specifications for luxury bathroom suites.
+                  Our engineering team assists homeowners and builders with pressure balancing calculations, finish matching, and CAD specifications for luxury bathroom suites.
                 </p>
                 <div className="pt-2 flex flex-wrap items-center gap-4">
                   <Link
@@ -309,7 +309,7 @@ export default function BlogDetailClient({ blog, relatedBlogs }: BlogDetailClien
             {/* Bottom In-Article Share Bar */}
             <div className="flex flex-col sm:flex-row items-center justify-between gap-4 p-5 rounded-2xl bg-white border border-[#ede8df] shadow-xs">
               <div className="text-xs font-medium text-stone-600 text-center sm:text-left">
-                Found this architectural insight valuable? Share it with your design team:
+                Found this design insight valuable? Share it with your team:
               </div>
               <div className="flex items-center gap-2 shrink-0">
                 <button
@@ -351,32 +351,32 @@ export default function BlogDetailClient({ blog, relatedBlogs }: BlogDetailClien
                 </div>
                 <div>
                   <div className="text-base font-serif font-bold text-[#151a22]">{blog.author}</div>
-                  <div className="text-xs text-[#9b7842] font-medium">{blog.authorRole || "Senior Design Consultant"}</div>
+                  <div className="text-xs text-[#9b7842] font-medium">{blog.authorRole || "Senior Design Specialist"}</div>
                   <div className="text-[11px] text-stone-500 font-mono mt-0.5">Prakash Ceramics Editorial</div>
                 </div>
               </div>
               <p className="text-xs text-stone-600 leading-relaxed border-t border-[#ede8df] pt-3">
-                Curating cutting-edge architectural trends, sanitaryware technology, and wellness fixture innovations for premier residences across India.
+                Curating cutting-edge bathroom trends, sanitaryware technology, and wellness fixture innovations for premier residences.
               </p>
             </div>
 
-            {/* Quick Consultation Card */}
+            {/* Quick Advisory Card */}
             <div className="rounded-3xl bg-gradient-to-br from-[#faf8f5] to-[#f4eee6] border border-[#e5decb] p-6 shadow-xs space-y-3">
               <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#9b7842]">
                 <Building2 className="w-4 h-4 text-[#9b7842]" />
-                <span>Trade &amp; Architecture Desk</span>
+                <span>Trade &amp; Project Desk</span>
               </div>
               <h5 className="text-base font-serif font-bold text-[#151a22]">
-                Need CAD drawings or physical finish samples?
+                Need product cut-sheets or physical finish samples?
               </h5>
               <p className="text-xs text-stone-600 leading-relaxed">
-                Connect directly with our showroom specification advisors for bathroom layout consultations and bulk quotes.
+                Connect directly with our showroom advisors for bathroom layouts and bulk quotes.
               </p>
               <Link
                 href="/contact"
                 className="mt-2 w-full inline-flex items-center justify-center gap-2 bg-[#121620] hover:bg-[#1a202c] text-white text-xs font-semibold py-2.5 px-4 rounded-xl transition-all cursor-pointer"
               >
-                <span>Book Showroom Consultation</span>
+                <span>Visit Showroom</span>
                 <ChevronRight className="w-3.5 h-3.5" />
               </Link>
             </div>
@@ -391,7 +391,7 @@ export default function BlogDetailClient({ blog, relatedBlogs }: BlogDetailClien
                   href="/products?category=Faucets"
                   className="flex items-center justify-between p-2.5 rounded-xl hover:bg-[#faf8f6] text-stone-700 hover:text-[#9b7842] transition-colors group"
                 >
-                  <span className="font-medium">Architectural Faucets &amp; Mixers</span>
+                  <span className="font-medium">Luxury Faucets &amp; Mixers</span>
                   <ChevronRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform text-stone-400" />
                 </Link>
                 <Link
@@ -430,7 +430,7 @@ export default function BlogDetailClient({ blog, relatedBlogs }: BlogDetailClien
               <div>
                 <span className="text-xs font-bold uppercase tracking-widest text-[#9b7842]">Editorial Archive</span>
                 <h3 className="text-2xl sm:text-3xl font-serif font-bold text-[#151a22] mt-1">
-                  Related Architecture Stories
+                  Related Design Stories
                 </h3>
               </div>
               <Link

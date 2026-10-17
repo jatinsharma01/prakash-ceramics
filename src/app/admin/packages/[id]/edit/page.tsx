@@ -21,7 +21,12 @@ import {
   Check,
   Percent,
   Upload,
-  X
+  X,
+  Building2,
+  FolderOpen,
+  Search,
+  Filter,
+  ChevronRight
 } from "lucide-react";
 import { PackageItem, BathroomPackage } from "@/lib/packages";
 import { PRODUCTS } from "@/lib/products";
@@ -74,10 +79,13 @@ export default function EditPackagePage({ params }: { params: Promise<{ id: stri
   const [autoSyncPrice, setAutoSyncPrice] = useState<boolean>(false);
   const [items, setItems] = useState<PackageItem[]>([]);
 
-  // Product Ingestion Picker State (Step-by-step for adding new product)
+  // Hierarchical Product Selector State (Brand -> Category -> Product)
+  const [selectedBrand, setSelectedBrand] = useState<string>("");
+  const [selectedCategory, setSelectedCategory] = useState<string>("");
   const [selectedCatalogProductId, setSelectedCatalogProductId] = useState<string>("");
   const [selectedFinishDetail, setSelectedFinishDetail] = useState<FinishDetail | null>(null);
   const [customRole, setCustomRole] = useState<string>("");
+  const [productSearchQuery, setProductSearchQuery] = useState<string>("");
 
   // Load catalog products and package data
   useEffect(() => {
@@ -221,10 +229,11 @@ export default function EditPackagePage({ params }: { params: Promise<{ id: stri
 
     setItems((prev) => [...prev, newFixture]);
 
-    // Reset picker
+    // Reset picker, keeping brand and category selected
     setSelectedCatalogProductId("");
     setSelectedFinishDetail(null);
     setCustomRole("");
+    setProductSearchQuery("");
   };
 
   const handleItemChange = (index: number, field: keyof PackageItem, value: any) => {
@@ -265,15 +274,75 @@ export default function EditPackagePage({ params }: { params: Promise<{ id: stri
   const savings = Math.max(0, originalPrice - packagePrice);
   const discountPercent = originalPrice > 0 ? Math.round((savings / originalPrice) * 100) : 0;
 
-  const groupedProducts = useMemo(() => {
-    const groups: Record<string, Product[]> = {};
+  // Available brands derived from catalog
+  const availableBrands = useMemo(() => {
+    const brandMap = new Map<string, number>();
     catalogProducts.forEach((p) => {
-      const cat = p.category || "General";
-      if (!groups[cat]) groups[cat] = [];
-      groups[cat].push(p);
+      const b = p.brand?.trim() || "General / Other";
+      brandMap.set(b, (brandMap.get(b) || 0) + 1);
     });
-    return groups;
+    return Array.from(brandMap.entries())
+      .map(([brand, count]) => ({ brand, count }))
+      .sort((a, b) => a.brand.localeCompare(b.brand));
   }, [catalogProducts]);
+
+  // Available categories for selected brand
+  const availableCategories = useMemo(() => {
+    if (!selectedBrand) return [];
+    const catMap = new Map<string, number>();
+    catalogProducts
+      .filter((p) => (p.brand?.trim() || "General / Other") === selectedBrand)
+      .forEach((p) => {
+        const c = p.category?.trim() || "Uncategorized";
+        catMap.set(c, (catMap.get(c) || 0) + 1);
+      });
+    return Array.from(catMap.entries())
+      .map(([category, count]) => ({ category, count }))
+      .sort((a, b) => a.category.localeCompare(b.category));
+  }, [catalogProducts, selectedBrand]);
+
+  // Filtered products for selected brand & category
+  const filteredProducts = useMemo(() => {
+    if (!selectedBrand || !selectedCategory) return [];
+    return catalogProducts.filter((p) => {
+      const b = p.brand?.trim() || "General / Other";
+      const c = p.category?.trim() || "Uncategorized";
+      if (b !== selectedBrand || c !== selectedCategory) return false;
+      if (!productSearchQuery.trim()) return true;
+      const q = productSearchQuery.toLowerCase();
+      return (
+        p.name.toLowerCase().includes(q) ||
+        p.sku.toLowerCase().includes(q) ||
+        (p.subcategory && p.subcategory.toLowerCase().includes(q))
+      );
+    });
+  }, [catalogProducts, selectedBrand, selectedCategory, productSearchQuery]);
+
+  const handleBrandChange = (newBrand: string) => {
+    setSelectedBrand(newBrand);
+    setSelectedCategory("");
+    setSelectedCatalogProductId("");
+    setSelectedFinishDetail(null);
+    setCustomRole("");
+    setProductSearchQuery("");
+  };
+
+  const handleCategoryChange = (newCat: string) => {
+    setSelectedCategory(newCat);
+    setSelectedCatalogProductId("");
+    setSelectedFinishDetail(null);
+    setCustomRole("");
+    setProductSearchQuery("");
+  };
+
+  const handleResetProductPicker = () => {
+    setSelectedBrand("");
+    setSelectedCategory("");
+    setSelectedCatalogProductId("");
+    setSelectedFinishDetail(null);
+    setCustomRole("");
+    setProductSearchQuery("");
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -422,7 +491,7 @@ export default function EditPackagePage({ params }: { params: Promise<{ id: stri
                 type="text"
                 value={badge}
                 onChange={(e) => setBadge(e.target.value)}
-                placeholder="e.g. Most Popular Suite, Architect's Choice"
+                placeholder="e.g. Most Popular Suite, Signature Suite"
                 className="w-full px-4 py-2.5 bg-[#0c0f17] border border-stone-800 rounded-xl text-xs text-white placeholder-stone-600 focus:outline-none focus:border-[#9b7842]"
               />
             </div>
@@ -455,7 +524,7 @@ export default function EditPackagePage({ params }: { params: Promise<{ id: stri
 
             <div className="md:col-span-2">
               <label className="block text-xs font-semibold text-stone-300 mb-2">
-                Suite Architectural Description
+                Suite Description
               </label>
               <textarea
                 rows={3}
@@ -701,7 +770,7 @@ export default function EditPackagePage({ params }: { params: Promise<{ id: stri
               <PackageIcon className="w-4 h-4 text-[#dec49a]" />
               <div>
                 <h3 className="text-base font-serif font-bold text-white">
-                  4. Architect-Matched Products ({items.length} / 8 Max)
+                  4. Included Products ({items.length} / 8 Max)
                 </h3>
                 <p className="text-[11px] text-stone-400">
                   Select a product from the dropdown, see its color options and prices appear, pick a color, and add it into the package.
@@ -720,8 +789,9 @@ export default function EditPackagePage({ params }: { params: Promise<{ id: stri
 
           {/* STEP-BY-STEP PRODUCT SELECTOR BUILDER */}
           {items.length < 8 && (
-            <div className="p-6 rounded-2xl bg-[#0c0f17] border-2 border-dashed border-[#9b7842]/40 space-y-5">
-              <div className="flex items-center justify-between">
+            <div className="p-6 rounded-2xl bg-[#0c0f17] border-2 border-dashed border-[#9b7842]/40 space-y-6">
+              {/* Stepper Header & Breadcrumb Trail */}
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-stone-800/80">
                 <div className="flex items-center gap-2">
                   <span className="w-6 h-6 rounded-lg bg-[#9b7842] text-white text-xs font-bold flex items-center justify-center">
                     +
@@ -730,33 +800,281 @@ export default function EditPackagePage({ params }: { params: Promise<{ id: stri
                     Add Product #{items.length + 1} to Package
                   </h4>
                 </div>
-                <span className="text-[11px] text-stone-400">
-                  Step 1: Choose Product &rarr; Step 2: Pick Color Option &rarr; Step 3: Add
-                </span>
+
+                <div className="flex items-center gap-1.5 flex-wrap text-xs">
+                  <span className={`px-2.5 py-1 rounded-lg text-[11px] font-medium flex items-center gap-1 transition-colors ${
+                    selectedBrand
+                      ? "bg-[#9b7842]/20 text-[#dec49a] border border-[#9b7842]/40"
+                      : "bg-stone-900 text-stone-400 border border-stone-800"
+                  }`}>
+                    <Building2 className="w-3 h-3 text-[#dec49a]" />
+                    <span>{selectedBrand || "1. Brand"}</span>
+                  </span>
+
+                  <ChevronRight className="w-3 h-3 text-stone-600" />
+
+                  <span className={`px-2.5 py-1 rounded-lg text-[11px] font-medium flex items-center gap-1 transition-colors ${
+                    selectedCategory
+                      ? "bg-[#9b7842]/20 text-[#dec49a] border border-[#9b7842]/40"
+                      : "bg-stone-900 text-stone-500 border border-stone-800"
+                  }`}>
+                    <FolderOpen className="w-3 h-3 text-[#dec49a]" />
+                    <span>{selectedCategory || "2. Category"}</span>
+                  </span>
+
+                  <ChevronRight className="w-3 h-3 text-stone-600" />
+
+                  <span className={`px-2.5 py-1 rounded-lg text-[11px] font-medium flex items-center gap-1 transition-colors ${
+                    activeProduct
+                      ? "bg-emerald-500/20 text-emerald-300 border border-emerald-500/30"
+                      : "bg-stone-900 text-stone-500 border border-stone-800"
+                  }`}>
+                    <Box className="w-3 h-3 text-emerald-400" />
+                    <span>{activeProduct ? activeProduct.name.slice(0, 24) + "..." : "3. Product"}</span>
+                  </span>
+
+                  {(selectedBrand || selectedCategory || selectedCatalogProductId) && (
+                    <button
+                      type="button"
+                      onClick={handleResetProductPicker}
+                      className="ml-2 text-[11px] text-stone-400 hover:text-white underline cursor-pointer"
+                    >
+                      Reset Filters
+                    </button>
+                  )}
+                </div>
               </div>
 
-              {/* Step 1: All Products Dropdown */}
-              <div className="space-y-1.5">
-                <label className="block text-xs font-semibold text-stone-300">
-                  Step 1: Select Product from Catalog <span className="text-red-400">*</span>
-                </label>
-                <select
-                  value={selectedCatalogProductId}
-                  onChange={(e) => handleSelectCatalogProduct(e.target.value)}
-                  className="w-full px-4 py-3 bg-[#141822] border border-stone-700 rounded-xl text-xs text-white focus:outline-none focus:border-[#9b7842] cursor-pointer"
-                >
-                  <option value="">-- Click here to select a product from catalog --</option>
-                  {Object.entries(groupedProducts).map(([cat, prods]) => (
-                    <optgroup key={cat} label={`📂 ${cat}`}>
-                      {prods.map((p) => (
-                        <option key={p.id} value={p.id}>
-                          {p.name} ({p.sku}) — Base: ₹{p.price.toLocaleString("en-IN")}
-                        </option>
-                      ))}
-                    </optgroup>
-                  ))}
-                </select>
+              {/* 3-Tier Cascading Selector: Brand -> Category -> Product */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                
+                {/* 1. BRAND SELECTOR */}
+                <div className="space-y-2 p-3.5 rounded-xl bg-[#141822]/80 border border-stone-800">
+                  <div className="flex items-center justify-between">
+                    <label className="text-xs font-semibold text-stone-200 flex items-center gap-1.5">
+                      <span className="w-4 h-4 rounded-full bg-[#9b7842]/30 text-[#dec49a] text-[10px] font-bold flex items-center justify-center">
+                        1
+                      </span>
+                      <span>Brand</span>
+                      <span className="text-red-400">*</span>
+                    </label>
+                    <span className="text-[10px] text-stone-500 font-mono">
+                      {availableBrands.length} Available
+                    </span>
+                  </div>
+
+                  <select
+                    value={selectedBrand}
+                    onChange={(e) => handleBrandChange(e.target.value)}
+                    className={`w-full px-3 py-2.5 bg-[#0c0f17] border rounded-xl text-xs text-white focus:outline-none transition-all cursor-pointer ${
+                      selectedBrand ? "border-[#9b7842] ring-1 ring-[#9b7842]/30" : "border-stone-700 hover:border-stone-600"
+                    }`}
+                  >
+                    <option value="">-- Select Brand --</option>
+                    {availableBrands.map(({ brand, count }) => (
+                      <option key={brand} value={brand}>
+                        {brand} ({count} {count === 1 ? "product" : "products"})
+                      </option>
+                    ))}
+                  </select>
+
+                  {/* Brand quick pills */}
+                  {availableBrands.length > 0 && (
+                    <div className="flex flex-wrap gap-1.5 pt-1">
+                      {availableBrands.map(({ brand, count }) => {
+                        const isChosen = selectedBrand === brand;
+                        return (
+                          <button
+                            key={brand}
+                            type="button"
+                            onClick={() => handleBrandChange(brand)}
+                            className={`text-[10px] px-2.5 py-1 rounded-lg border transition-all cursor-pointer ${
+                              isChosen
+                                ? "bg-[#9b7842] text-white border-[#9b7842] shadow-sm font-semibold"
+                                : "bg-[#0c0f17] border-stone-800 text-stone-400 hover:text-stone-200 hover:border-stone-700"
+                            }`}
+                          >
+                            {brand} <span className="opacity-70 font-mono">({count})</span>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
+
+                {/* 2. CATEGORY SELECTOR */}
+                <div className={`space-y-2 p-3.5 rounded-xl border transition-all ${
+                  !selectedBrand 
+                    ? "bg-[#141822]/40 border-stone-800/50 opacity-60" 
+                    : "bg-[#141822]/80 border-stone-800"
+                }`}>
+                  <div className="flex items-center justify-between">
+                    <label className="text-xs font-semibold text-stone-200 flex items-center gap-1.5">
+                      <span className="w-4 h-4 rounded-full bg-[#9b7842]/30 text-[#dec49a] text-[10px] font-bold flex items-center justify-center">
+                        2
+                      </span>
+                      <span>Category</span>
+                      <span className="text-red-400">*</span>
+                    </label>
+                    {selectedBrand && (
+                      <span className="text-[10px] text-stone-500 font-mono">
+                        {availableCategories.length} Categories
+                      </span>
+                    )}
+                  </div>
+
+                  <select
+                    value={selectedCategory}
+                    disabled={!selectedBrand}
+                    onChange={(e) => handleCategoryChange(e.target.value)}
+                    className={`w-full px-3 py-2.5 bg-[#0c0f17] border rounded-xl text-xs text-white focus:outline-none transition-all cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed ${
+                      selectedCategory ? "border-[#9b7842] ring-1 ring-[#9b7842]/30" : "border-stone-700 hover:border-stone-600"
+                    }`}
+                  >
+                    <option value="">
+                      {!selectedBrand ? "-- First select a brand --" : "-- Select Category --"}
+                    </option>
+                    {availableCategories.map(({ category, count }) => (
+                      <option key={category} value={category}>
+                        {category} ({count} {count === 1 ? "product" : "products"})
+                      </option>
+                    ))}
+                  </select>
+
+                  {/* Category quick pills */}
+                  {selectedBrand && availableCategories.length > 0 && (
+                    <div className="flex flex-wrap gap-1.5 pt-1">
+                      {availableCategories.map(({ category, count }) => {
+                        const isChosen = selectedCategory === category;
+                        return (
+                          <button
+                            key={category}
+                            type="button"
+                            onClick={() => handleCategoryChange(category)}
+                            className={`text-[10px] px-2.5 py-1 rounded-lg border transition-all cursor-pointer ${
+                              isChosen
+                                ? "bg-[#9b7842] text-white border-[#9b7842] shadow-sm font-semibold"
+                                : "bg-[#0c0f17] border-stone-800 text-stone-400 hover:text-stone-200 hover:border-stone-700"
+                            }`}
+                          >
+                            {category} <span className="opacity-70 font-mono">({count})</span>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
+
+                {/* 3. PRODUCT SELECTOR */}
+                <div className={`space-y-2 p-3.5 rounded-xl border transition-all ${
+                  !selectedCategory 
+                    ? "bg-[#141822]/40 border-stone-800/50 opacity-60" 
+                    : "bg-[#141822]/80 border-stone-800"
+                }`}>
+                  <div className="flex items-center justify-between">
+                    <label className="text-xs font-semibold text-stone-200 flex items-center gap-1.5">
+                      <span className="w-4 h-4 rounded-full bg-[#9b7842]/30 text-[#dec49a] text-[10px] font-bold flex items-center justify-center">
+                        3
+                      </span>
+                      <span>Product</span>
+                      <span className="text-red-400">*</span>
+                    </label>
+                    {selectedCategory && (
+                      <span className="text-[10px] text-stone-500 font-mono">
+                        {filteredProducts.length} Available
+                      </span>
+                    )}
+                  </div>
+
+                  <select
+                    value={selectedCatalogProductId}
+                    disabled={!selectedCategory || filteredProducts.length === 0}
+                    onChange={(e) => handleSelectCatalogProduct(e.target.value)}
+                    className={`w-full px-3 py-2.5 bg-[#0c0f17] border rounded-xl text-xs text-white focus:outline-none transition-all cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed ${
+                      selectedCatalogProductId ? "border-[#9b7842] ring-1 ring-[#9b7842]/30" : "border-stone-700 hover:border-stone-600"
+                    }`}
+                  >
+                    <option value="">
+                      {!selectedBrand
+                        ? "-- Select brand first --"
+                        : !selectedCategory
+                        ? "-- Select category first --"
+                        : filteredProducts.length === 0
+                        ? "-- No products found --"
+                        : `-- Choose Product (${filteredProducts.length}) --`}
+                    </option>
+                    {filteredProducts.map((p) => (
+                      <option key={p.id} value={p.id}>
+                        {p.name} ({p.sku}) — Base: ₹{p.price.toLocaleString("en-IN")}
+                      </option>
+                    ))}
+                  </select>
+
+                  {/* Filter input if multiple products */}
+                  {selectedCategory && filteredProducts.length > 3 && (
+                    <div className="pt-1">
+                      <div className="relative">
+                        <input
+                          type="text"
+                          value={productSearchQuery}
+                          onChange={(e) => setProductSearchQuery(e.target.value)}
+                          placeholder="Filter products by name or SKU..."
+                          className="w-full pl-7 pr-3 py-1 bg-[#0c0f17] border border-stone-800 rounded-lg text-[11px] text-stone-300 placeholder-stone-600 focus:outline-none focus:border-[#9b7842]"
+                        />
+                        <Search className="w-3 h-3 text-stone-500 absolute left-2 top-2" />
+                      </div>
+                    </div>
+                  )}
+                </div>
               </div>
+
+              {/* Visual Product Grid: Click directly to select product */}
+              {selectedBrand && selectedCategory && !selectedCatalogProductId && (
+                <div className="space-y-2.5 pt-2 border-t border-stone-800/80 animate-in fade-in duration-200">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[11px] font-semibold text-stone-300 flex items-center gap-1.5">
+                      <span>Click to select product from</span>
+                      <span className="text-[#dec49a] font-bold">{selectedBrand}</span>
+                      <span>&rsaquo;</span>
+                      <span className="text-[#dec49a] font-bold">{selectedCategory}</span>:
+                    </span>
+                    <span className="text-[10px] text-stone-500 font-mono">
+                      {filteredProducts.length} items
+                    </span>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 max-h-80 overflow-y-auto pr-1">
+                    {filteredProducts.map((p) => {
+                      const thumb = p.images?.[0];
+                      return (
+                        <button
+                          key={p.id}
+                          type="button"
+                          onClick={() => handleSelectCatalogProduct(p.id)}
+                          className="p-3 rounded-xl bg-[#141822] border border-stone-800 hover:border-[#dec49a]/70 hover:bg-[#182030] transition-all text-left flex items-center gap-3 group cursor-pointer"
+                        >
+                          <div className="w-12 h-12 rounded-lg bg-[#0c0f17] border border-stone-800 shrink-0 overflow-hidden flex items-center justify-center p-1">
+                            {thumb ? (
+                              <img src={thumb} alt={p.name} className="w-full h-full object-contain group-hover:scale-105 transition-transform" />
+                            ) : (
+                              <Box className="w-5 h-5 text-stone-600" />
+                            )}
+                          </div>
+                          <div className="min-w-0 flex-1">
+                            <div className="text-xs font-bold text-white truncate group-hover:text-[#dec49a] transition-colors">
+                              {p.name}
+                            </div>
+                            <div className="text-[10px] text-stone-400 font-mono truncate">{p.sku}</div>
+                            <div className="text-[11px] font-bold text-[#dec49a] mt-0.5">
+                              ₹{p.price.toLocaleString("en-IN")}
+                            </div>
+                          </div>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
 
               {/* Step 2: Product Selected -> Show Color Options & Prices */}
               {activeProduct && (

@@ -197,7 +197,7 @@ function BestsellersContent({ initialProducts }: BestsellersClientProps) {
                 Best Sellers Collection
               </h1>
               <p className="text-xs sm:text-sm text-[#6b7280] mt-2 max-w-2xl leading-relaxed">
-                See the faucets, showers, bathtubs, and sanitaryware products our customers choose most for their homes and luxury architectural projects.
+                See the faucets, showers, bathtubs, and sanitaryware products our customers choose most for their homes and luxury projects.
               </p>
             </div>
 

@@ -54,7 +54,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(
       {
         success: true,
-        message: "Consultation request recorded successfully! Our team will reach out soon.",
+        message: "Request recorded successfully! Our team will reach out soon.",
         enquiry,
       },
       { status: 201 }

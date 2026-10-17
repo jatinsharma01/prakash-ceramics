@@ -35,105 +35,62 @@ const NAV_ITEMS = [
     label: "Dashboard",
     href: "/admin",
     icon: LayoutDashboard,
-    badge: null,
   },
   {
     label: "Products",
     href: "/admin/products",
     icon: Package,
-    badge: null,
   },
   {
     label: "Categories",
     href: "/admin/categories",
     icon: LayoutGrid,
-    badge: null,
   },
   {
     label: "Brands",
     href: "/admin/brands",
     icon: Award,
-    badge: "8 Active",
-    badgeColor: "bg-[#9b7842]/20 text-[#dec49a] border border-[#9b7842]/40",
   },
   {
     label: "Bathroom Packages",
     href: "/admin/packages",
     icon: Layers,
-    badge: "Suites",
-    badgeColor: "bg-emerald-500/20 text-emerald-300 border border-emerald-500/30",
   },
   {
     label: "Orders",
     href: "/admin/orders",
     icon: ShoppingCart,
-    badge: "6 New",
-    badgeColor: "bg-emerald-500/20 text-emerald-400 border border-emerald-500/30",
   },
   {
     label: "Enquiries",
     href: "/admin/enquiries",
     icon: MessageSquareText,
-    badge: "New Leads",
-    badgeColor: "bg-amber-500/20 text-amber-300 border border-amber-500/30",
   },
   {
     label: "Customers",
     href: "/admin/users",
     icon: Users,
-    badge: "1.2k",
   },
   {
     label: "Coupons & Offers",
     href: "/admin/coupons",
     icon: Tag,
-    badge: "4 Active",
   },
   {
     label: "SEO & Metadata",
     href: "/admin/seo",
     icon: Globe,
-    badge: "Meta",
-    badgeColor: "bg-blue-500/20 text-blue-300 border border-blue-500/30",
   },
   {
     label: "Blogs",
     href: "/admin/blogs",
     icon: BookOpen,
-    badge: "Editorial",
-    badgeColor: "bg-[#9b7842]/20 text-[#dec49a] border border-[#9b7842]/40",
   },
-  // {
-  //   label: "Sales & Analytics",
-  //   href: "/admin/sales",
-  //   icon: TrendingUp,
-  //   badge: null,
-  // },
 ];
 
 export function AdminSidebar() {
   const pathname = usePathname();
   const [isMobileOpen, setIsMobileOpen] = useState(false);
-  const [newEnquiryCount, setNewEnquiryCount] = useState<number | null>(null);
-
-  useEffect(() => {
-    let isMounted = true;
-    async function loadCount() {
-      try {
-        const res = await fetch("/api/enquiries?status=new");
-        if (res.ok) {
-          const data = await res.json();
-          if (isMounted && typeof data.count === "number") {
-            setNewEnquiryCount(data.count);
-          }
-        }
-      } catch {}
-    }
-    loadCount();
-    return () => {
-      isMounted = false;
-    };
-  }, [pathname]);
 
   const isActive = (href: string) => {
     if (href === "/admin") {
@@ -214,43 +171,19 @@ export function AdminSidebar() {
               href={item.href}
               onClick={() => setIsMobileOpen(false)}
               className={clsx(
-                "flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-medium transition-all group",
+                "flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-medium transition-all group",
                 active
                   ? "bg-gradient-to-r from-[#9b7842] to-[#836433] text-white shadow-md shadow-[#9b7842]/20 font-semibold"
                   : "text-stone-300 hover:text-white hover:bg-stone-800/60"
               )}
             >
-              <div className="flex items-center gap-3">
-                <Icon
-                  className={clsx(
-                    "w-4 h-4 transition-colors",
-                    active ? "text-white" : "text-stone-300 group-hover:text-[#dec49a]"
-                  )}
-                />
-                <span>{item.label}</span>
-              </div>
-
-              {(() => {
-                const badgeText =
-                  item.href === "/admin/enquiries" && newEnquiryCount !== null
-                    ? `${newEnquiryCount} New`
-                    : item.badge;
-
-                if (!badgeText) return null;
-
-                return (
-                  <span
-                    className={clsx(
-                      "text-[10px] px-2 py-0.5 rounded-full font-semibold",
-                      active
-                        ? "bg-black/30 text-white"
-                        : item.badgeColor || "bg-stone-800 text-stone-300 border border-stone-700"
-                    )}
-                  >
-                    {badgeText}
-                  </span>
-                );
-              })()}
+              <Icon
+                className={clsx(
+                  "w-4 h-4 transition-colors",
+                  active ? "text-white" : "text-stone-300 group-hover:text-[#dec49a]"
+                )}
+              />
+              <span>{item.label}</span>
             </Link>
           );
         })}

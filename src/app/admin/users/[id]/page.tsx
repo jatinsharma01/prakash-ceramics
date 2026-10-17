@@ -730,7 +730,7 @@ export default function AdminUserDetailPage({
                       <div className="min-w-0">
                         <div className="flex items-center gap-2">
                           <p className="font-semibold text-white text-sm truncate">
-                            {prod.name || "Custom Architectural Fixture"}
+                            {prod.name || "Custom Luxury Fixture"}
                           </p>
                           {prod.category && (
                             <span className="text-[10px] px-2 py-0.5 rounded-full bg-stone-800 text-stone-300 font-medium">
@@ -801,7 +801,7 @@ export default function AdminUserDetailPage({
                 <span>Saved Wishlist ({wishlistCount} Products)</span>
               </h3>
               <p className="text-xs text-stone-400 mt-0.5">
-                Curated architectural fixtures and bathroom fittings saved to wishlist in database for {user.name}.
+                Curated luxury fixtures and bathroom fittings saved to wishlist in database for {user.name}.
               </p>
             </div>
             <div className="flex items-center gap-3">
@@ -838,7 +838,7 @@ export default function AdminUserDetailPage({
 
                       <div>
                         <h4 className="font-semibold text-white text-sm line-clamp-1">
-                          {prod.name || "Architectural Product"}
+                          {prod.name || "Luxury Product"}
                         </h4>
                         <p className="text-xs text-stone-400 mt-1 line-clamp-2 leading-relaxed">
                           {prod.tagline || prod.description || "Luxury precision bathroom fitting"}
@@ -888,7 +888,7 @@ export default function AdminUserDetailPage({
             <div>
               <h3 className="text-lg font-bold text-white">Saved Project & Delivery Sites</h3>
               <p className="text-xs text-stone-400">
-                Architectural sites, residences, and project addresses registered under {user.name}&apos;s profile.
+                Project sites, residences, and addresses registered under {user.name}&apos;s profile.
               </p>
             </div>
             <span className="text-xs font-semibold px-3 py-1 rounded-full bg-stone-800 text-[#dec49a] border border-stone-700">
@@ -987,7 +987,7 @@ export default function AdminUserDetailPage({
                 <span className="font-semibold text-white">{user.city}</span>
               </div>
               <div className="p-3.5 rounded-2xl bg-stone-900/60 border border-stone-800/80 flex items-center justify-between">
-                <span className="text-stone-400">Studio / Architectural Firm</span>
+                <span className="text-stone-400">Studio / Design Firm</span>
                 <span className="font-semibold text-white">{user.company || "Individual Client"}</span>
               </div>
             </div>

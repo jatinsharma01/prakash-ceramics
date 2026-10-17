@@ -237,7 +237,7 @@ export default function AdminCategoriesPage() {
               </div>
               <div>
                 <h1 className="text-2xl font-bold tracking-tight text-white font-serif">
-                  Category Architecture
+                  Category Directory
                 </h1>
                 <p className="text-xs text-stone-400 mt-0.5">
                   Organize and expand your product departments across bathroom fittings, wellness & sanitaryware.
@@ -555,7 +555,7 @@ export default function AdminCategoriesPage() {
                     rows={2}
                     value={formData.description}
                     onChange={(e) => setFormData((prev) => ({ ...prev, description: e.target.value }))}
-                    placeholder="Extended architectural overview of this department..."
+                    placeholder="Extended overview of this product department..."
                     className="w-full bg-[#1c222c] border border-stone-700 text-xs text-white placeholder-stone-400 p-4 rounded-xl focus:border-[#9b7842] focus:outline-hidden"
                   />
                 </div>

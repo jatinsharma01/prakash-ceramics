@@ -49,7 +49,7 @@ export default function ContactPage() {
       const data = await res.json();
 
       if (!res.ok) {
-        throw new Error(data.message || "Failed to submit consultation request");
+        throw new Error(data.message || "Failed to submit request");
       }
 
       setSubmitted(true);
@@ -81,13 +81,13 @@ export default function ContactPage() {
         <div className="max-w-[1600px] mx-auto px-4 sm:px-8 lg:px-12 text-center">
           <MotionReveal direction="up">
             <span className="text-xs uppercase tracking-[0.25em] text-[#9b7842] font-semibold block mb-2">
-              Flagship Experience Center & Architectural Support
+              Flagship Experience Center & Support
             </span>
             <h1 className="text-3xl sm:text-5xl font-serif font-semibold text-[#151a22] tracking-tight mb-4">
               Connect With Our Bath Concierge
             </h1>
             <p className="text-xs sm:text-sm text-[#6b7280] max-w-xl mx-auto leading-relaxed">
-              Visit our state-of-the-art live water experience center, consult with technical sanitaryware advisors, or request a custom architectural project quote.
+              Visit our state-of-the-art live water experience center or request a custom project quote.
             </p>
           </MotionReveal>
         </div>
@@ -117,7 +117,7 @@ export default function ContactPage() {
                   <MapPin className="w-4 h-4 text-[#9b7842] shrink-0 mt-0.5" />
                   <div>
                     <strong className="text-[#151a22] block">Prakash Ceramics Experience Center</strong>
-                    <p className="text-[#6b7280] mt-0.5">Plot No. 42, Marble Market Avenue, Main Bath Boulevard, New Delhi / NCR, India</p>
+                    <p className="text-[#6b7280] mt-0.5">No 647, Whitefield Main Rd, nearby Cloudnine Hospital, Palm Meadows, Siddapura, Whitefield, Bengaluru, Karnataka 560066</p>
                   </div>
                 </div>
 
@@ -140,7 +140,7 @@ export default function ContactPage() {
                   <Clock className="w-4 h-4 text-[#9b7842] shrink-0 mt-0.5" />
                   <div>
                     <p className="text-[#151a22] font-semibold">Monday – Saturday: 10:00 AM – 8:00 PM</p>
-                    <p className="text-[#6b7280]">Sunday: By Exclusive Architect Appointment</p>
+                    <p className="text-[#6b7280]">Sunday: By Prior Appointment</p>
                   </div>
                 </div>
               </div>
@@ -171,19 +171,19 @@ export default function ContactPage() {
           </MotionReveal>
 
           {/* Right Column: Appointment & Quote Request Form (7 Cols) */}
-          <MotionReveal direction="left" id="consultation" className="lg:col-span-7">
+          <MotionReveal direction="left" id="visit-form" className="lg:col-span-7">
             <div className="bg-white border border-[#dec49a] rounded-3xl p-8 sm:p-12 shadow-sm relative">
               
               <div className="flex items-center gap-2 text-xs uppercase tracking-[0.25em] text-[#9b7842] font-semibold mb-2">
                 <Calendar className="w-3.5 h-3.5" />
-                <span>Private Consultation</span>
+                <span>Showroom Visit & Enquiries</span>
               </div>
 
               <h2 className="text-2xl sm:text-3xl font-serif font-semibold text-[#151a22] mb-2">
-                Book A Technical Bath Consultation
+                Book A Showroom Visit or Request A Quote
               </h2>
               <p className="text-xs sm:text-sm text-[#6b7280] mb-8">
-                Fill in your project scope below. Our sanitaryware architects will prepare customized CAD specs and product samples.
+                Fill in your project requirements below. Our team will prepare customized recommendations and product samples.
               </p>
 
               <AnimatePresence mode="wait">
@@ -200,7 +200,7 @@ export default function ContactPage() {
                       Appointment Request Received
                     </h3>
                     <p className="text-xs text-emerald-700 max-w-sm mx-auto leading-relaxed">
-                      Thank you! A dedicated Prakash Ceramics luxury bath consultant will contact you via WhatsApp and phone to confirm your schedule.
+                      Thank you! A dedicated Prakash Ceramics luxury bath specialist will contact you via WhatsApp and phone to confirm your schedule.
                     </p>
                   </motion.div>
                 ) : (
@@ -243,7 +243,7 @@ export default function ContactPage() {
                         <input
                           type="email"
                           required
-                          placeholder="name@architecture.com"
+                          placeholder="name@example.com"
                           value={formData.email}
                           onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                           className="w-full bg-[#fbf9f5] border border-[#e5e0d8] rounded-xl px-4 py-3 text-xs text-[#151a22] placeholder-neutral-400 focus:outline-none focus:border-[#9b7842]"
@@ -263,14 +263,14 @@ export default function ContactPage() {
                           <option value="Luxury Penthouse">Luxury Penthouse / High-Rise Apartment</option>
                           <option value="Hospitality Resort">Hospitality Resort / Boutique Hotel</option>
                           <option value="Commercial Landmark">Commercial Complex / Corporate Office</option>
-                          <option value="Architectural Design Firm">Architect / Interior Design Practice</option>
+                          <option value="Interior Design Studio">Interior Design Studio / Private Client</option>
                         </select>
                       </div>
                     </div>
 
                     <div>
                       <label className="text-xs font-semibold text-[#374151] block mb-1.5">
-                        Preferred Tour / Consultation Date
+                        Preferred Tour / Visit Date
                       </label>
                       <input
                         type="date"
@@ -315,7 +315,7 @@ export default function ContactPage() {
                       ) : (
                         <>
                           <Send className="w-4 h-4 text-[#8c7764]" />
-                          <span>Submit Consultation Request</span>
+                          <span>Submit Request</span>
                         </>
                       )}
                     </motion.button>
@@ -340,7 +340,7 @@ export default function ContactPage() {
                   Jaquar Authorized Dealer - Prakash Ceramics
                 </h3>
                 <p className="text-xs sm:text-sm text-[#6b7280] mt-1">
-                  Experience live water display zones, sanitaryware collections, and architectural bath fittings.
+                  Experience live water display zones, sanitaryware collections, and luxury bath fittings.
                 </p>
               </div>
 

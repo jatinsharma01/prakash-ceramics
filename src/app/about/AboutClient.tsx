@@ -63,7 +63,7 @@ export default function AboutClient() {
             transition={{ duration: 0.7, delay: 0.3 }}
             className="text-base sm:text-lg text-neutral-200 max-w-2xl font-normal leading-relaxed"
           >
-            Prakash Ceramics was founded with a singular purpose: to elevate bathing from a daily routine into an architectural and sensory ritual of well-being.
+            Prakash Ceramics was founded with a singular purpose: to elevate bathing from a daily routine into a luxurious and sensory ritual of well-being.
           </motion.p>
         </div>
       </div>
@@ -84,14 +84,14 @@ export default function AboutClient() {
               At Prakash Ceramics, every curve, valve, and ceramic contour is sculpted with obsessive attention to fluid mechanics and tactile ergonomics. We believe luxury is not merely decorative — it is the effortless glide of a ceramic cartridge, the silent cascade of aerated rainfall, and the warmth of perfectly calibrated thermostatic water.
             </p>
             <p className="text-sm text-[#374151] leading-relaxed">
-              Our products are specified across India’s most prestigious private villas, luxury penthouses, boutique wellness resorts, and commercial architectural landmarks.
+              Our products are specified for prestigious private villas, luxury penthouses, boutique wellness resorts, and fine residences.
             </p>
           </MotionReveal>
 
           <MotionReveal direction="left" className="relative aspect-[4/3] rounded-3xl overflow-hidden border border-[#d8d2c6] shadow-xl bg-white">
             <ProductImage
               src="https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&q=80&w=1200"
-              alt="Prakash Ceramics Architectural Bath Suite"
+              alt="Prakash Ceramics Luxury Bath Suite"
               fill
               className="object-cover"
               sizes="50vw"
@@ -160,13 +160,13 @@ export default function AboutClient() {
                 The Prakash Ceramics Experience Center
               </h2>
               <p className="text-xs sm:text-sm text-[#4b5563] leading-relaxed mb-6">
-                Explore fully plumbed live hydrotherapy showers, test pneumatic whirlpool bathtubs, and step inside real Canadian red cedar sauna cabins. Our senior project architects are on hand to review floor plans and recommend ideal rough-in placements.
+                Explore fully plumbed live hydrotherapy showers, test pneumatic whirlpool bathtubs, and step inside real Canadian red cedar sauna cabins. Our experienced product specialists are on hand to guide you and recommend ideal rough-in placements.
               </p>
 
               <div className="space-y-3 text-xs text-[#4b5563] mb-8 font-medium">
-                <div className="flex items-center gap-3">
-                  <MapPin className="w-4 h-4 text-[#9b7842] shrink-0" />
-                  <span>Flagship Experience Center, Marble Market & Bath Boulevard</span>
+                <div className="flex items-start gap-3">
+                  <MapPin className="w-4 h-4 text-[#9b7842] shrink-0 mt-0.5" />
+                  <span>No 647, Whitefield Main Rd, nearby Cloudnine Hospital, Palm Meadows, Siddapura, Whitefield, Bengaluru, Karnataka 560066</span>
                 </div>
                 <div className="flex items-center gap-3">
                   <Clock className="w-4 h-4 text-[#9b7842] shrink-0" />

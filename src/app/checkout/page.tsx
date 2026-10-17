@@ -516,7 +516,7 @@ export default function CheckoutPage() {
                       <option value="Residential Villa / Master Bath">Residential Villa / Master Bath</option>
                       <option value="Luxury Penthouse / Apartment">Luxury Penthouse / Apartment</option>
                       <option value="Commercial Resort / Hotel">Commercial Resort / Hotel</option>
-                      <option value="Architect & Interior Design Firm">Architect & Interior Firm</option>
+                      <option value="Design & Interior Firm">Interior Design Firm</option>
                     </select>
                   </div>
                 </div>
@@ -677,10 +677,6 @@ export default function CheckoutPage() {
                   <span>-₹{discountAmount.toLocaleString("en-IN")}</span>
                 </div>
               )}
-              <div className="flex justify-between text-[#4b5563]">
-                <span>Insured Packaging & Freight</span>
-                <span className="text-emerald-700 font-bold">FREE</span>
-              </div>
               <div className="flex justify-between text-[#4b5563]">
                 <span>GST (18%)</span>
                 <span className="text-[#84786d]">Included</span>

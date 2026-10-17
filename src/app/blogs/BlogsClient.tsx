@@ -38,7 +38,7 @@ export default function BlogsClient({ initialBlogs }: BlogsClientProps) {
   const categories = [
     "All",
     "Material & Craft",
-    "Architectural Trends",
+    "Design Trends",
     "Engineering & Craft",
     "Luxury Bathrooms",
     "Design Guides",
@@ -67,7 +67,7 @@ export default function BlogsClient({ initialBlogs }: BlogsClientProps) {
         <div className="absolute inset-0 z-0">
           <Image
             src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&q=80&w=2400"
-            alt="Prakash Ceramics Blogs & Architectural Journal"
+            alt="Prakash Ceramics Blogs & Design Journal"
             fill
             priority
             className="object-cover"
@@ -102,7 +102,7 @@ export default function BlogsClient({ initialBlogs }: BlogsClientProps) {
             transition={{ duration: 0.7, delay: 0.3 }}
             className="text-base sm:text-lg text-neutral-200 max-w-2xl font-normal leading-relaxed mb-8"
           >
-            In-depth guides crafted for architects, interior connoisseurs, and luxury villa homeowners seeking bespoke brassware, precision hydrotherapy, and timeless wellness.
+            In-depth guides crafted for interior connoisseurs and luxury villa homeowners seeking bespoke brassware, precision hydrotherapy, and timeless wellness.
           </motion.p>
 
           {/* Search bar inside hero matching the frosted glass look */}
@@ -236,7 +236,7 @@ export default function BlogsClient({ initialBlogs }: BlogsClientProps) {
                     </div>
                     <div>
                       <div className="text-xs font-bold text-[#151a22]">{featuredPost.author}</div>
-                      <div className="text-[10px] text-stone-500">{featuredPost.authorRole || "Architectural Contributor"}</div>
+                      <div className="text-[10px] text-stone-500">{featuredPost.authorRole || "Design Contributor"}</div>
                     </div>
                   </div>
 
@@ -372,26 +372,26 @@ export default function BlogsClient({ initialBlogs }: BlogsClientProps) {
           )}
         </div>
 
-        {/* Architect Consultation Callout Banner */}
+        {/* Design Advisory Banner */}
         <section className="rounded-3xl bg-gradient-to-br from-[#121620] via-[#1c222c] to-[#121620] text-white p-8 sm:p-14 border border-[#dec49a]/30 relative overflow-hidden shadow-2xl">
           <div className="absolute right-0 top-0 bottom-0 w-1/3 bg-radial from-[#9b7842]/20 to-transparent blur-2xl pointer-events-none" />
 
           <div className="max-w-2xl relative z-10 space-y-4">
             <span className="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-[#9b7842]/20 text-[#dec49a] border border-[#9b7842]/40">
-              Architectural Advisory
+              Design Advisory
             </span>
             <h3 className="text-2xl sm:text-4xl font-serif font-bold tracking-tight text-white">
-              Bringing Architectural Articles to Life in Your Residence
+              Bringing Design Trends to Life in Your Home
             </h3>
             <p className="text-xs sm:text-sm text-stone-300 font-light leading-relaxed">
-              Have questions about plumbing schematics, thermostatic diverters, or coordinating bespoke PVD finishes across your villa? Connect with our senior bath consultants for complimentary layout guidance.
+              Have questions about plumbing schematics, thermostatic diverters, or coordinating bespoke PVD finishes? Connect with our team for expert guidance.
             </p>
             <div className="pt-2 flex flex-wrap items-center gap-4">
               <Link
                 href="/contact"
                 className="inline-flex items-center gap-2 bg-gradient-to-r from-[#9b7842] to-[#836433] hover:from-[#aa864e] hover:to-[#92703a] text-white text-xs font-bold px-6 py-3.5 rounded-full shadow-lg shadow-[#9b7842]/30 transition-all cursor-pointer"
               >
-                <span>Book a Showroom Consultation</span>
+                <span>Visit Our Experience Center</span>
                 <ArrowRight className="w-3.5 h-3.5" />
               </Link>
               <Link

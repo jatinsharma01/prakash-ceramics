@@ -146,7 +146,7 @@ export default function AdminEnquiriesPage() {
   };
 
   const handleDeleteEnquiry = async (id: string) => {
-    if (!confirm("Are you sure you want to delete this consultation enquiry?")) return;
+    if (!confirm("Are you sure you want to delete this enquiry?")) return;
     setIsDeleting(true);
     try {
       const res = await fetch(`/api/enquiries/${id}`, {
@@ -183,7 +183,8 @@ export default function AdminEnquiriesPage() {
         statusFilter === "all" || e.status.toLowerCase() === statusFilter.toLowerCase();
 
       const matchesSource =
-        sourceFilter === "all" || e.source.toLowerCase() === sourceFilter.toLowerCase();
+        sourceFilter === "all" ||
+        (sourceFilter === "Home Page" ? e.source.toLowerCase().includes("home") : e.source.toLowerCase() === sourceFilter.toLowerCase());
 
       return matchesSearch && matchesStatus && matchesSource;
     });
@@ -246,7 +247,7 @@ export default function AdminEnquiriesPage() {
             </span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-serif font-bold text-white tracking-tight">
-            Consultation Enquiries
+            Client Enquiries
           </h1>
           <p className="text-xs sm:text-sm text-stone-400 mt-1">
             Real-time appointment bookings and technical bathware inquiries from the live storefront.
@@ -324,7 +325,7 @@ export default function AdminEnquiriesPage() {
             <h3 className="text-2xl font-bold text-emerald-300 tracking-tight">
               {isLoading ? "-" : completedCount}
             </h3>
-            <p className="text-[11px] text-emerald-400/80 mt-1">Consultation completed</p>
+            <p className="text-[11px] text-emerald-400/80 mt-1">Enquiries completed</p>
           </div>
         </div>
       </div>
@@ -360,7 +361,7 @@ export default function AdminEnquiriesPage() {
               className="bg-[#0d1017] border border-stone-700 text-xs text-stone-200 rounded-xl px-3 py-2 focus:outline-none focus:border-[#9b7842]"
             >
               <option value="all">All Sources</option>
-              <option value="Home Page Consultation">Home Page Consultation</option>
+              <option value="Home Page">Home Page Enquiries</option>
               <option value="Contact Page">Contact Page</option>
             </select>
           </div>
@@ -421,7 +422,7 @@ export default function AdminEnquiriesPage() {
             <p className="text-xs text-stone-400 max-w-sm">
               {searchQuery || statusFilter !== "all" || sourceFilter !== "all"
                 ? "Try clearing your filters or search term to see more submissions."
-                : "When clients submit the Home Page or Contact Page consultation forms, they will show up here instantly."}
+                : "When clients submit the Home Page or Contact Page enquiry forms, they will show up here instantly."}
             </p>
           </div>
         ) : (
@@ -504,7 +505,7 @@ export default function AdminEnquiriesPage() {
                         <span
                           className={clsx(
                             "inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-semibold border",
-                            enquiry.source === "Home Page Consultation"
+                            enquiry.source?.toLowerCase().includes("home")
                               ? "bg-amber-500/10 text-amber-300 border-amber-500/20"
                               : "bg-blue-500/10 text-blue-300 border-blue-500/20"
                           )}
@@ -630,7 +631,7 @@ export default function AdminEnquiriesPage() {
                 <div className="p-6 border-b border-stone-800 flex items-center justify-between bg-[#151a24]">
                   <div>
                     <span className="text-[10px] uppercase tracking-widest text-[#dec49a] font-bold block mb-1">
-                      Consultation Request Details
+                      Enquiry Request Details
                     </span>
                     <h3 className="text-lg font-serif font-bold text-white">
                       {selectedEnquiry.name}
@@ -705,7 +706,7 @@ export default function AdminEnquiriesPage() {
                       {/* WhatsApp */}
                       <a
                         href={`https://wa.me/${getCleanPhone(selectedEnquiry.phone).startsWith("91") ? getCleanPhone(selectedEnquiry.phone) : "91" + getCleanPhone(selectedEnquiry.phone)}?text=${encodeURIComponent(
-                          `Hello ${selectedEnquiry.name}, thank you for reaching out to Prakash Ceramics regarding your ${selectedEnquiry.projectType} consultation.`
+                          `Hello ${selectedEnquiry.name}, thank you for reaching out to Prakash Ceramics regarding your ${selectedEnquiry.projectType} enquiry.`
                         )}`}
                         target="_blank"
                         rel="noopener noreferrer"
@@ -726,7 +727,7 @@ export default function AdminEnquiriesPage() {
 
                       {/* Email */}
                       <a
-                        href={`mailto:${selectedEnquiry.email}?subject=Prakash Ceramics Luxury Bath Consultation&body=Hello ${selectedEnquiry.name},`}
+                        href={`mailto:${selectedEnquiry.email}?subject=Prakash Ceramics Luxury Bath Enquiry&body=Hello ${selectedEnquiry.name},`}
                         className="p-3 rounded-xl bg-purple-500/10 hover:bg-purple-500/20 text-purple-300 border border-purple-500/30 transition-all flex flex-col items-center justify-center gap-1.5 text-center font-medium text-xs"
                       >
                         <Mail className="w-4 h-4 text-purple-400" />
@@ -765,7 +766,7 @@ export default function AdminEnquiriesPage() {
                       </div>
 
                       <div className="sm:col-span-2">
-                        <span className="text-stone-400 block text-[10px]">Preferred Tour / Consultation Date</span>
+                        <span className="text-stone-400 block text-[10px]">Preferred Tour / Visit Date</span>
                         <span className="text-white font-medium">
                           {selectedEnquiry.preferredDate || "Immediate / Open Schedule"}
                         </span>
@@ -773,7 +774,7 @@ export default function AdminEnquiriesPage() {
                     </div>
                   </div>
 
-                  {/* Consultation Scope & Notes */}
+                  {/* Enquiry Scope & Notes */}
                   <div className="p-4 rounded-2xl bg-[#141822] border border-stone-800 space-y-2">
                     <span className="text-[11px] font-semibold text-stone-400 uppercase tracking-wider block">
                       Client Message & Fittings of Interest
@@ -795,7 +796,7 @@ export default function AdminEnquiriesPage() {
                       rows={3}
                       value={adminNotesInput}
                       onChange={(e) => setAdminNotesInput(e.target.value)}
-                      placeholder="Add followup notes, architect requirements, showroom appointment time, quotation status..."
+                      placeholder="Add followup notes, client requirements, showroom appointment time, quotation status..."
                       className="w-full bg-[#0d1017] border border-stone-700 rounded-xl p-3 text-xs text-white placeholder-stone-400 focus:outline-none focus:border-[#9b7842] resize-none"
                     />
                     <div className="flex justify-end pt-1">

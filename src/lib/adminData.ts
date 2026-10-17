@@ -41,7 +41,7 @@ export interface AdminUser {
   phone: string;
   avatar: string;
   city: string;
-  tier: "VIP Architect" | "Luxury Homeowner" | "Commercial Contractor" | "Retail Buyer";
+  tier: "VIP Designer" | "Luxury Homeowner" | "Commercial Contractor" | "Retail Buyer";
   totalOrders: number;
   totalSpent: number;
   status: "Active" | "Inactive" | "VIP";
@@ -346,8 +346,8 @@ export const ADMIN_USERS: AdminUser[] = [
     phone: "+91 98112 34567",
     avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=200",
     city: "New Delhi",
-    tier: "VIP Architect",
-    company: "Studio Vista Architecture",
+    tier: "VIP Designer",
+    company: "Studio Vista Interiors",
     totalOrders: 14,
     totalSpent: 1245000,
     status: "VIP",
@@ -390,7 +390,7 @@ export const ADMIN_USERS: AdminUser[] = [
     phone: "+91 98300 45123",
     avatar: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=200",
     city: "Kolkata",
-    tier: "VIP Architect",
+    tier: "VIP Designer",
     company: "Sensory Interiors",
     totalOrders: 6,
     totalSpent: 390000,
@@ -448,8 +448,8 @@ export const ADMIN_USERS: AdminUser[] = [
     phone: "+91 98210 99887",
     avatar: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&q=80&w=200",
     city: "Ahmedabad",
-    tier: "VIP Architect",
-    company: "Goenka & Partners Architects",
+    tier: "VIP Designer",
+    company: "Goenka & Partners Design",
     totalOrders: 9,
     totalSpent: 980000,
     status: "VIP",
@@ -474,7 +474,7 @@ export const ADMIN_COUPONS: AdminCoupon[] = [
   },
   {
     id: "c-2",
-    code: "ARCHITECTVIP",
+    code: "VIPDESIGN15",
     discountType: "percentage",
     discountValue: 15,
     minOrderValue: 75000,
@@ -483,7 +483,7 @@ export const ADMIN_COUPONS: AdminCoupon[] = [
     startDate: "2026-01-15",
     expiryDate: "2026-12-31",
     status: "Active",
-    description: "Exclusive 15% trade concession for registered Architects & Interior Designers.",
+    description: "Exclusive 15% trade concession for registered Designers & Trade Partners.",
   },
   {
     id: "c-3",

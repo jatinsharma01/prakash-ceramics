@@ -246,7 +246,7 @@ function ProductsContent({ initialProducts }: ProductsClientProps) {
                 Prakash Ceramics Master Catalogue
               </span>
               <h1 className="text-3xl sm:text-5xl font-serif font-semibold text-[#151a22] tracking-tight">
-                Architectural Fittings & Suites
+                Curated Fittings & Suites
               </h1>
             </div>
             <p className="text-xs sm:text-sm text-[#6b7280] max-w-md">
@@ -340,7 +340,7 @@ function ProductsContent({ initialProducts }: ProductsClientProps) {
                   <option value="featured">Featured / Signatures</option>
                   <option value="price-low">Price: Low to High</option>
                   <option value="price-high">Price: High to Low</option>
-                  <option value="rating">Architect Rating</option>
+                  <option value="rating">Top Rated</option>
                 </select>
                 <ChevronDown className="w-4 h-4 text-neutral-400 absolute right-2.5 top-3 pointer-events-none" />
               </div>
@@ -473,7 +473,7 @@ function ProductsContent({ initialProducts }: ProductsClientProps) {
             {/* Finishes Filter */}
             <div className="pt-4 border-t border-[#ede8df]">
               <h4 className="text-xs font-semibold text-[#151a22] uppercase tracking-wider mb-3">
-                Architectural Finish
+                Product Finish
               </h4>
               <div className="space-y-2">
                 {ALL_FINISHES.map((finish) => {
@@ -685,7 +685,7 @@ function ProductsContent({ initialProducts }: ProductsClientProps) {
                   <Sparkles className="w-6 h-6" />
                 </div>
                 <h3 className="text-base font-serif font-semibold text-[#151a22]">
-                  No matching architectural products found
+                  No matching products found
                 </h3>
                 <p className="text-xs text-[#6b7280] max-w-sm mx-auto">
                   Try adjusting your search keywords, clearing selected finish filters, or expanding the price range slider.

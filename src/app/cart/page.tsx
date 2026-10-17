@@ -13,7 +13,7 @@ import {
   ArrowRight, 
   ChevronRight, 
   ShieldCheck, 
-  Truck, 
+  CheckCircle2, 
   RotateCcw, 
   Heart,
   Plus,
@@ -40,7 +40,7 @@ export default function CartPage() {
 
   const handleApplyPromo = (e: React.FormEvent) => {
     e.preventDefault();
-    if (promoCode.trim().toUpperCase() === "PRAKASH5" || promoCode.trim().toUpperCase() === "ARCHITECT") {
+    if (promoCode.trim().toUpperCase() === "PRAKASH5" || promoCode.trim().toUpperCase() === "TRADE" || promoCode.trim().toUpperCase() === "VIP5") {
       setPromoApplied(true);
     }
   };
@@ -67,7 +67,7 @@ export default function CartPage() {
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-8 border-b border-[#ede8df]">
           <div>
             <span className="text-xs uppercase tracking-[0.25em] text-[#9b7842] font-bold block mb-1">
-              Your Architectural Shortlist
+              Your Curated Shortlist
             </span>
             <h1 className="text-3xl sm:text-4xl font-serif font-bold text-[#151a22]">
               Shopping Cart ({totalItems})
@@ -234,11 +234,11 @@ export default function CartPage() {
 
                 <div className="bg-white border border-[#ede8df] rounded-2xl p-4 flex items-center gap-3">
                   <div className="p-2 rounded-xl bg-[#9b7842]/10 text-[#9b7842]">
-                    <Truck className="w-5 h-5" />
+                    <CheckCircle2 className="w-5 h-5" />
                   </div>
                   <div>
-                    <h4 className="text-xs font-bold text-[#151a22]">Free Insured Freight</h4>
-                    <p className="text-[10px] text-[#84786d]">Pan-India door delivery included</p>
+                    <h4 className="text-xs font-bold text-[#151a22]">100% Genuine Branded</h4>
+                    <p className="text-[10px] text-[#84786d]">Official factory-sealed products</p>
                   </div>
                 </div>
 
@@ -263,7 +263,7 @@ export default function CartPage() {
               {/* Promo Code Form */}
               <form onSubmit={handleApplyPromo} className="space-y-2">
                 <label className="text-xs font-bold text-[#374151] block">
-                  Architect / Promo Coupon
+                  Promo Coupon
                 </label>
                 <div className="flex gap-2">
                   <input
@@ -284,7 +284,7 @@ export default function CartPage() {
                 </div>
                 {promoApplied && (
                   <p className="text-[11px] text-emerald-600 font-semibold">
-                    ✓ 5% Architect Trade Discount applied!
+                    ✓ 5% Trade Discount applied!
                   </p>
                 )}
               </form>
@@ -302,11 +302,6 @@ export default function CartPage() {
                     <span>-₹{discountAmount.toLocaleString("en-IN")}</span>
                   </div>
                 )}
-
-                <div className="flex justify-between text-[#4b5563]">
-                  <span>Insured Shipping & Packaging</span>
-                  <span className="text-emerald-600 font-semibold uppercase tracking-wider">FREE</span>
-                </div>
 
                 <div className="flex justify-between text-[#4b5563]">
                   <span>Applicable Taxes (GST 18%)</span>
@@ -356,7 +351,7 @@ export default function CartPage() {
                 Complementary Collections
               </span>
               <h3 className="text-2xl font-serif font-bold text-[#151a22]">
-                Architectural Recommendations
+                Curated Recommendations
               </h3>
             </div>
             <Link

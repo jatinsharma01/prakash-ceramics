@@ -604,7 +604,7 @@ export default function EditProductPage() {
                 rows={3}
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-                placeholder="Describe architectural features, durability, cartridge specs..."
+                placeholder="Describe luxury features, durability, cartridge specs..."
                 className="w-full bg-[#1c222c] border border-stone-700 text-xs text-white px-4 py-2.5 rounded-xl focus:border-[#9b7842] focus:outline-hidden"
               />
             </div>
@@ -900,7 +900,7 @@ export default function EditProductPage() {
         <div className="p-6 rounded-2xl bg-[#141822] border border-stone-800 space-y-4">
           <h3 className="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
             <Tag className="w-4 h-4 text-[#dec49a]" />
-            4. Key Architectural Highlights
+            4. Key Product Highlights
           </h3>
 
           <div className="space-y-2">
@@ -1027,7 +1027,7 @@ export default function EditProductPage() {
                 </div>
               </div>
               <p className="text-[11px] text-stone-400">
-                Highlights product in curated architectural collections & catalog hero.
+                Highlights product in curated luxury collections & catalog hero.
               </p>
             </div>
 

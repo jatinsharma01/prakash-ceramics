@@ -24,7 +24,7 @@ import { motion, AnimatePresence } from "motion/react";
 
 const BLOG_CATEGORIES = [
   "Material & Craft",
-  "Architectural Trends",
+  "Design Trends",
   "Engineering & Craft",
   "Luxury Bathrooms",
   "Design Guides",
@@ -49,7 +49,7 @@ export default function AdminNewBlogPage() {
 
   // Editorial Info
   const [author, setAuthor] = useState("Prakash Editorial Studio");
-  const [authorRole, setAuthorRole] = useState("Senior Architectural Consultant");
+  const [authorRole, setAuthorRole] = useState("Senior Design Specialist");
   const [readTime, setReadTime] = useState("");
   const [tagsInput, setTagsInput] = useState("Luxury Bathroom, PVD Finishes, Interior Design");
   const [isPublished, setIsPublished] = useState(true);
@@ -149,7 +149,7 @@ export default function AdminNewBlogPage() {
         coverImage: coverImage.trim() || null,
         content: finalContent,
         author: author.trim() || "Prakash Editorial Studio",
-        authorRole: authorRole.trim() || "Senior Architectural Consultant",
+        authorRole: authorRole.trim() || "Senior Design Specialist",
         readTime: readTime.trim() || "5 min read",
         tags,
         metaTitle: metaTitle.trim() || `${title.trim()} | Prakash Ceramics Journal`,
@@ -266,7 +266,7 @@ export default function AdminNewBlogPage() {
                 required
                 value={title}
                 onChange={handleTitleChange}
-                placeholder="e.g. The Architectural Elegance of Matte Black PVD in Contemporary Master Suites"
+                placeholder="e.g. The Timeless Elegance of Matte Black PVD in Contemporary Master Suites"
                 className="w-full bg-[#1c222c] border border-stone-700 text-sm text-white placeholder-stone-400 px-4 py-3 rounded-xl focus:border-[#9b7842] focus:outline-hidden font-serif"
               />
             </div>
@@ -394,7 +394,7 @@ export default function AdminNewBlogPage() {
           <RichTextEditor
             value={content}
             onChange={setContent}
-            placeholder="Start writing your architectural article. Use Heading 2 (H2) for section headers, bullet lists for features, and the 'Upload Image' button in the toolbar to insert high-resolution photos into your story..."
+            placeholder="Start writing your design article. Use Heading 2 (H2) for section headers, bullet lists for features, and the 'Upload Image' button in the toolbar to insert high-resolution photos into your story..."
           />
         </div>
 
@@ -504,7 +504,7 @@ export default function AdminNewBlogPage() {
                 type="text"
                 value={authorRole}
                 onChange={(e) => setAuthorRole(e.target.value)}
-                placeholder="e.g. Senior Architectural Consultant"
+                placeholder="e.g. Senior Design Specialist"
                 className="w-full bg-[#1c222c] border border-stone-700 text-xs text-white px-4 py-2.5 rounded-xl focus:border-[#9b7842] focus:outline-hidden"
               />
             </div>
@@ -530,7 +530,7 @@ export default function AdminNewBlogPage() {
                 type="text"
                 value={tagsInput}
                 onChange={(e) => setTagsInput(e.target.value)}
-                placeholder="e.g. PVD Finishes, Luxury Bathroom, Villa Architecture"
+                placeholder="e.g. PVD Finishes, Luxury Bathroom, Villa Design"
                 className="w-full bg-[#1c222c] border border-stone-700 text-xs text-white px-4 py-2.5 rounded-xl focus:border-[#9b7842] focus:outline-hidden"
               />
             </div>

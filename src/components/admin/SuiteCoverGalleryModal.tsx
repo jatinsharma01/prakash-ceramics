@@ -23,7 +23,7 @@ export interface GalleryImage {
 }
 
 export const SUITE_GALLERY_IMAGES: GalleryImage[] = [
-  // Architectural Suite Ensembles
+  // Luxury Suite Ensembles
   {
     id: "suite-gold-penthouse",
     name: "The Royal Penthouse Master Suite",
@@ -61,7 +61,7 @@ export const SUITE_GALLERY_IMAGES: GalleryImage[] = [
   },
   {
     id: "suite-alabaster-villa",
-    name: "Alabaster Stone & Wood Architectural En-Suite",
+    name: "Alabaster Stone & Wood Luxury En-Suite",
     category: "Suites",
     theme: "Natural Stone",
     url: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&q=80&w=1600",
@@ -91,7 +91,7 @@ export const SUITE_GALLERY_IMAGES: GalleryImage[] = [
   // Showroom & Category Visuals (from Cloudinary)
   {
     id: "cat-faucets",
-    name: "Architectural Faucets & Mixers Showroom",
+    name: "Curated Faucets & Mixers Showroom",
     category: "Showroom",
     url: "https://res.cloudinary.com/dtk1pspib/image/upload/v1788760648/parkash-ceramics/faucets.jpg",
   },
@@ -103,7 +103,7 @@ export const SUITE_GALLERY_IMAGES: GalleryImage[] = [
   },
   {
     id: "cat-bathtubs",
-    name: "Freestanding Architectural Bathtubs",
+    name: "Freestanding Luxury Bathtubs",
     category: "Showroom",
     url: "https://res.cloudinary.com/dtk1pspib/image/upload/v1788760643/parkash-ceramics/bathtub.jpg",
   },
@@ -205,7 +205,7 @@ export function SuiteCoverGalleryModal({
                 Choose Suite Cover Visual
               </h3>
               <p className="text-xs text-stone-400">
-                Select high-resolution architectural suite visual for the left-side banner
+                Select high-resolution luxury suite visual for the left-side banner
               </p>
             </div>
           </div>

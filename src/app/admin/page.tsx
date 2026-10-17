@@ -172,7 +172,7 @@ export default function AdminDashboardPage() {
               Executive Dashboard
             </h1>
             <p className="text-stone-300 text-xs sm:text-sm mt-1 max-w-xl">
-              Real-time live monitoring connected directly to PostgreSQL database for luxury sanitaryware catalog, trade architect orders, inventory levels, and revenue performance.
+              Real-time live monitoring connected directly to PostgreSQL database for luxury sanitaryware catalog, trade client orders, inventory levels, and revenue performance.
             </p>
           </div>
 
@@ -668,7 +668,7 @@ export default function AdminDashboardPage() {
         </div>
       </div>
 
-      {/* Inbound Consultation Enquiries Overview */}
+      {/* Inbound Client Enquiries Overview */}
       <div className="p-6 rounded-2xl bg-[#141822] border border-stone-800 shadow-md">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-stone-800/80 gap-3">
           <div className="flex items-center gap-3">
@@ -676,7 +676,7 @@ export default function AdminDashboardPage() {
               <MessageSquareText className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="text-base font-bold text-white">Latest Consultation Enquiries</h3>
+              <h3 className="text-base font-bold text-white">Latest Client Enquiries</h3>
               <p className="text-xs text-stone-400 mt-0.5">
                 Inbound showroom tour requests & technical inquiries from Home Page & Contact Page
               </p>
@@ -698,7 +698,7 @@ export default function AdminDashboardPage() {
             </div>
           ) : recentEnquiries.length === 0 ? (
             <div className="py-8 text-center text-stone-400 text-xs">
-              No consultation requests received yet.
+              No client enquiries received yet.
             </div>
           ) : (
             <table className="w-full text-left text-xs">

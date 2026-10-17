@@ -36,7 +36,7 @@ export default async function BrandsIndexPage() {
               Authorized Dealerships & Manufacturing Partners
             </span>
             <h1 className="text-3xl sm:text-5xl font-serif font-bold text-white tracking-tight">
-              World-Class Architectural Brands
+              World-Class Luxury Brands
             </h1>
             <p className="text-sm text-stone-300 mt-3 leading-relaxed">
               We collaborate with premier sanitaryware, brassware, quartz sink, and kitchen appliance manufacturers to bring engineering precision and luxury aesthetics to your spaces.
@@ -81,7 +81,7 @@ export default async function BrandsIndexPage() {
                   </h3>
 
                   <p className="text-xs text-[#6b7280] line-clamp-3 leading-relaxed mt-2 min-h-[48px]">
-                    {b.description || `${b.name} architectural sanitaryware & bath fixtures.`}
+                    {b.description || `${b.name} luxury sanitaryware & bath fixtures.`}
                   </p>
                 </div>
 

@@ -237,7 +237,7 @@ export default function AdminUsersPage() {
         <div>
           <div className="flex items-center gap-2">
             <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase bg-[#9b7842]/20 text-[#dec49a] border border-[#9b7842]/40">
-              Registered Clients & Architects
+              Registered Clients & Designers
             </span>
             <span className="text-stone-400 text-xs flex items-center gap-1">
               <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />

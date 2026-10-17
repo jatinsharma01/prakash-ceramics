@@ -524,7 +524,7 @@ function AccountContent() {
                     <span>Direct Concierge</span>
                   </div>
                   <h3 className="text-lg font-serif font-bold text-[#151a22] mb-1">
-                    Architectural Order Assistance
+                    Client Order Assistance
                   </h3>
                   <p className="text-xs text-stone-600 leading-relaxed">
                     Have custom specification requests, rough-in plumbing questions, or dispatch scheduling queries? Speak directly with our master technicians.
@@ -845,7 +845,7 @@ function AccountContent() {
             <div className="bg-white border border-[#e8e2d9] rounded-3xl p-6 sm:p-8 shadow-xs max-w-2xl">
               <div className="pb-4 border-b border-[#ede8df] mb-6">
                 <h2 className="text-xl font-serif font-bold text-[#151a22]">Profile & Personal Details</h2>
-                <p className="text-xs text-stone-500">Manage your personal information and architectural preferences</p>
+                <p className="text-xs text-stone-500">Manage your personal information and account preferences</p>
               </div>
 
               {profileSuccess && (

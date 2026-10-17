@@ -187,7 +187,7 @@ export default function AdminCouponsPage() {
             Coupons & Trade Concessions
           </h1>
           <p className="text-stone-300 text-xs sm:text-sm">
-            Create and monitor promotional discount vouchers for projects, showrooms, and VIP architects.
+            Create and monitor promotional discount vouchers for projects, showrooms, and VIP clients.
           </p>
         </div>
 

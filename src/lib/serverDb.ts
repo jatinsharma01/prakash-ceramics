@@ -83,7 +83,7 @@ export interface Enquiry {
   projectType: string;
   preferredDate?: string | null;
   message: string;
-  source: string; // "Home Page Consultation" | "Contact Page"
+  source: string; // "Home Page Enquiry" | "Contact Page"
   status: "New" | "Contacted" | "Scheduled" | "Completed" | "Archived";
   adminNotes?: string | null;
   createdAt: string | Date;
@@ -93,13 +93,13 @@ export interface Enquiry {
 let memoryEnquiries: Enquiry[] = [
   {
     id: "enq-101",
-    name: "Ar. Neha Singhania",
+    name: "Neha Singhania",
     email: "neha.singhania@designatelier.in",
     phone: "+91 98101 22345",
     projectType: "Residential Villa",
     preferredDate: "2026-09-12",
     message: "Designing a 4-storey luxury residence in DLF Phase 5. Need Brushed Gold PVD faucets, concealed thermostatic showers and freestanding bathtubs for 6 master bathrooms.",
-    source: "Home Page Consultation",
+    source: "Home Page Enquiry",
     status: "New",
     createdAt: new Date(Date.now() - 1000 * 60 * 60 * 4).toISOString(),
     updatedAt: new Date(Date.now() - 1000 * 60 * 60 * 4).toISOString(),
@@ -126,7 +126,7 @@ let memoryEnquiries: Enquiry[] = [
     projectType: "Hospitality Resort",
     preferredDate: "2026-09-18",
     message: "Upcoming boutique resort project in Rishikesh (24 guest villas). Require technical CAD drawings and wholesale quotation for matte black shower columns.",
-    source: "Home Page Consultation",
+    source: "Home Page Enquiry",
     status: "Scheduled",
     adminNotes: "Showroom walkthrough scheduled for Saturday 3:00 PM.",
     createdAt: new Date(Date.now() - 1000 * 60 * 60 * 48).toISOString(),
@@ -1413,7 +1413,7 @@ export async function updateOrderStatus(
 }
 
 // -------------------------------------------------------------
-// USERS / CLIENTS & ARCHITECTS CRUD
+// USERS / CLIENTS & DESIGNERS CRUD
 // -------------------------------------------------------------
 export async function getUsers(tier?: string): Promise<AdminUser[]> {
   return withDbFallback<AdminUser[]>(
@@ -1464,7 +1464,7 @@ export async function createUser(data: {
     phone: data.phone,
     avatar: `https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=150`,
     city: data.city || "Delhi NCR",
-    tier: (data.tier as any) || "VIP Architect",
+    tier: (data.tier as any) || "VIP Designer",
     totalOrders: 0,
     totalSpent: 0,
     status: (data.status as any) || "Active",
@@ -1741,7 +1741,7 @@ export async function getAdminStats() {
 }
 
 // -------------------------------------------------------------
-// ENQUIRIES / CONSULTATIONS CRUD
+// ENQUIRIES / VISIT REQUESTS CRUD
 // -------------------------------------------------------------
 export async function getEnquiries(options?: {
   status?: string;
@@ -1955,8 +1955,8 @@ let memoryPageSeos: PageSeoItem[] = [
     path: "/",
     pageName: "Home Page",
     title: "PRAKASH CERAMICS | Luxury Bathrooms, Sanitaryware & Wellness Solutions",
-    description: "Explore Prakash Ceramics' signature collection of premium architectural faucets, hydrotherapy showers, freestanding bathtubs, saunas, and luxury sanitaryware.",
-    keywords: "Prakash Ceramics, luxury bathroom, sanitaryware, faucets, showers, freestanding bathtubs, architectural fittings",
+    description: "Explore Prakash Ceramics' signature collection of premium luxury faucets, hydrotherapy showers, freestanding bathtubs, saunas, and designer sanitaryware.",
+    keywords: "Prakash Ceramics, luxury bathroom, sanitaryware, faucets, showers, freestanding bathtubs, luxury bath fittings",
     ogImage: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&q=80&w=1200",
     createdAt: new Date("2026-01-01"),
     updatedAt: new Date("2026-01-01"),
@@ -1965,7 +1965,7 @@ let memoryPageSeos: PageSeoItem[] = [
     id: "seo-products",
     path: "/products",
     pageName: "Products Catalogue",
-    title: "Luxury Architectural Bathroom Collections | PRAKASH CERAMICS",
+    title: "Luxury Bathroom Collections | PRAKASH CERAMICS",
     description: "Browse our complete catalogue of precision-engineered Swiss cartridge faucets, rain showers, freestanding tubs, and designer sanitaryware.",
     keywords: "luxury bathroom catalogue, faucets, shower systems, bathtubs, vanity basins, sanitaryware price list",
     ogImage: "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&q=80&w=1200",
@@ -1987,9 +1987,9 @@ let memoryPageSeos: PageSeoItem[] = [
     id: "seo-contact",
     path: "/contact",
     pageName: "Contact & Showrooms",
-    title: "Experience Centre & Architectural Consultations | PRAKASH CERAMICS",
-    description: "Book a private design consultation or visit our experiential flagship showrooms to explore working hydrotherapy suites and bespoke PVD finishes.",
-    keywords: "bathroom showroom Delhi, architect consultations, sanitaryware experience centre, contact Prakash Ceramics",
+    title: "Experience Centre & Flagship Showroom | PRAKASH CERAMICS",
+    description: "Visit our experiential flagship showrooms to explore working hydrotherapy suites and bespoke PVD finishes.",
+    keywords: "bathroom showroom Bengaluru, sanitaryware experience centre Whitefield, contact Prakash Ceramics",
     ogImage: "https://images.unsplash.com/photo-1620626011761-996317b8d101?auto=format&fit=crop&q=80&w=1200",
     createdAt: new Date("2026-01-01"),
     updatedAt: new Date("2026-01-01"),
@@ -1998,9 +1998,9 @@ let memoryPageSeos: PageSeoItem[] = [
     id: "seo-cart",
     path: "/cart",
     pageName: "Shopping Cart",
-    title: "Architectural Shortlist & Cart | PRAKASH CERAMICS",
+    title: "Curated Shortlist & Cart | PRAKASH CERAMICS",
     description: "Review your shortlisted luxury bathroom fittings, customized finishes, and request immediate quotations or direct checkout.",
-    keywords: "bathroom shortlist, sanitaryware cart, architectural fittings quotation",
+    keywords: "bathroom shortlist, sanitaryware cart, luxury fittings quotation",
     ogImage: "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&q=80&w=1200",
     createdAt: new Date("2026-01-01"),
     updatedAt: new Date("2026-01-01"),
@@ -2010,7 +2010,7 @@ let memoryPageSeos: PageSeoItem[] = [
     path: "/wishlist",
     pageName: "Saved Wishlist",
     title: "Saved Curations & Wishlist | PRAKASH CERAMICS",
-    description: "Your curated luxury faucets, hydrotherapy showers, and bespoke bathtubs saved for architectural projects and interior planning.",
+    description: "Your curated luxury faucets, hydrotherapy showers, and bespoke bathtubs saved for luxury interior planning.",
     keywords: "luxury bath wishlist, saved fittings, interior design favourites",
     ogImage: "https://images.unsplash.com/photo-1507652313519-d4e9174996dd?auto=format&fit=crop&q=80&w=1200",
     createdAt: new Date("2026-01-01"),
@@ -2024,28 +2024,7 @@ export async function getAllPageSeos(): Promise<PageSeoItem[]> {
       const list = await (prisma as any).pageSeo.findMany({
         orderBy: { path: "asc" },
       });
-      if (list.length === 0) {
-        // Seed default records to DB if empty
-        for (const item of memoryPageSeos) {
-          try {
-            await (prisma as any).pageSeo.upsert({
-              where: { path: item.path },
-              create: {
-                id: item.id,
-                path: item.path,
-                pageName: item.pageName,
-                title: item.title,
-                description: item.description,
-                keywords: item.keywords,
-                ogImage: item.ogImage,
-              },
-              update: {},
-            });
-          } catch {}
-        }
-        return memoryPageSeos;
-      }
-      return list;
+      return list || [];
     },
     () => memoryPageSeos
   );
@@ -2164,13 +2143,13 @@ export async function deletePageSeo(idOrPath: string): Promise<boolean> {
 export const INITIAL_BLOG_POSTS: BlogPost[] = [
   {
     id: "blog-pvd-finishes-guide",
-    title: "The Art of PVD Architectural Finishes: Molecular Durability Meets Warm Metallics",
-    slug: "art-of-pvd-architectural-finishes",
+    title: "The Art of PVD Luxury Finishes: Molecular Durability Meets Warm Metallics",
+    slug: "art-of-pvd-luxury-finishes",
     excerpt: "Discover how Physical Vapor Deposition (PVD) molecular bonding produces lustrous gold, rose gold, and brushed brass finishes that resist scratches, tarnish, and harsh water.",
     content: `<h2>The Renaissance of Metallic Bathware</h2>
-<p>Modern luxury bathrooms have moved decisively beyond standard sterile chrome. Architects and interior connoisseurs increasingly seek warmer, tactile palettes that create sanctuary spaces: brushed gold, blush rose gold, matte graphite, and black chrome. However, traditional electroplating often succumbs to abrasion, calcification, and peeling over time.</p>
+<p>Modern luxury bathrooms have moved decisively beyond standard sterile chrome. Interior connoisseurs and homeowners increasingly seek warmer, tactile palettes that create sanctuary spaces: brushed gold, blush rose gold, matte graphite, and black chrome. However, traditional electroplating often succumbs to abrasion, calcification, and peeling over time.</p>
 
-<blockquote>"True architectural luxury is not merely how an ensemble gleams upon handover, but how gracefully it endures a decade of daily rituals." — Ar. Vikram Singhania</blockquote>
+<blockquote>"True luxury is not merely how an ensemble gleams upon handover, but how gracefully it endures a decade of daily rituals." — Vikram Singhania</blockquote>
 
 <h3>What is Physical Vapor Deposition (PVD)?</h3>
 <p>Physical Vapor Deposition is a vacuum coating process utilized in high-performance aerospace and Swiss horology. Solid metal targets are vaporized in a high-vacuum chamber and ionized with reactive gases. The vaporized metal atoms then condense onto the brass substrate, forming a molecular ceramic-metallic lattice that is physically bonded to the brass rather than merely painted or plated on top.</p>
@@ -2191,13 +2170,13 @@ export const INITIAL_BLOG_POSTS: BlogPost[] = [
       "https://images.unsplash.com/photo-1620626011761-996317b8d101?auto=format&fit=crop&q=80&w=1600"
     ],
     category: "Material & Craft",
-    author: "Ar. Vikram Singhania",
-    authorRole: "Chief Architectural Consultant",
+    author: "Vikram Singhania",
+    authorRole: "Chief Design Specialist",
     authorAvatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=200",
     readTime: "6 min read",
-    tags: ["PVD Finishes", "Bathroom Design", "Architecture", "Luxury Interiors"],
-    metaTitle: "PVD Bathroom Finishes Guide | Prakash Ceramics Architecture Journal",
-    metaDescription: "Explore why architectural PVD finishes are the premier choice for luxury villas, offering superior durability, corrosion resistance, and timeless aesthetic beauty.",
+    tags: ["PVD Finishes", "Bathroom Design", "Sanctuary Spaces", "Luxury Interiors"],
+    metaTitle: "PVD Bathroom Finishes Guide | Prakash Ceramics Design Journal",
+    metaDescription: "Explore why luxury PVD finishes are the premier choice for luxury villas, offering superior durability, corrosion resistance, and timeless aesthetic beauty.",
     keywords: "PVD finishes, gold faucets, luxury bathroom design, brassware, scratch resistant bathware",
     isPublished: true,
     isFeatured: true,
@@ -2212,7 +2191,7 @@ export const INITIAL_BLOG_POSTS: BlogPost[] = [
     slug: "master-ensuite-trends-2026",
     excerpt: "From integrated chromotherapy rain ceilings to monolithic stone vanity bowls, explore the key design elements redefining private luxury estates in 2026.",
     content: `<h2>The Evolution of the Private Spa</h2>
-<p>The contemporary master bath is no longer a purely utilitarian room; it has ascended to the pinnacle of residential design as a private sanctuary for daily rejuvenation. In 2026, homeowners and architectural studios are harmonizing raw organic textures with aerospace-grade water control.</p>
+<p>The contemporary master bath is no longer a purely utilitarian room; it has ascended to the pinnacle of residential design as a private sanctuary for daily rejuvenation. In 2026, homeowners and design studios are harmonizing raw organic textures with aerospace-grade water control.</p>
 
 <h3>1. Monolithic Freestanding Bathtubs</h3>
 <p>Freestanding bathtubs act as sculptural centerpieces. Whether carved from composite stone or finished in velvety matte white resin, positioning the bath alongside panoramic glass windows or botanical indoor courtyards creates an unhurried retreat.</p>
@@ -2228,7 +2207,7 @@ export const INITIAL_BLOG_POSTS: BlogPost[] = [
     images: [
       "https://images.unsplash.com/photo-1620626011761-996317b8d101?auto=format&fit=crop&q=80&w=1600"
     ],
-    category: "Architectural Trends",
+    category: "Design Trends",
     author: "Prakash Editorial Studio",
     authorRole: "Interior Trend Specialists",
     authorAvatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=200",
@@ -2262,8 +2241,8 @@ export const INITIAL_BLOG_POSTS: BlogPost[] = [
   <li><strong>Simultaneous Multi-Flow:</strong> 3-way and 4-way diverters allow simultaneous operation of hand shower and rain cascade without sacrificing pressure.</li>
 </ul>
 
-<h3>Architectural Concealed Installation</h3>
-<p>For minimalist, clutter-free aesthetics, Prakash Ceramics thermostatic bodies are recessed cleanly into the wall substrate using solid brass rough-in boxes, presenting only sleek architectural trim plates and tactile knurled dials on the finished tile surface.</p>`,
+<h3>Precision Concealed Installation</h3>
+<p>For minimalist, clutter-free aesthetics, Prakash Ceramics thermostatic bodies are recessed cleanly into the wall substrate using solid brass rough-in boxes, presenting only sleek minimalist trim plates and tactile knurled dials on the finished tile surface.</p>`,
     coverImage: "https://images.unsplash.com/photo-1507652313519-d4e9174996dd?auto=format&fit=crop&q=80&w=1600",
     images: [
       "https://images.unsplash.com/photo-1507652313519-d4e9174996dd?auto=format&fit=crop&q=80&w=1600"
@@ -2320,47 +2299,7 @@ export async function getAllBlogPosts(options?: {
         orderBy: [{ isFeatured: "desc" }, { publishedAt: "desc" }, { createdAt: "desc" }],
       });
 
-      if (!posts || posts.length === 0) {
-        // Seed default sample blogs into database if empty
-        try {
-          for (const item of INITIAL_BLOG_POSTS) {
-            await (prisma as any).blogPost.upsert({
-              where: { slug: item.slug },
-              update: {},
-              create: {
-                id: item.id,
-                title: item.title,
-                slug: item.slug,
-                excerpt: item.excerpt,
-                content: item.content,
-                coverImage: item.coverImage,
-                images: item.images || [],
-                category: item.category,
-                author: item.author,
-                authorRole: item.authorRole,
-                authorAvatar: item.authorAvatar,
-                readTime: item.readTime,
-                tags: item.tags || [],
-                metaTitle: item.metaTitle,
-                metaDescription: item.metaDescription,
-                keywords: item.keywords,
-                isPublished: item.isPublished,
-                isFeatured: item.isFeatured,
-                views: item.views || 0,
-                publishedAt: item.publishedAt,
-              },
-            });
-          }
-          return (prisma as any).blogPost.findMany({
-            where,
-            orderBy: [{ isFeatured: "desc" }, { publishedAt: "desc" }],
-          });
-        } catch {
-          // fallback to memory
-        }
-      }
-
-      return posts;
+      return posts || [];
     },
     () => {
       let filtered = [...memoryBlogPosts];
@@ -2431,9 +2370,9 @@ export async function createBlogPost(data: Partial<BlogPost>): Promise<BlogPost>
   const content = data.content || `<p>${excerpt || title}</p>`;
   const coverImage = data.coverImage || null;
   const images = data.images || (coverImage ? [coverImage] : []);
-  const category = data.category || "Design & Architecture";
+  const category = data.category || "Design & Craft";
   const author = data.author || "Prakash Editorial Studio";
-  const authorRole = data.authorRole || "Senior Architectural Consultant";
+  const authorRole = data.authorRole || "Senior Design Specialist";
   const authorAvatar = data.authorAvatar || null;
   const readTime = data.readTime || `${Math.max(3, Math.ceil(content.split(/\s+/).length / 200))} min read`;
   const tags = data.tags || [];
